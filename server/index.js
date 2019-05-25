@@ -24,11 +24,13 @@ app.use(cookieSession({
     maxAge: 7*24*60*60*1000,
     keys: [COOKIE_KEY]
 }));
+initiateMongo();
+
 
 app.use(passport.initialize());
 app.use(passport.session());
+require('./auth/google.auth');
 
-initiateMongo();
 
 app.use('/', router);
 app.use('/auth', authRouter);

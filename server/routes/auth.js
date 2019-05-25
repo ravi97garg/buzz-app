@@ -13,15 +13,12 @@ router.get('/google', passport.authenticate('google',
 );
 
 router.get('/google/redirect',
-    (req, res, n) => {
-        console.log('#############', n());
-    },
     passport.authenticate('google', {
         failureRedirect: '/login',
-        successRedirect: '/'
+        // successRedirect: '/'
     }),
     function (req, res) {
-        res.send("hello");
+        res.send(req.user);
     });
 
 module.exports = router;
