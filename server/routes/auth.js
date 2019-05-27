@@ -2,6 +2,12 @@ const Express = require('express');
 const passport = require("passport");
 const router = Express.Router();
 
+router.get('/logout', (req, res) => {
+    req.logout();
+    console.log(`Hello ${req.user}`)
+    res.send(req.user)
+});
+
 router.get('/google', passport.authenticate('google',
     {
         scope: [
@@ -14,7 +20,7 @@ router.get('/google', passport.authenticate('google',
 
 router.get('/google/redirect',
     passport.authenticate('google', {
-        failureRedirect: '/login',
+        failureRedirect: '/google',
         // successRedirect: '/'
     }),
     function (req, res) {
