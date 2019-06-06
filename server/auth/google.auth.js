@@ -1,8 +1,9 @@
 const {CLIENT_ID, SECRET_KEY} = require("../constants");
 const User = require('../models/User');
+const Role = require('../models/Roles');
 
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth2').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 passport.serializeUser((user, done) => {
     done(null, user.id)
@@ -32,6 +33,7 @@ passport.use(new GoogleStrategy({
             provider: profile.provider,
             [profile.provider]: profile._json
         };
+
         User.findOneAndUpdate(
             {googleId: profile.id},
             {...user},

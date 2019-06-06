@@ -3,11 +3,11 @@ const SECRET_KEY = 'bsh5QG18Ak2JG3gl45kvq-H7';
 
 const SERVER_PORT = 8080;
 
-const COOKIE_KEY = 'ttnbuzzistheonlythingiremember';
+const JWT_KEY = 'itisalmostimpossibletocrackthiscode';
 
 module.exports = {
     CLIENT_ID,
     SECRET_KEY,
     SERVER_PORT,
-    COOKIE_KEY
+    JWT_KEY
 };

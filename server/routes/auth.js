@@ -1,10 +1,12 @@
 const Express = require('express');
 const passport = require("passport");
 const router = Express.Router();
+const jwt = require('jsonwebtoken');
+const JWT_KEY =  require('../constants').JWT_KEY;
 
 router.get('/logout', (req, res) => {
-    req.logout();
-    console.log(`Hello ${req.user}`)
+    // req.logout();
+    console.log(`Hello ${req.user}`);
     res.send(req.user)
 });
 
@@ -24,7 +26,17 @@ router.get('/google/redirect',
         // successRedirect: '/'
     }),
     function (req, res) {
-        res.send(req.user);
+        jwt.sign(req.user.toJSON(), JWT_KEY, {expiresIn: "10h"},
+            function(err, token) {
+                if(err){
+                    console.log(`err: ${err}`);
+                } else {
+                    console.log(`token: ${token}`);
+                }
+                res.redirect(`http://localhost:3000/token?q=${token}`);
+        });
     });
+
+
 
 module.exports = router;
