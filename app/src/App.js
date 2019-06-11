@@ -4,6 +4,8 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 import HeaderComponent from './components/header';
 import FooterComponent from './components/footer';
 import AppRouterComponent from "./components/appRouter";
+import {createUser} from "./actions/user.action";
+import {connect} from "react-redux";
 
 class App extends React.Component{
 
@@ -11,14 +13,28 @@ class App extends React.Component{
     return (
       <div>
 
-        <HeaderComponent/>
         <Router>
           <Route path={'/'} component={AppRouterComponent}/>
         </Router>
-        <FooterComponent />
       </div>
     );
   }
-}
 
-export default App;
+  componentDidMount() {
+      if(localStorage.getItem('Token')){
+          this.props.createUser(localStorage.getItem('Token'))
+      }
+  }
+}
+const mapStateToProps = (state) => {
+    return {
+        user: state.user }
+};
+
+const mapDispatchToProps = {
+    createUser
+};
+
+const AppConnect = connect(mapStateToProps, mapDispatchToProps)(App);
+
+export default AppConnect;

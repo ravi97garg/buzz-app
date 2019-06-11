@@ -3,18 +3,20 @@ import {Switch, Route, Redirect} from "react-router-dom";
 import BuzzComponent from "./BuzzComponent";
 import LoginComponent from "./login";
 import ResolveComponent from "./resolve";
-import ComplaintsComponent from "./complaints";
+import ComplaintsComponent from "./ComplaintsComponent";
 import NavLinkComponent from "./navLinks";
 import {connect} from "react-redux";
 import {createUser} from "../actions/user.action";
+import HeaderComponent from "./header";
+import FooterComponent from "./footer";
 const authenticateToken = require('../services/authenticate').authenticateToken;
 
 class AppRouterComponent extends React.Component {
     constructor(props){
         super(props);
-        if(!localStorage.getItem("Token")){
+        if(!localStorage.getItem("Token") && props.location.pathname === '/'){
             props.history.push('/login');
-        } else {
+        } else if(props.location.pathname === '/') {
             authenticateToken(localStorage.getItem("Token"))
                 .then((res) => {
                     if(res.data){
@@ -57,11 +59,15 @@ const TokenComponent = (props) => {
 const PrivateRoute = ({component: Component, ...rest}) => {
     if (localStorage.getItem('Token')) {
         return <Route {...rest} render={(props) => (
+            <div>
+            <HeaderComponent/>
             <div className={'actual-body'}>
                 <div className={'container'}>
                     <NavLinkComponent/>
                     <Component {...props}/>
                 </div>
+            </div>
+                <FooterComponent/>
             </div>)}/>
     } else {
         console.log("Invalid login");

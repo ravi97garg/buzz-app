@@ -28,11 +28,12 @@ class NavLinkComponent extends React.Component{
                 }}>
                     Complaints
                 </NavLink>
-                <NavLink to="/resolve" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
+                {this.props.user.role === 'Admin' && <NavLink to="/resolve" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
                     color: "white"
                 }}>
                     Resolve
-                </NavLink>
+                    </NavLink>}
+
             </div>
 
         )

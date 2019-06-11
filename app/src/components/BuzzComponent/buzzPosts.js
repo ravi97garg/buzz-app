@@ -1,9 +1,9 @@
 import React from "react";
-import {getBuzzService} from "../../services/buzz.service";
+import {getInitialBuzzService, getMoreBuzzs} from "../../services/buzz.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faAngry, faSmile, faSadTear, faCommentAlt} from "@fortawesome/free-solid-svg-icons";
-import {createUser} from "../../actions/user.action";
 import {connect} from "react-redux";
+import {initBuzzAction, loadMoreBuzzAction} from "../../actions/buzz.action";
 
 class BuzzPosts extends React.Component{
 
@@ -12,34 +12,55 @@ class BuzzPosts extends React.Component{
         this.state = {
             skip: 0,
             limit: 10,
+            uptime: null,
+            downtime: null,
+            showLoadMore: false
         };
-        getBuzzService(10, 0).then((res) => {
-            console.log(`resssposnsn ${res}`)
+    }
+
+    componentDidMount() {
+        getInitialBuzzService(this.state.limit).then((res) => {
+            if(res.extractedBuzzs.length > this.state.limit){
+                this.setState({
+                    showLoadMore: true
+                })
+            }
+            const posts = res.extractedBuzzs.slice(0, this.state.limit);
+            this.props.initBuzzAction(posts);
             this.setState({
-                posts: res.extractedBuzzs
-            })
+                uptime: posts[0].postedOn,
+                downtime: posts[posts.length-1].postedOn,
+                skip: 1
+            });
         }).catch((err) => {
-            console.log(err);
+            console.error(err);
         })
     }
 
     handleLoadMore = (e) => {
-        this.setState({
-            skip: this.state.skip+1
-        }, this.afterIncreaseSkip);
-        console.log(this.state.skip);
+        console.log(this.props.buzz.buzzList.length, this.state.limit, this.state.skip);
+        if((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit){
+            getMoreBuzzs(this.state.limit, this.state.downtime).then((res) => {
+                console.log(`posts are here: ${JSON.stringify(res)}`);
+                const posts = res.extractedBuzzs.slice(0, this.state.limit);
+                this.props.loadMoreBuzzAction(posts);
+                this.setState({
+                    skip: this.state.skip +1,
+                    downtime: posts[posts.length-1].postedOn
+                })
+            })
+        } else {
+            // const startIndex = this.state.limit * this.state.skip;
+            // const endIndex = this.props.buzz.buzzList.length;
+            this.setState({
+                skip: this.state.skip + 1,
+                downtime: this.props.buzz.buzzList[(this.state.skip+1)*this.state.limit].postedOn
+            })
+        }
     };
 
-    afterIncreaseSkip = () => {
-        getBuzzService(this.state.limit, this.state.skip).then((response) => {
-            console.log(response);
-            this.setState({
-                posts: [...this.state.posts, ...response.buzzs]
-            })
-        })
-            .catch((error) => {
-                console.log(error);
-            })
+    showLoadMore = () => {
+        return (this.props.buzz.buzzList.length > this.state.skip*this.state.limit) || this.state.showLoadMore;
     };
 
     happyClickHandle = (e) => {
@@ -58,8 +79,7 @@ class BuzzPosts extends React.Component{
     render(){
         return (
             <div>
-                {console.log(`postsss`,this.state.posts)}
-                {this.state.posts && this.state.posts.map((post) => {
+                {this.props.buzz.buzzList && this.props.buzz.buzzList.slice(0, this.state.limit*this.state.skip).map((post) => {
                     return (
                         <div className={'post-wrapper'} key={post._id}>
                             <div className={'post-header'}>
@@ -81,14 +101,14 @@ class BuzzPosts extends React.Component{
                                     <span>{post.reactions.filter((reaction) => reaction.reactionType === 'angry').length}</span>
                                     <FontAwesomeIcon icon={faSadTear} color="orange" onClick={this.sadClickHandle} size="lg"/>
                                     <span>{post.reactions.filter((reaction) => reaction.reactionType === 'sad').length}</span>
-                                    <FontAwesomeIcon icon={faCommentAlt} color="orange" onClick={this.commentClickHandle} size="lg"/>
+                                    <FontAwesomeIcon icon={faCommentAlt} color="yellow" onClick={this.commentClickHandle} size="lg"/>
                                     <span>{post.comments.length}</span>
                                 </div>
                             </div>
                         </div>
                     )
                 })}
-                <button onClick={this.handleLoadMore}>Load More</button>
+                {this.showLoadMore() && <button onClick={this.handleLoadMore}>Load More</button>}
             </div>
         )
     }
@@ -100,7 +120,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    createBuzz
+    initBuzzAction,
+    loadMoreBuzzAction
 };
 
 const BuzzPostsConnect = connect(mapStateToProps, mapDispatchToProps)(BuzzPosts);

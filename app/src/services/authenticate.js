@@ -1,12 +1,9 @@
-const axios = require('axios');
+import axiosInstance from "../config/axios";
 
-const authenticateToken = (token) => {
-    return axios.post('http://localhost:8080/authenticate', {
+
+export const authenticateToken = (token) => {
+    return axiosInstance.post('/authenticate', {
         token: token
     })
 
-};
-
-module.exports = {
-    authenticateToken
 };

@@ -1,8 +1,10 @@
 import React from "react";
 import {createBuzzService} from "../../services/buzz.service";
 import axiosInstance from "../../config/axios";
+import {createBuzzAction} from "../../actions/buzz.action";
+import {connect} from "react-redux";
 
-export default class BuzzFormComponent extends React.Component {
+class BuzzFormComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -21,7 +23,14 @@ export default class BuzzFormComponent extends React.Component {
                 category: 'activity',
                 images: []
             });
-            createBuzzService(this.state);
+            createBuzzService(this.state, this.props.buzz.uptime)
+                .then((response) => {
+                    console.log(response.extractedBuzzs);
+                    this.props.createBuzzAction(response.extractedBuzzs);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         } else {
             alert('Write something in buzz field');
         }
@@ -70,3 +79,16 @@ export default class BuzzFormComponent extends React.Component {
     }
 
 }
+
+const mapStateToProps = (state) => {
+    return {
+        buzz: state.buzz }
+};
+
+const mapDispatchToProps = {
+    createBuzzAction
+};
+
+const BuzzFormConnect = connect(mapStateToProps, mapDispatchToProps)(BuzzFormComponent);
+
+export default BuzzFormConnect;
