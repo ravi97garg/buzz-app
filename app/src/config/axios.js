@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {BASE_URL} from './index';
 import {getToken} from '../utilities';
+import store from '../store';
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -20,10 +21,9 @@ const axiosInstance = axios.create({
 // })();
 
 axiosInstance.interceptors.response.use((response) => {
-    console.log(response.data);
     if(response.data.status === 0){
-        console.log('hi I arrived here');
         localStorage.removeItem('Token');
+        store.dispatch({type: 'USER_LOGGED_OUT'});
     }
     return response.data;
 });
@@ -31,7 +31,6 @@ axiosInstance.interceptors.response.use((response) => {
 axiosInstance.interceptors.request.use((config) => {
     const token = getToken();
     config.headers.Authorization = token;
-    console.log("hi", config.headers.Authorization);
     return config;
 });
 

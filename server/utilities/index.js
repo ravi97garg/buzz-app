@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const JWT_KEY = require('../constants').JWT_KEY;
-
+const Roles = require('../models/Roles');
 
 const verifyToken = (token, secretKey = JWT_KEY) => {
     let verifyResponse;
@@ -18,6 +18,11 @@ const signToken = (userObj, secretKey = JWT_KEY) => {
     return token;
 };
 
+const getFirstAdminStrategy = (department) => {
+    return Roles.findOne({department: department});
+};
+
 module.exports = {
-    verifyToken
+    verifyToken,
+    getFirstAdminStrategy
 };

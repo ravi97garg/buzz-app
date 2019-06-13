@@ -9,21 +9,20 @@ const cookieParser = require('cookie-parser');
 const initiateMongo = require('./models');
 const cookieSession = require('cookie-session');
 const dataRouter = require('./routes/data');
-const verifyToken = require('./utilities').verifyToken;
+const {verifyToken} = require('./utilities');
 const axios = require('axios');
 const multer = require('multer');
 const upload = multer();
 
 
 const dataRouteMiddleware = (req, res, next) => {
-    console.log(`hadd hai yar ${JSON.stringify(req.body)}`);
-    console.log(req.headers);
     let user = verifyToken(req.headers.authorization);
     if(user){
         req.userId = user._id;
+        req.user = user;
         next();
     } else {
-        res.send(`{message: 'Not authenticated', status: 0}`);
+        res.send({message: 'Not authenticated', status: 0});
     }
 };
 
@@ -49,7 +48,6 @@ app.use('/auth', authRouter);
 app.use('/data',dataRouteMiddleware, upload.none(), dataRouter);
 
 app.get('/', (req, res) => {
-    console.log("Hello world");
     res.send("Hello world");
 });
 

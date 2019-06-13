@@ -6,7 +6,7 @@ const user = (state = initialState, action) => {
             return {...state, ...action.payload};
 
         case 'USER_LOGGED_OUT':
-            return {...state};
+            return {name: '', email: '', role: '', profileImage: '', department: ''};
 
         default:
             return {...state};

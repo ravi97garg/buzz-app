@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route} from "react-router-dom";
-import HeaderComponent from './components/header';
-import FooterComponent from './components/footer';
 import AppRouterComponent from "./components/appRouter";
 import {createUser} from "./actions/user.action";
 import {connect} from "react-redux";

@@ -27,15 +27,6 @@ const BuzzSchema = new Schema({
     updatedOn: {
         type: Date,
         default: null
-    },
-    comments: {
-        type: [Schema.Types.ObjectId],
-        default: null
-    },
-    reactions: {
-        type: [Schema.Types.ObjectId],
-        default: null,
-        ref: Reactions
     }
 });
 

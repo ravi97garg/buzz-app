@@ -27,26 +27,33 @@ passport.use(new GoogleStrategy({
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
-            role: 'User',
             profileImage: profile.photos[0].value,
-            department: 'Technology',
             provider: profile.provider,
             [profile.provider]: profile._json
         };
 
-        User.findOneAndUpdate(
-            {googleId: profile.id},
-            {...user},
-            {upsert: true, new: true},
-            (err, user) => {
-                if(err) {
-                    return done(err);
-                } else {
-                    user.save();
-                    return done(null, user);
-                }
+        Role.findOne({email: profile.emails[0].value}, (err, adminUser) => {
+            if(err) {
+                console.error(err);
+            } else {
+                console.log(`userrrrrrrrr ${JSON.stringify(user)}`);
+                user.department = adminUser ? adminUser.department: 'IT';
+                user.role = adminUser ? adminUser.role : 'User';
+                User.findOneAndUpdate(
+                    {googleId: profile.id},
+                    {...user},
+                    {upsert: true, new: true},
+                    (err, user) => {
+                        if(err) {
+                            return done(err);
+                        } else {
+                            user.save();
+                            return done(null, user);
+                        }
+                    }
+                );
             }
-        );
+        });
 
     }
 ));

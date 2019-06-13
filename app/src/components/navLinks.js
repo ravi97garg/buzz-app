@@ -1,14 +1,10 @@
-import { NavLink } from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import React from "react";
 import {connect} from "react-redux";
-import {transform} from "@babel/core";
 
-class NavLinkComponent extends React.Component{
-    constructor(props){
-        super(props);
-        console.log(`propsrwtw ${JSON.stringify(props)}   fjv ${props}`);
-    }
-    render(){
+class NavLinkComponent extends React.Component {
+
+    render() {
         return (
             <div className={'nav-container'}>
                 <div className={'nav-profile-img-wrapper'}>
@@ -28,11 +24,12 @@ class NavLinkComponent extends React.Component{
                 }}>
                     Complaints
                 </NavLink>
-                {this.props.user.role === 'Admin' && <NavLink to="/resolve" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
+                {this.props.user.role === 'Admin' &&
+                <NavLink to="/resolve" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
                     color: "white"
                 }}>
                     Resolve
-                    </NavLink>}
+                </NavLink>}
 
             </div>
 
@@ -40,9 +37,10 @@ class NavLinkComponent extends React.Component{
     }
 }
 
-const mapStateToProps = (state) =>
-{return {
-    user: state.user}
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    }
 };
 
 const NavLinkConnect = connect(mapStateToProps)(NavLinkComponent);

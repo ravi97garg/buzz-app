@@ -29,7 +29,7 @@ router.get('/google/redirect',
         jwt.sign(req.user.toJSON(), JWT_KEY, {expiresIn: "10h"},
             function(err, token) {
                 if(err){
-                    console.log(`err: ${err}`);
+                    console.error(`err: ${err}`);
                 } else {
                     console.log(`token: ${token}`);
                 }

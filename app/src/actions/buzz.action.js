@@ -21,7 +21,8 @@ export const createBuzzAction = (buzz) => (dispatch) =>{
     // }).catch((error) => {
     //     console.log(error)
     // })
-    console.log(`hell is here`);
+
+    console.log(`hell is here ${JSON.stringify(buzz)}`);
     dispatch(createBuzz(buzz));
 };
 

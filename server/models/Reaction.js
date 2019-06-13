@@ -15,7 +15,8 @@ const ReactionSchema = new Schema({
     },
     reactionPostId : {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: Buzz
     }
 });
 

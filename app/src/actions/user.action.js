@@ -15,7 +15,6 @@ export const logOutUser = () => ({
 export const createUser = (token = getToken()) => (dispatch) =>{
 
     authenticateToken(token).then((res) => {
-        console.log(res);
         dispatch(fetchUser(res));
     }).catch((error) => {
         console.log(error)

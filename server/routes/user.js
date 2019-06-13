@@ -3,11 +3,10 @@ const {findUserByID} = require('../services/user.service');
 const router = Express.Router();
 
 router.get('/:id', (req, res) => {
-    console.log(req.params.id);
     findUserByID(req.params.id).then((user) => {
         res.send(user);
     }).catch((err) => {
-        console.log(err);
+        console.error(err);
         res.send({message: 'DBError', status: 2})
     });
 });

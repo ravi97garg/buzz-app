@@ -1,9 +1,10 @@
 import React from "react";
 import {getInitialBuzzService, getMoreBuzzs} from "../../services/buzz.service";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faAngry, faSmile, faSadTear, faCommentAlt} from "@fortawesome/free-solid-svg-icons";
 import {connect} from "react-redux";
 import {initBuzzAction, loadMoreBuzzAction} from "../../actions/buzz.action";
+import PostTemplateComponent from "./postTemplate";
+import {reactionService} from "../../services/reaction.service";
+import {reactionAction} from "../../actions/reaction.action";
 
 class BuzzPosts extends React.Component{
 
@@ -28,8 +29,8 @@ class BuzzPosts extends React.Component{
             const posts = res.extractedBuzzs.slice(0, this.state.limit);
             this.props.initBuzzAction(posts);
             this.setState({
-                uptime: posts[0].postedOn,
-                downtime: posts[posts.length-1].postedOn,
+                uptime: posts[0] ? posts[0].postedOn : null,
+                downtime: posts[0] ? posts[posts.length-1].postedOn : null,
                 skip: 1
             });
         }).catch((err) => {
@@ -41,7 +42,6 @@ class BuzzPosts extends React.Component{
         console.log(this.props.buzz.buzzList.length, this.state.limit, this.state.skip);
         if((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit){
             getMoreBuzzs(this.state.limit, this.state.downtime).then((res) => {
-                console.log(`posts are here: ${JSON.stringify(res)}`);
                 const posts = res.extractedBuzzs.slice(0, this.state.limit);
                 this.props.loadMoreBuzzAction(posts);
                 this.setState({
@@ -63,17 +63,26 @@ class BuzzPosts extends React.Component{
         return (this.props.buzz.buzzList.length > this.state.skip*this.state.limit) || this.state.showLoadMore;
     };
 
-    happyClickHandle = (e) => {
-        console.log(e.target.value);
+    happyClickHandle = (buzzId) => {
+        reactionService(buzzId, 'happy')
+            .then((res) => {
+                this.props.reactionAction(res.action, res.reactionObj, 'happy');
+            });
     };
-    angryClickHandle = (e) => {
-        console.log(e.target.value);
+    angryClickHandle = (buzzId) => {
+        reactionService(buzzId, 'angry')
+            .then((res) => {
+                this.props.reactionAction(res.action, res.reactionObj, 'angry');
+            });
     };
-    sadClickHandle = (e) => {
-        console.log(e.target.value);
+    sadClickHandle = (buzzId) => {
+        reactionService(buzzId, 'sad')
+            .then((res) => {
+                this.props.reactionAction(res.action, res.reactionObj, 'sad');
+            });
     };
-    commentClickHandle = (e) => {
-        console.log(e.target.value);
+    commentClickHandle = (buzzId) => {
+        console.log(buzzId);
     };
 
     render(){
@@ -81,31 +90,14 @@ class BuzzPosts extends React.Component{
             <div>
                 {this.props.buzz.buzzList && this.props.buzz.buzzList.slice(0, this.state.limit*this.state.skip).map((post) => {
                     return (
-                        <div className={'post-wrapper'} key={post._id}>
-                            <div className={'post-header'}>
-                                <div className={'post-wrapper-profile-img'}>
-                                    <img alt={'postedBy'} src={post.postedBy.profileImage}/>
-                                </div>
-                                <div className={'post-wrapper-profile-right'}>
-                                    {post.postedBy.name} posted {Math.trunc((Date.now()-new Date(post.postedOn))/(1000*60))} minutes ago
-                                </div>
-                            </div>
-                            <div className={'post-content'}>
-                                {post.buzzContent}
-                            </div>
-                            <div className={'post-footer'}>
-                                <div className={'reactions'}>
-                                    <FontAwesomeIcon icon={faSmile} color="green" onClick={this.happyClickHandle} size="lg"/>
-                                    <span>{post.reactions.filter((reaction) => reaction.reactionType === 'happy').length}</span>
-                                    <FontAwesomeIcon icon={faAngry} color="red" onClick={this.angryClickHandle} size="lg"/>
-                                    <span>{post.reactions.filter((reaction) => reaction.reactionType === 'angry').length}</span>
-                                    <FontAwesomeIcon icon={faSadTear} color="orange" onClick={this.sadClickHandle} size="lg"/>
-                                    <span>{post.reactions.filter((reaction) => reaction.reactionType === 'sad').length}</span>
-                                    <FontAwesomeIcon icon={faCommentAlt} color="yellow" onClick={this.commentClickHandle} size="lg"/>
-                                    <span>{post.comments.length}</span>
-                                </div>
-                            </div>
-                        </div>
+                        <PostTemplateComponent
+                            post={post}
+                            key={post._id}
+                            commentClickHandle={this.commentClickHandle}
+                            happyClickHandle={this.happyClickHandle}
+                            angryClickHandle={this.angryClickHandle}
+                            sadClickHandle={this.sadClickHandle}
+                        />
                     )
                 })}
                 {this.showLoadMore() && <button onClick={this.handleLoadMore}>Load More</button>}
@@ -121,7 +113,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     initBuzzAction,
-    loadMoreBuzzAction
+    loadMoreBuzzAction,
+    reactionAction
 };
 
 const BuzzPostsConnect = connect(mapStateToProps, mapDispatchToProps)(BuzzPosts);

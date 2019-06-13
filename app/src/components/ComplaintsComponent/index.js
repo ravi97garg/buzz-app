@@ -5,7 +5,7 @@ import ComplaintsTable from './complaintTable';
 export default class ComplaintsComponent extends React.Component {
     render(){
         return (
-            <div>
+            <div className={'buzz'}>
                 <ComplaintsForm/>
                 <ComplaintsTable/>
             </div>
