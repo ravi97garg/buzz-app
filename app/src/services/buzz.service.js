@@ -1,10 +1,8 @@
 import axiosInstance from "../config/axios";
+// import axios from "axios";
 
-export const createBuzzService = (formData, startTime) => {
-    return axiosInstance.post('/data/buzz/createBuzz', {
-        formData, startTime
-    })
-
+export const createBuzzService = (formData) => {
+    return axiosInstance.post('/data/buzz/createBuzz', formData);
 };
 
 export const getInitialBuzzService = (limit) => {

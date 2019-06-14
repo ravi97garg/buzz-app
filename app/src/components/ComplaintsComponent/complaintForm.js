@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {createComplaint, getDepartments} from "../../services/complaint.service";
+import {addComplaintAction, initComplaintAction} from "../../actions/complaint.action";
 
 class ComplaintForm extends React.Component {
 
@@ -27,6 +28,7 @@ class ComplaintForm extends React.Component {
         createComplaint({complaintDepartment, complaintTitle, complaintContent})
             .then((res) => {
                 console.log(res);
+                this.props.addComplaintAction(res.newComplaint);
             }).catch((err) => {
                 console.error(err);
         });
@@ -48,7 +50,7 @@ class ComplaintForm extends React.Component {
             complaintContent
         } = this.state;
         return (
-            <form onSubmit={this.submitHandle}>
+            <form onSubmit={this.submitHandle} autoComplete={'off'}>
                 <label htmlFor={'complaintDepartment'}>Department</label>
                 <select
                     value={complaintDepartment}
@@ -70,6 +72,7 @@ class ComplaintForm extends React.Component {
                        onChange={this.changeHandle}
                        required={true}
                        value={complaintTitle}
+                       autoComplete={'off'}
                 />
 
                 <label htmlFor={'complaintContent'}>Your Concern</label>
@@ -78,6 +81,7 @@ class ComplaintForm extends React.Component {
                        onChange={this.changeHandle}
                        required={true}
                        value={complaintContent}
+                       autoComplete={'off'}
                 />
 
                 <input type="submit" value="Log Complaint"/>
@@ -103,6 +107,11 @@ const mapStateToProps = (state) => {
     }
 };
 
-const ComplaintFormConnect = connect(mapStateToProps)(ComplaintForm);
+const mapDispatchToProps = {
+    initComplaintAction,
+    addComplaintAction
+};
+
+const ComplaintFormConnect = connect(mapStateToProps, mapDispatchToProps)(ComplaintForm);
 
 export default ComplaintFormConnect;

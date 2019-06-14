@@ -1,6 +1,5 @@
 import React from "react";
 import {createBuzzService} from "../../services/buzz.service";
-import axiosInstance from "../../config/axios";
 import {createBuzzAction} from "../../actions/buzz.action";
 import {connect} from "react-redux";
 
@@ -17,13 +16,20 @@ class BuzzFormComponent extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        console.log(this.state.images);
         if(this.state.buzzContent){
-            this.setState({
-                buzzContent: '',
-                category: 'activity',
-                images: []
-            });
-            createBuzzService(this.state, this.props.buzz.uptime)
+            const formData = new FormData();
+            console.log(`hey there ${JSON.stringify(this.state.images)}`);
+            console.log(`keys: ${Object.keys(this.state.images)}`);
+            // formData.append('image', this.state.images[0],'myimage');
+            formData.append('buzzContent', this.state.buzzContent);
+            formData.append('category', this.state.category);
+            formData.append('startTime', this.props.buzz.uptime);
+            for (var x = 0; x < this.state.images.length; x++) {
+                formData.append(`images[]`, this.state.images[x]);
+            }
+            console.log(`Formdata: ${JSON.stringify(formData)}`);
+            createBuzzService(formData)
                 .then((response) => {
                     console.log(response.extractedBuzzs);
                     this.props.createBuzzAction(response.extractedBuzzs);
@@ -31,6 +37,12 @@ class BuzzFormComponent extends React.Component {
                 .catch((error) => {
                     console.error(error);
                 });
+            this.setState({
+                buzzContent: '',
+                category: 'activity',
+                images: []
+            });
+            e.target.reset();
         } else {
             alert('Write something in buzz field');
         }
@@ -44,17 +56,15 @@ class BuzzFormComponent extends React.Component {
         })
     };
 
-    addImage = (image) => {
-        const newImages = this.state.images;
-        newImages.unshift(image);
+    addImage = (e) => {
         this.setState({
-            images: newImages
-        })
+            images: e.target.files
+        });
+        console.log(e.target.files)
     };
 
-    click = () => axiosInstance.get(`/data`)
-        .then(response => (console.log(response)))
-        .catch(error => (console.log(error)));
+    // handleImageUpload
+
 
     render() {
         return (
@@ -70,6 +80,7 @@ class BuzzFormComponent extends React.Component {
                         <option value={'activity'}>Activity</option>
                         <option value={'lostFound'}>Lost and Found</option>
                     </select>
+                    <input type={'file'} name={'images'} onChange={this.addImage} multiple={true}/>
                     <input type={'submit'} value={'POST'}/>
                 </form>
 

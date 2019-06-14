@@ -1,7 +1,7 @@
 const initialState = {buzzList: [], uptime: null};
 
 const buzz = (state = initialState, action) => {
-    // console.log(action.type, action.payload);
+    console.log(action.type, action.payload);
     switch (action.type) {
         case 'CREATE_BUZZ': {
             const data = action.payload;
@@ -15,6 +15,7 @@ const buzz = (state = initialState, action) => {
             const data = action.payload;
             let buzzList = state.buzzList;
             buzzList = buzzList.concat(data);
+            console.log(buzzList.length);
             return {...state, buzzList};
         }
 

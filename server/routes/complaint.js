@@ -1,6 +1,6 @@
 const Express = require('express');
 const router = Express.Router();
-const {getDepartments, postComplaint, electAdmin} = require('../services/complaint.service');
+const {getDepartments, postComplaint, electAdmin, getUserComplaints} = require('../services/complaint.service');
 const {getFirstAdminStrategy} = require('../utilities');
 
 router.get('/getDepartments', (req, res) => {
@@ -32,5 +32,14 @@ router.post('/postComplaint', async (req, res) => {
     }
 
 });
+
+router.get('/getMyComplaint', (req, res) => {
+    getUserComplaints(req.userId).then((complaints) => {
+        res.send({complaints, status: 1});
+    }).catch(e => {
+        res.send({message: 'DBError', status: 2});
+    });
+});
+
 
 module.exports = router;

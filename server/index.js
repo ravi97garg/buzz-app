@@ -11,9 +11,9 @@ const cookieSession = require('cookie-session');
 const dataRouter = require('./routes/data');
 const {verifyToken} = require('./utilities');
 const axios = require('axios');
-const multer = require('multer');
-const upload = multer();
+const { cloudinaryConfig } = require('./config/cloudinary.config');
 
+app.use('*', cloudinaryConfig);
 
 const dataRouteMiddleware = (req, res, next) => {
     let user = verifyToken(req.headers.authorization);
@@ -45,7 +45,7 @@ require('./auth/google.auth');
 
 app.use('/', router);
 app.use('/auth', authRouter);
-app.use('/data',dataRouteMiddleware, upload.none(), dataRouter);
+app.use('/data',dataRouteMiddleware, dataRouter);
 
 app.get('/', (req, res) => {
     res.send("Hello world");

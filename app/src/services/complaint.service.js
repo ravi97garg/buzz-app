@@ -9,3 +9,7 @@ export const createComplaint = (complaint) => {
         ...complaint
     });
 };
+
+export const getMyComplaints = () => {
+    return axiosInstance.get('/data/complaint/getMyComplaint')
+};

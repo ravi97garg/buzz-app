@@ -14,14 +14,6 @@ const addMoreBuzz = (buzzs) => ({
 });
 
 export const createBuzzAction = (buzz) => (dispatch) =>{
-
-    // authenticateToken(token).then((res) => {
-    //     console.log(res.data);
-    //     dispatch(createBuzz(res.data));
-    // }).catch((error) => {
-    //     console.log(error)
-    // })
-
     console.log(`hell is here ${JSON.stringify(buzz)}`);
     dispatch(createBuzz(buzz));
 };

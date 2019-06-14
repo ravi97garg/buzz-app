@@ -26,8 +26,13 @@ const electAdmin = async (department, strategy = getFirstAdminStrategy) => {
     return admin._id;
 };
 
+const getUserComplaints = (user) => {
+    return Complaint.find({loggedBy: user});
+};
+
 module.exports = {
     getDepartments,
     postComplaint,
-    electAdmin
+    electAdmin,
+    getUserComplaints
 };

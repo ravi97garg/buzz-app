@@ -4,10 +4,11 @@ const Comment = require('../models/Comment');
 
 const createBuzzService = (buzzData) => {
     var buzz = new Buzz();
-    buzz.buzzContent = buzzData.formData.buzzContent;
+    buzz.buzzContent = buzzData.buzzContent;
     buzz.postedBy = buzzData.postedBy;
-    buzz.category = buzzData.formData.category;
-    buzz.images = buzzData.formData.images;
+    buzz.category = buzzData.category;
+    buzz.images = buzzData.images;
+    console.log(buzzData);
     return buzz.save();
 };
 

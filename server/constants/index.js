@@ -5,9 +5,16 @@ const SERVER_PORT = 8080;
 
 const JWT_KEY = 'itisalmostimpossibletocrackthiscode';
 
+const CLOUD_NAME = 'dnuq1lgqs';
+const CLOUDINARY_API_KEY = '295531686213238';
+const CLOUDINARY_API_SECRET = '-zMFnMD_rqF2vJtU7vcCfw0B9hY';
+
 module.exports = {
     CLIENT_ID,
     SECRET_KEY,
     SERVER_PORT,
-    JWT_KEY
+    JWT_KEY,
+    CLOUD_NAME,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET
 };

@@ -39,10 +39,11 @@ class BuzzPosts extends React.Component{
     }
 
     handleLoadMore = (e) => {
-        console.log(this.props.buzz.buzzList.length, this.state.limit, this.state.skip);
+        console.log(this.props.buzz.buzzList.length, this.state.limit, this.state.skip, this.state.downtime);
         if((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit){
             getMoreBuzzs(this.state.limit, this.state.downtime).then((res) => {
                 const posts = res.extractedBuzzs.slice(0, this.state.limit);
+                console.log(posts);
                 this.props.loadMoreBuzzAction(posts);
                 this.setState({
                     skip: this.state.skip +1,

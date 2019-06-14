@@ -2,28 +2,55 @@ const Express = require('express');
 const {postReactionService, createReactionService, updateReactionService, deleteReactionService} = require("../services/reaction.service");
 const {createBuzzService, getInitialBuzzService, getCommentService, getReactionService, getMoreBuzzService, getNewBuzzs} = require("../services/buzz.service");
 const router = Express.Router();
+const {multerUploads, dataUri} = require('../config/multer.config');
+const {uploader} = require('../config/cloudinary.config');
 
-router.post('/createBuzz', (req, res) => {
+// const multer = require('multer');
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
+
+router.post('/createBuzz', multerUploads, (req, res) => {
     try {
+        // console.log(`request: `,req.headers);
         req.body.postedBy = req.userId;
-        createBuzzService(req.body).then(() => {
-            getNewBuzzs(req.body.startTime).then((buzzs) => {
-                var reactionPromises = [];
-                buzzs.forEach(item=>{
-                    reactionPromises.push(getReactionService(item._id));
-                });
-                Promise.all(reactionPromises).then((result) => {
-                    let extractedBuzzs = buzzs.map((item, index) => {
-                        item._doc['reactions'] = result[index];
-                        return item;
-                    });
-                    res.send({message: 'OK', status: 1, extractedBuzzs});
-                });
+        console.log(`new Buzz  ${JSON.stringify(req.body)}`);
+        // console.log(`files  ${JSON.stringify(req.files)} ${JSON.stringify(req.file)}`);
+        if(req.files){
+            console.log(`hello ${Array.isArray(req.files)}`);
+            let uploaderPromises = [];
+            console.log(req.files.length);
+            req.files.forEach((file) => {
+                let base64file = dataUri(file).content;
+                console.log(`base64file`);
+                uploaderPromises.push(uploader.upload(base64file));
+            });
+            Promise.all(uploaderPromises).then((result) => {
+                req.body.images = result.map((file) => { return file.secure_url});
+                console.log(req.body.images)
+                createBuzzService(req.body).then(() => {
+                    getNewBuzzs(req.body.startTime).then((buzzs) => {
+                        var reactionPromises = [];
+                        buzzs.forEach(item=>{
+                            reactionPromises.push(getReactionService(item._id));
+                        });
+                        Promise.all(reactionPromises).then((result) => {
+                            let extractedBuzzs = buzzs.map((item, index) => {
+                                item._doc['reactions'] = result[index];
+                                return item;
+                            });
+                            res.send({message: 'OK', status: 1, extractedBuzzs});
+                        });
 
-            })
-        }).catch(() => {
-            res.send({message: 'DBError', status: 2});
-        })
+                    })
+                }).catch(() => {
+                    res.send({message: 'DBError', status: 2});
+                })
+            }).catch((err) => {
+                console.error(err);
+            });
+
+    }
+
     } catch (e) {
         console.error(e);
         res.send(e);

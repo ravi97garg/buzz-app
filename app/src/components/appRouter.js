@@ -2,13 +2,14 @@ import React from 'react';
 import {Switch, Route, Redirect} from "react-router-dom";
 import BuzzComponent from "./BuzzComponent";
 import LoginComponent from "./login";
-import ResolveComponent from "./resolve";
+import ResolveComponent from "./ResolveComponent";
 import ComplaintsComponent from "./ComplaintsComponent";
 import NavLinkComponent from "./navLinks";
 import {connect} from "react-redux";
 import {createUser} from "../actions/user.action";
 import HeaderComponent from "./header";
 import FooterComponent from "./footer";
+import PageNotFoundComponent from "./pageNotFound";
 const authenticateToken = require('../services/authenticate').authenticateToken;
 
 class AppRouterComponent extends React.Component {
@@ -43,6 +44,7 @@ class AppRouterComponent extends React.Component {
                 <PrivateRoute path={"/complaints"} isAuth={this.isAuthenticated} component={ComplaintsComponent}/>
                 <PrivateRoute path={"/resolve"} isAuth={this.isAuthenticated} component={ResolveComponent}/>
                 <Route path={"/login"} component={LoginComponent}/>
+                <Route path={"/pageNotFound"} component={PageNotFoundComponent}/>
             </Switch>
         )
     }
