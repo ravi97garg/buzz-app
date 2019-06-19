@@ -12,7 +12,7 @@ class App extends React.Component{
       <div>
 
         <Router>
-          <Route path={'/'} component={AppRouterComponent}/>
+          <Route component={AppRouterComponent}/>
         </Router>
       </div>
     );

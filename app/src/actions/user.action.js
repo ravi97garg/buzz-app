@@ -1,6 +1,3 @@
-import {getToken} from "../utilities";
-import {authenticateToken} from "../services/authenticate";
-
 const fetchUser = (user) => ({
     type: 'USER_LOGGED_IN',
     payload: user
@@ -11,12 +8,8 @@ export const logOutUser = () => ({
 });
 
 
+export const createUser = (user) => (dispatch) => {
+    console.log('hello user', JSON.stringify(user))
+    dispatch(fetchUser(user));
 
-export const createUser = (token = getToken()) => (dispatch) =>{
-
-    authenticateToken(token).then((res) => {
-        dispatch(fetchUser(res));
-    }).catch((error) => {
-        console.log(error)
-    })
 };

@@ -98,6 +98,7 @@ class BuzzPosts extends React.Component{
                             happyClickHandle={this.happyClickHandle}
                             angryClickHandle={this.angryClickHandle}
                             sadClickHandle={this.sadClickHandle}
+                            user={this.props.user}
                         />
                     )
                 })}
@@ -109,7 +110,9 @@ class BuzzPosts extends React.Component{
 
 const mapStateToProps = (state) => {
     return {
-        buzz: state.buzz }
+        buzz: state.buzz,
+        user: state.user
+    }
 };
 
 const mapDispatchToProps = {

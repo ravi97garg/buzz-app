@@ -21,7 +21,7 @@ class ComplaintTable extends React.Component {
                     <tbody>
                     {this.props.complaints && this.props.complaints.complaintList.map((item) => {
                         return (
-                            <tr>
+                            <tr key={item._id}>
                                 <td>{item._id}</td>
                                 <td>{item.subject}</td>
                                 <td>{item.department}</td>

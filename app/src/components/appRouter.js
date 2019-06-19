@@ -10,36 +10,22 @@ import {createUser} from "../actions/user.action";
 import HeaderComponent from "./header";
 import FooterComponent from "./footer";
 import PageNotFoundComponent from "./pageNotFound";
-const authenticateToken = require('../services/authenticate').authenticateToken;
+
+const {authenticateToken} = require('../services/authenticate');
 
 class AppRouterComponent extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        if(!localStorage.getItem("Token") && props.location.pathname === '/'){
-            props.history.push('/login');
-        } else if(props.location.pathname === '/') {
-            authenticateToken(localStorage.getItem("Token"))
-                .then((res) => {
-                    if(res.data){
-                        props.createUser();
-                        props.history.push('/dashboard');
-                    } else {
-                        props.history.push('/login');
-                    }
-                    // return !!res.data;
-                })
-                .catch((err)=>{
-                    console.log(`error while authenticating: ${err}`);
-                });
-        }
+        console.log(`props: ${JSON.stringify(props)}`);
+
     }
 
 
-    
     render() {
         return (
             <Switch>
-                <Route path='/token' render={(props)=><TokenComponent {...props} createUser={this.props.createUser}/>}/>
+                <Route path='/token'
+                       render={(props) => <TokenComponent {...props} createUser={this.props.createUser}/>}/>
                 <PrivateRoute path={"/dashboard"} isAuth={this.isAuthenticated} component={BuzzComponent}/>
                 <PrivateRoute path={"/complaints"} isAuth={this.isAuthenticated} component={ComplaintsComponent}/>
                 <PrivateRoute path={"/resolve"} isAuth={this.isAuthenticated} component={ResolveComponent}/>
@@ -47,6 +33,32 @@ class AppRouterComponent extends React.Component {
                 <Route path={"/pageNotFound"} component={PageNotFoundComponent}/>
             </Switch>
         )
+    }
+
+    componentDidMount() {
+        if (!localStorage.getItem("Token")) {
+            this.props.history.push('/login');
+        } else {
+            authenticateToken(localStorage.getItem("Token"))
+                .then((res) => {
+                    if (res) {
+                        this.props.createUser(res);
+                        if (this.props.history.location.pathname !== '/') {
+                            this.props.history.push(this.props.history.location.pathname);
+                        } else {
+                            this.props.history.push('/dashboard')
+                        }
+
+                    } else {
+                        this.props.history.push('/login');
+                    }
+                    // return !!res.data;
+                })
+                .catch((err) => {
+                    console.log(`error while authenticating: ${err}`);
+                    this.props.history.push('/login');
+                });
+        }
     }
 }
 
@@ -62,13 +74,13 @@ const PrivateRoute = ({component: Component, ...rest}) => {
     if (localStorage.getItem('Token')) {
         return <Route {...rest} render={(props) => (
             <div>
-            <HeaderComponent/>
-            <div className={'actual-body'}>
-                <div className={'container'}>
-                    <NavLinkComponent/>
-                    <Component {...props}/>
+                <HeaderComponent/>
+                <div className={'actual-body'}>
+                    <div className={'container'}>
+                        <NavLinkComponent/>
+                        <Component {...props}/>
+                    </div>
                 </div>
-            </div>
                 <FooterComponent/>
             </div>)}/>
     } else {
@@ -80,7 +92,8 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 
 const mapStateToProps = (state) => {
     return {
-    user: state.user }
+        user: state.user
+    }
 };
 
 const mapDispatchToProps = {

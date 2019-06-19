@@ -50,7 +50,7 @@ class ComplaintForm extends React.Component {
             complaintContent
         } = this.state;
         return (
-            <form onSubmit={this.submitHandle} autoComplete={'off'}>
+            <form onSubmit={this.submitHandle} autoComplete={'off'} className={'complaint-form'}>
                 <label htmlFor={'complaintDepartment'}>Department</label>
                 <select
                     value={complaintDepartment}
@@ -103,7 +103,7 @@ class ComplaintForm extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        complaints: state.complaints
+        complaints: state.complaint
     }
 };
 

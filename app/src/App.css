@@ -238,9 +238,15 @@ header {
 }
 
 .post-footer > .reactions > svg{
-    padding-top: 6px;
-    padding-left: 10px;
-    padding-right: 4px;
+    /*padding-top: 6px;*/
+    /*padding-left: 10px;*/
+    /*padding-right: 4px;*/
+}
+
+.post-footer > .reactions > span{
+    padding: 2px 8px;
+    border-radius: 50%;
+    margin-right: 12px;
 }
 
 #notfound {
@@ -342,4 +348,45 @@ header {
         padding: 7px 15px;
         font-size: 14px;
     }
+}
+
+/* Style tab links */
+.tablink {
+    background-color: #555;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+    width: 50%;
+}
+
+.tablink:hover {
+    background-color: #777;
+    color: white;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+    padding-top: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: white;
+    
+}
+
+.resolveTabActive {
+    background-color: white;
+    color: #000;
+}
+
+.active-reaction {
+    color: #c0392b;
+    background-color: yellow;
+}
+
+.complaint-form > * {
+    display: block;
 }

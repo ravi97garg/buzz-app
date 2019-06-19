@@ -1,4 +1,4 @@
-const initialState = {name: '', email: '', role: '', profileImage: '', department: ''};
+const initialState = {_id: '', name: '', email: '', role: '', profileImage: '', department: ''};
 
 const user = (state = initialState, action) => {
     switch (action.type) {
@@ -6,7 +6,7 @@ const user = (state = initialState, action) => {
             return {...state, ...action.payload};
 
         case 'USER_LOGGED_OUT':
-            return {name: '', email: '', role: '', profileImage: '', department: ''};
+            return {_id: '', name: '', email: '', role: '', profileImage: '', department: ''};
 
         default:
             return {...state};

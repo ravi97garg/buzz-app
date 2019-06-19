@@ -7,9 +7,7 @@ const complaint = (state = initialState, action) => {
             return {...state, complaintList: action.payload.complaints};
 
         case 'ADD_COMPLAINT':
-            const complaintList = state.complaintList;
-            complaintList.push(action.payload);
-            return {...state, complaintList};
+            return {...state, complaintList: [...state.complaintList, action.payload.complaint]};
 
         default:
             return {...state};

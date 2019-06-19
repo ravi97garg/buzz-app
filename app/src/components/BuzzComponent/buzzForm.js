@@ -16,11 +16,8 @@ class BuzzFormComponent extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.images);
         if(this.state.buzzContent){
             const formData = new FormData();
-            console.log(`hey there ${JSON.stringify(this.state.images)}`);
-            console.log(`keys: ${Object.keys(this.state.images)}`);
             // formData.append('image', this.state.images[0],'myimage');
             formData.append('buzzContent', this.state.buzzContent);
             formData.append('category', this.state.category);
