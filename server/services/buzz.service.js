@@ -18,18 +18,12 @@ const getNewBuzzs = (uptime) => {
             .sort({'postedOn': -1})
             .populate({
                 path: 'postedBy',
-                populate: {
-                    path: 'reactions'
-                }
             })
     } else {
         return Buzz.find()
             .sort({'postedOn': -1})
             .populate({
                 path: 'postedBy',
-                populate: {
-                    path: 'reactions'
-                }
             })
     }
 
