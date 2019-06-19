@@ -37,6 +37,11 @@ const ComplaintSchema = new Schema({
         type: String,
         required: true,
         default: 'Pending'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        required: true
     }
 });
 
