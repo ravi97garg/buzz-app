@@ -1,9 +1,8 @@
 const {CLIENT_ID, SECRET_KEY} = require("../constants");
 const User = require('../models/User');
-const Role = require('../models/Roles');
 
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+let passport = require('passport');
+let GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 passport.serializeUser((user, done) => {
     done(null, user.id)
@@ -32,19 +31,18 @@ passport.use(new GoogleStrategy({
             [profile.provider]: profile._json
         };
 
-        Role.findOne({email: profile.emails[0].value}, (err, adminUser) => {
-            if(err) {
+        User.findOne({email: profile.emails[0].value}, (err, adminUser) => {
+            if (err) {
                 console.error(err);
             } else {
-                console.log(`userrrrrrrrr ${JSON.stringify(user)}`);
-                user.department = adminUser ? adminUser.department: 'IT';
+                user.department = adminUser ? adminUser.department : 'IT';
                 user.role = adminUser ? adminUser.role : 'User';
                 User.findOneAndUpdate(
                     {googleId: profile.id},
                     {...user},
                     {upsert: true, new: true},
                     (err, user) => {
-                        if(err) {
+                        if (err) {
                             return done(err);
                         } else {
                             user.save();

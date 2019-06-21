@@ -1,9 +1,9 @@
 const Complaint = require('../models/Complaint');
-const Role = require('../models/Roles');
+const User = require('../models/User');
 const {getFirstAdminStrategy} = require('../utilities');
 
 const getDepartments = () => {
-    return Role.find().distinct('department');
+    return User.find({role: 'Admin'}).distinct('department');
 };
 
 const postComplaint = (complaint) => {
@@ -26,13 +26,27 @@ const electAdmin = async (department, strategy = getFirstAdminStrategy) => {
     return admin._id;
 };
 
-const getUserComplaints = (user) => {
-    return Complaint.find({loggedBy: user});
+const getUserComplaintsDetailed = (complaintId) => {
+    return Complaint.findOne({_id: complaintId})
+        .populate({
+            path: 'assignedTo'
+        })
+        .populate({
+            path: 'loggedBy'
+        });
+};
+
+const getUserComplaintsBrief = (user) => {
+    return Complaint.find({loggedBy: user}, {subject: 1, department: 1, status: 1, assignedTo: 1})
+        .populate({
+            path: 'assignedTo'
+        })
 };
 
 module.exports = {
     getDepartments,
     postComplaint,
     electAdmin,
-    getUserComplaints
+    getUserComplaintsBrief,
+    getUserComplaintsDetailed
 };

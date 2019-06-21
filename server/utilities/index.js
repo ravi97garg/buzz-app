@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken');
-const JWT_KEY = require('../constants').JWT_KEY;
-const Roles = require('../models/Roles');
+const {JWT_KEY} = require('../constants');
 const User = require('../models/User');
 
 const verifyToken = (token, secretKey = JWT_KEY) => {
-    let verifyResponse;
+    let verifyResponse = '';
     jwt.verify(token, secretKey, (err, decoded) => {
         verifyResponse = decoded ? decoded : '';
     });
@@ -12,7 +11,7 @@ const verifyToken = (token, secretKey = JWT_KEY) => {
 };
 
 const signToken = (userObj, secretKey = JWT_KEY) => {
-    let token;
+    let token = '';
     jwt.sign(userObj, secretKey, (err, encoded) => {
         token = encoded ? encoded : '';
     });
@@ -24,6 +23,7 @@ const getFirstAdminStrategy = (department) => {
 };
 
 module.exports = {
+    signToken,
     verifyToken,
     getFirstAdminStrategy
 };

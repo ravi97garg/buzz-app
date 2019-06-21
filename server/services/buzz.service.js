@@ -55,7 +55,7 @@ const getReactionService = (postId) => {
 };
 
 const getCommentService = (postId) => {
-    return Comment.find({commentPostId: postId})
+    return Comment.find({commentPostId: postId}).populate({path: 'commentBy'})
 };
 
 

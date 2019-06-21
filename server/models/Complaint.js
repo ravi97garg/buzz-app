@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('./User');
-const Roles = require('./Roles');
 
 const ComplaintSchema = new Schema({
     department: {
@@ -31,7 +30,7 @@ const ComplaintSchema = new Schema({
     assignedTo: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: Roles
+        ref: User
     },
     status: {
         type: String,

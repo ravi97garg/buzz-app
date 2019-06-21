@@ -2,6 +2,8 @@ import React from "react";
 import {createBuzzService} from "../../services/buzz.service";
 import {createBuzzAction} from "../../actions/buzz.action";
 import {connect} from "react-redux";
+import UploadComponent from "../uploaderComponent";
+import AttachmentUploadComponent from "../uploaderComponent/attachmentUpload";
 
 class BuzzFormComponent extends React.Component {
 
@@ -77,7 +79,12 @@ class BuzzFormComponent extends React.Component {
                         <option value={'activity'}>Activity</option>
                         <option value={'lostFound'}>Lost and Found</option>
                     </select>
-                    <input type={'file'} name={'images'} onChange={this.addImage} multiple={true}/>
+                    {/*<input type={'file'} name={'images'} onChange={this.addImage} multiple={true}/>*/}
+                    <UploadComponent id={'2'}
+                                     addImage={this.addImage}
+                                     uploaderLabel={() => <AttachmentUploadComponent id={'2'}/>}
+                                     multiple={true}
+                    />
                     <input type={'submit'} value={'POST'}/>
                 </form>
 

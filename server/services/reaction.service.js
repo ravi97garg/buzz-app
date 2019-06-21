@@ -15,11 +15,11 @@ const updateReactionService = (reactionId, reactionType) => {
 const createReactionService = (reaction) => {
     const newReaction = new Reaction(reaction);
     return newReaction.save();
-}
+};
 
 module.exports = {
     postReactionService,
     deleteReactionService,
     updateReactionService,
     createReactionService
-}
+};

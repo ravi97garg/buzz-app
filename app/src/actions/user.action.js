@@ -7,9 +7,17 @@ export const logOutUser = () => ({
     type: 'USER_LOGGED_OUT'
 });
 
+export const changeProfileImage = (imageUrl) => ({
+    type: 'CHANGE_PROFILE_IMAGE',
+    imageUrl
+});
+
 
 export const createUser = (user) => (dispatch) => {
-    console.log('hello user', JSON.stringify(user))
     dispatch(fetchUser(user));
 
+};
+
+export const changeProfileImageAction = (imageUrl) => (dispatch) => {
+    dispatch(changeProfileImage(imageUrl));
 };

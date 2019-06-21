@@ -1,5 +1,4 @@
 const Complaint = require('../models/Complaint');
-const Role = require('../models/Roles');
 
 const getInitResolves = () => {
     return Complaint.find()
@@ -7,10 +6,13 @@ const getInitResolves = () => {
         .populate({
             path: 'loggedBy'
         })
+        .populate({
+            path: 'assignedTo'
+        })
 };
 
 const changeStatusService = (complaintId, status) => {
-    return Complaint.update({_id: complaintId}, {status: status});
+    return Complaint.updateOne({_id: complaintId}, {status: status});
 };
 
 module.exports = {

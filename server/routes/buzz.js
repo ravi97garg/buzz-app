@@ -4,6 +4,8 @@ const {createBuzzService, getInitialBuzzService, getCommentService, getReactionS
 const router = Express.Router();
 const {multerUploads, dataUri} = require('../config/multer.config');
 const {uploader} = require('../config/cloudinary.config');
+const {createCommentService} = require('../services/comment.service');
+const Comment = require('../models/Comment');
 
 router.post('/createBuzz', multerUploads, (req, res) => {
     try {
@@ -58,13 +60,17 @@ router.post('/getInitialBuzz', async (req, res) => {
     const {limit} = req.body;
     var buzzs = await getInitialBuzzService(limit);
     var reactionPromises = [];
+    var commentPromises = [];
     buzzs.forEach(item=>{
         reactionPromises.push(getReactionService(item._id));
+        commentPromises.push(getCommentService(item._id));
     });
     var buzzsWithReactions = await Promise.all(reactionPromises); //Promise.all([...reactionPromises]);
+    var buzzsWithComments = await Promise.all(commentPromises);
     let tempBuzzs = buzzs;
     buzzs = tempBuzzs.map((item, index) => {
         item._doc['reactions'] = buzzsWithReactions[index];
+        item._doc['comments'] = buzzsWithComments[index];
         return item;
     });
     res.send({extractedBuzzs: buzzs, status: 1})
@@ -76,7 +82,7 @@ router.post('/getMoreBuzz', (req, res) => {
     getMoreBuzzService(limit, endTime).then(async (buzzs) => {
         extractedBuzzs = buzzs;
         var reactionPromises = [];
-        buzzs.forEach((buzz, index) => {
+        buzzs.forEach((buzz) => {
             reactionPromises.push(getReactionService(buzz._id));
         });
         var buzzsWithReactions = await Promise.all(reactionPromises); //Promise.all([...reactionPromises]);
@@ -121,6 +127,21 @@ router.post('/postReaction', (req, res) => {
                     .catch(err => console.error(err));
             }
         })
-})
+});
+
+router.post('/postComment', (req, res) => {
+    const {buzzId, comment} = req.body;
+    createCommentService(comment, req.userId, buzzId).then((insertedComment) => {
+        Comment.populate(insertedComment, {path:"commentBy"}, function(err, populatedComment) {
+            if(err){
+                res.send({message: 'DBError', status: 2});
+            } else {
+                res.send({comment: populatedComment, status: 1});
+            }
+        });
+    }).catch((err) => {
+        console.error(err);
+    })
+});
 
 module.exports = router;

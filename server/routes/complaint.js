@@ -1,7 +1,9 @@
 const Express = require('express');
 const router = Express.Router();
-const {getDepartments, postComplaint, electAdmin, getUserComplaints} = require('../services/complaint.service');
+const {getDepartments, postComplaint, electAdmin, getUserComplaintsBrief, getUserComplaintsDetailed} = require('../services/complaint.service');
 const {getFirstAdminStrategy} = require('../utilities');
+const {multerUploads, dataUri} = require('../config/multer.config');
+const {uploader} = require('../config/cloudinary.config');
 
 router.get('/getDepartments', (req, res) => {
     getDepartments().then((departments) => {
@@ -12,33 +14,66 @@ router.get('/getDepartments', (req, res) => {
     })
 });
 
-router.post('/postComplaint', async (req, res) => {
-    try{
-        const complaintObj = {
-            department: req.body.complaintDepartment,
-            subject: req.body.complaintTitle,
-            complaintContent: req.body.complaintContent,
-            email: req.user.email,
-            images: [],
-            loggedBy: req.user._id,
-            assignedTo: await electAdmin(req.body.complaintDepartment, getFirstAdminStrategy),
-            status: 'Pending'
-        };
-        const newComplaint = await postComplaint(complaintObj)
-        res.send({newComplaint, status: 1})
-    } catch (e) {
-        console.error(e);
-        res.send(e);
-    }
+router.post('/postComplaint', multerUploads, (req, res) => {
+        try {
+            if (req.files) {
+                console.log(`hello ${Array.isArray(req.files)}`);
+                let uploaderPromises = [];
+                console.log(req.files.length);
+                req.files.forEach((file) => {
+                    let base64file = dataUri(file).content;
+                    console.log(`base64file`);
+                    uploaderPromises.push(uploader.upload(base64file));
+                });
+                Promise.all(uploaderPromises).then(async (result) => {
+                    req.body.images = result.map((file) => {
+                        return file.secure_url
+                    });
+                    const complaintObj = {
+                        department: req.body.complaintDepartment,
+                        subject: req.body.complaintTitle,
+                        complaintContent: req.body.complaintContent,
+                        email: req.user.email,
+                        images: req.body.images,
+                        loggedBy: req.user._id,
+                        assignedTo: await electAdmin(req.body.complaintDepartment, getFirstAdminStrategy),
+                        status: 'Pending'
+                    };
+                    const newComplaint = await postComplaint(complaintObj);
 
-});
+                    res.send({newComplaint, status: 1})
+                }).catch((err) => {
+                    console.error(err);
+                    res.send({message: 'DBError', status: 2});
+
+                })
+            }
+        } catch (e) {
+            console.error(e);
+            res.send(e);
+        }
+
+    }
+);
 
 router.get('/getMyComplaint', (req, res) => {
-    getUserComplaints(req.userId).then((complaints) => {
-        res.send({complaints, status: 1});
-    }).catch(e => {
-        res.send({message: 'DBError', status: 2});
-    });
+    if(req.query['type'] === 'brief'){
+        getUserComplaintsBrief(req.userId).then((complaints) => {
+            res.send({complaints, status: 1});
+        }).catch(() => {
+            res.send({message: 'DBError', status: 2});
+        });
+    } else if(req.query['type'] === 'detailed'){
+        const complaintId = req.query['id'];
+        getUserComplaintsDetailed(complaintId).then((complaints) => {
+            res.send({complaints, status: 1});
+        }).catch(() => {
+            res.send({message: 'DBError', status: 2});
+        });
+    } else {
+        res.send({message: 'Not Authenticated', status: 0})
+    }
+
 });
 
 

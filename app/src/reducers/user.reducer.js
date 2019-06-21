@@ -8,6 +8,9 @@ const user = (state = initialState, action) => {
         case 'USER_LOGGED_OUT':
             return {_id: '', name: '', email: '', role: '', profileImage: '', department: ''};
 
+        case 'CHANGE_PROFILE_IMAGE':
+            return {...state, profileImage: action.imageUrl};
+
         default:
             return {...state};
     }

@@ -18,8 +18,8 @@ export const createBuzzAction = (buzz) => (dispatch) =>{
     dispatch(createBuzz(buzz));
 };
 
-export const initBuzzAction = (extractedBuzzs) => (dispatch) =>{
-    dispatch(initBuzz(extractedBuzzs));
+export const initBuzzAction = (buzzs) => (dispatch) =>{
+    dispatch(initBuzz(buzzs));
 };
 
 export const loadMoreBuzzAction = (extractedBuzzs) => (dispatch) =>{

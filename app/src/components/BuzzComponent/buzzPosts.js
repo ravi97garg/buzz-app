@@ -6,9 +6,9 @@ import PostTemplateComponent from "./postTemplate";
 import {reactionService} from "../../services/reaction.service";
 import {reactionAction} from "../../actions/reaction.action";
 
-class BuzzPosts extends React.Component{
+class BuzzPosts extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             skip: 0,
@@ -21,7 +21,7 @@ class BuzzPosts extends React.Component{
 
     componentDidMount() {
         getInitialBuzzService(this.state.limit).then((res) => {
-            if(res.extractedBuzzs.length > this.state.limit){
+            if (res.extractedBuzzs.length > this.state.limit) {
                 this.setState({
                     showLoadMore: true
                 })
@@ -30,7 +30,7 @@ class BuzzPosts extends React.Component{
             this.props.initBuzzAction(posts);
             this.setState({
                 uptime: posts[0] ? posts[0].postedOn : null,
-                downtime: posts[0] ? posts[posts.length-1].postedOn : null,
+                downtime: posts[0] ? posts[posts.length - 1].postedOn : null,
                 skip: 1
             });
         }).catch((err) => {
@@ -38,16 +38,16 @@ class BuzzPosts extends React.Component{
         })
     }
 
-    handleLoadMore = (e) => {
+    handleLoadMore = () => {
         console.log(this.props.buzz.buzzList.length, this.state.limit, this.state.skip, this.state.downtime);
-        if((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit){
+        if ((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit) {
             getMoreBuzzs(this.state.limit, this.state.downtime).then((res) => {
                 const posts = res.extractedBuzzs.slice(0, this.state.limit);
                 console.log(posts);
                 this.props.loadMoreBuzzAction(posts);
                 this.setState({
-                    skip: this.state.skip +1,
-                    downtime: posts[posts.length-1].postedOn
+                    skip: this.state.skip + 1,
+                    downtime: posts[posts.length - 1].postedOn
                 })
             })
         } else {
@@ -55,13 +55,13 @@ class BuzzPosts extends React.Component{
             // const endIndex = this.props.buzz.buzzList.length;
             this.setState({
                 skip: this.state.skip + 1,
-                downtime: this.props.buzz.buzzList[(this.state.skip+1)*this.state.limit].postedOn
+                downtime: this.props.buzz.buzzList[(this.state.skip + 1) * this.state.limit].postedOn
             })
         }
     };
 
     showLoadMore = () => {
-        return (this.props.buzz.buzzList.length > this.state.skip*this.state.limit) || this.state.showLoadMore;
+        return (this.props.buzz.buzzList.length > this.state.skip * this.state.limit) || this.state.showLoadMore;
     };
 
     happyClickHandle = (buzzId) => {
@@ -82,19 +82,15 @@ class BuzzPosts extends React.Component{
                 this.props.reactionAction(res.action, res.reactionObj, 'sad');
             });
     };
-    commentClickHandle = (buzzId) => {
-        console.log(buzzId);
-    };
 
-    render(){
+    render() {
         return (
             <div>
-                {this.props.buzz.buzzList && this.props.buzz.buzzList.slice(0, this.state.limit*this.state.skip).map((post) => {
+                {this.props.buzz.buzzList && this.props.buzz.buzzList.slice(0, this.state.limit * this.state.skip).map((post) => {
                     return (
                         <PostTemplateComponent
                             post={post}
                             key={post._id}
-                            commentClickHandle={this.commentClickHandle}
                             happyClickHandle={this.happyClickHandle}
                             angryClickHandle={this.angryClickHandle}
                             sadClickHandle={this.sadClickHandle}

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./User');
+const Buzz = require('./Buzz');
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
@@ -14,7 +15,8 @@ const CommentSchema = new Schema({
     },
     commentPostId : {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: Buzz
     },
     commentedOn : {
         type: Date,

@@ -5,11 +5,13 @@ export const getDepartments = () => {
 };
 
 export const createComplaint = (complaint) => {
-    return axiosInstance.post('/data/complaint/postComplaint', {
-        ...complaint
-    });
+    return axiosInstance.post('/data/complaint/postComplaint', complaint);
 };
 
-export const getMyComplaints = () => {
-    return axiosInstance.get('/data/complaint/getMyComplaint')
+export const getMyComplaintsBrief = () => {
+    return axiosInstance.get('/data/complaint/getMyComplaint?type=brief')
+};
+
+export const getMyComplaintsDetailed = (id) => {
+    return axiosInstance.get(`/data/complaint/getMyComplaint?type=detailed&id=${id}`)
 };

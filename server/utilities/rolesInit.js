@@ -1,7 +1,8 @@
-const rolesModel = require('../models/Roles');
+const User = require('../models/User');
 
 const isAdmin = (user) => {
-    rolesModel.findOne({
+    User.findOne({
+        role: 'Admin',
         email: user.email
     }).exec((err, rolesData) => {
         return rolesData

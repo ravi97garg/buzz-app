@@ -7,3 +7,7 @@ export const authenticateToken = (token) => {
     })
 
 };
+
+export const changeProfileService = (formData) => {
+    return axiosInstance.post('/changeProfile', formData)
+};
