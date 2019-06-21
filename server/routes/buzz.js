@@ -9,35 +9,32 @@ const Comment = require('../models/Comment');
 
 router.post('/createBuzz', multerUploads, (req, res) => {
     try {
-        // console.log(`request: `,req.headers);
         req.body.postedBy = req.userId;
-        console.log(`new Buzz  ${JSON.stringify(req.body)}`);
-        // console.log(`files  ${JSON.stringify(req.files)} ${JSON.stringify(req.file)}`);
         if(req.files){
-            console.log(`hello ${Array.isArray(req.files)}`);
             let uploaderPromises = [];
-            console.log(req.files.length);
             req.files.forEach((file) => {
                 let base64file = dataUri(file).content;
-                console.log(`base64file`);
                 uploaderPromises.push(uploader.upload(base64file));
             });
             Promise.all(uploaderPromises).then((result) => {
                 req.body.images = result.map((file) => { return file.secure_url});
                 createBuzzService(req.body).then(() => {
-                    getNewBuzzs(req.body.startTime).then((buzzs) => {
+                    getNewBuzzs(req.body.startTime).then(async (buzzs) => {
                         var reactionPromises = [];
+                        var commentPromises = [];
                         buzzs.forEach(item=>{
                             reactionPromises.push(getReactionService(item._id));
+                            commentPromises.push(getCommentService(item._id));
                         });
-                        Promise.all(reactionPromises).then((result) => {
-                            let extractedBuzzs = buzzs.map((item, index) => {
-                                item._doc['reactions'] = result[index];
-                                return item;
-                            });
-                            res.send({message: 'OK', status: 1, extractedBuzzs});
+                        var buzzsWithReactions = await Promise.all(reactionPromises); //Promise.all([...reactionPromises]);
+                        var buzzsWithComments = await Promise.all(commentPromises);
+                        let tempBuzzs = buzzs;
+                        buzzs = tempBuzzs.map((item, index) => {
+                            item._doc['reactions'] = buzzsWithReactions[index];
+                            item._doc['comments'] = buzzsWithComments[index];
+                            return item;
                         });
-
+                        res.send({message: 'OK', status: 1, extractedBuzzs: buzzs})
                     })
                 }).catch(() => {
                     res.send({message: 'DBError', status: 2});
@@ -82,13 +79,17 @@ router.post('/getMoreBuzz', (req, res) => {
     getMoreBuzzService(limit, endTime).then(async (buzzs) => {
         extractedBuzzs = buzzs;
         var reactionPromises = [];
-        buzzs.forEach((buzz) => {
-            reactionPromises.push(getReactionService(buzz._id));
+        var commentPromises = [];
+        buzzs.forEach(item=>{
+            reactionPromises.push(getReactionService(item._id));
+            commentPromises.push(getCommentService(item._id));
         });
         var buzzsWithReactions = await Promise.all(reactionPromises); //Promise.all([...reactionPromises]);
+        var buzzsWithComments = await Promise.all(commentPromises);
         let tempBuzzs = buzzs;
         buzzs = tempBuzzs.map((item, index) => {
             item._doc['reactions'] = buzzsWithReactions[index];
+            item._doc['comments'] = buzzsWithComments[index];
             return item;
         });
         res.send({extractedBuzzs: buzzs, status: 1});
