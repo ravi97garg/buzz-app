@@ -22,6 +22,15 @@ class BuzzPosts extends React.Component {
     handleLoadMore = () => {
         if ((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit) {
             getMoreBuzzs(this.state.limit, this.state.downtime).then((res) => {
+                if (res.extractedBuzzs.length > this.state.limit) {
+                    this.setState({
+                        showLoadMore: true
+                    })
+                } else {
+                    this.setState({
+                        showLoadMore: false
+                    })
+                }
                 const posts = res.extractedBuzzs.slice(0, this.state.limit);
                 this.props.loadMoreBuzzAction(posts);
                 this.setState({
