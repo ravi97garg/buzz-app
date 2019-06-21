@@ -24,13 +24,13 @@ class AppRouterComponent extends React.Component {
     render() {
         return (
             <Switch>
-                <Route path='/token'
+                <Route exact path='/token'
                        render={(props) => <TokenComponent {...props} createUser={this.props.createUser}/>}/>
-                <PrivateRoute path={"/dashboard"} isAuth={this.isAuthenticated} component={BuzzComponent}/>
-                <PrivateRoute path={"/complaints"} isAuth={this.isAuthenticated} component={ComplaintsComponent}/>
-                <PrivateRoute path={"/resolve"} isAuth={this.isAuthenticated} component={ResolveComponent}/>
-                <Route path={"/login"} component={LoginComponent}/>
-                <Route path={"/pageNotFound"} component={PageNotFoundComponent}/>
+                <PrivateRoute exact path={"/dashboard"} isAuth={this.isAuthenticated} component={BuzzComponent}/>
+                <PrivateRoute exact path={"/complaints"} isAuth={this.isAuthenticated} component={ComplaintsComponent}/>
+                <PrivateRoute exact path={"/resolve"} isAuth={this.isAuthenticated} component={ResolveComponent}/>
+                <Route exact path={"/login"} component={LoginComponent}/>
+                <Route component={PageNotFoundComponent}/>
             </Switch>
         )
     }
