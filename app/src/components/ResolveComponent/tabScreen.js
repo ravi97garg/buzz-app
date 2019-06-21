@@ -26,12 +26,12 @@ class TabScreenComponent extends React.Component {
     render() {
         return (
             <div className={'tabcontent'}>
-                hello {this.props.page}
-                <table>
+                {this.props.resolve.complaintList[0] ? <table>
                     <thead>
                     <tr>
                         <td>ID</td>
                         <td>Logged By</td>
+                        {this.props.page === 'Home' ? <td>Assigned To</td> : null}
                         <td>Status</td>
                         <td>Action</td>
                     </tr>
@@ -43,6 +43,8 @@ class TabScreenComponent extends React.Component {
                                 <ResolveRowComponent resolves={item}
                                                      currentUser={this.props.user}
                                                      updateStatus={this.props.updateStatus}
+                                                     page={this.props.page}
+                                                     key={item._id}
                                 />
                             )
                         })}
@@ -57,13 +59,16 @@ class TabScreenComponent extends React.Component {
                                     <ResolveRowComponent resolves={item}
                                                          currentUser={this.props.user}
                                                          updateStatus={this.props.updateStatus}
+                                                         page={this.props.page}
+                                                         key={item._id}
                                     />
                                 )
                             })
                         }
                         </tbody>)}
 
-                </table>
+                </table> : <span>No complaints to resolveso far</span>}
+
             </div>
         )
     }
