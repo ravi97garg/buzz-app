@@ -6,21 +6,38 @@ class ResolveRowComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ['Pending', 'In Progress', 'Completed', 'Closed']
+            status: [
+                {
+                    id: '0',
+                    statusName: 'Pending'
+                },
+                {
+                    id: '1',
+                    statusName: 'In Progress'
+                },
+                {
+                    id: '2',
+                    statusName: 'Completed'
+                },
+                {
+                    id: '3',
+                    statusName: 'Closed'
+                }
+            ]
         }
     };
 
     saveAction = (id) => {
-        if(this.state[id]){
+        if (this.state[id]) {
             changeStatus(id, this.state[id]).then((res) => {
-                if(res.status){
+                if (res.status) {
                     this.props.updateStatus(id, this.state[id]);
                 } else {
                     console.log(res.message);
                 }
             })
         }
-    }
+    };
 
     handleChange = (e) => {
         this.setState({[e.target.name]: e.target.value})
@@ -28,33 +45,47 @@ class ResolveRowComponent extends React.Component {
 
     render() {
         const {
-            _id,
-            status,
-            loggedBy,
-            department
-        } = this.props.resolves;
-        const statusIndex = this.state.status.indexOf(status);
+            resolves: {
+                _id,
+                status,
+                loggedBy,
+                assignedTo,
+                department
+            }
+        } = this.props;
+        console.log('assigned to ', assignedTo.name);
+        const statusIndex = this.state.status.findIndex(element => element.statusName === status);
 
         return (
             <tr>
-                <td>{_id}</td>
+                <td><span style={{textOverflow: 'ellipsis', width: '120px'}}>{_id}</span></td>
                 <td>{loggedBy.name}</td>
-                <td>
-                {((this.props.resolves.department === this.props.currentUser.department) && (['Completed', 'Closed'].indexOf(status) === -1))
-                    ?
-                    <select name={_id} onChange={this.handleChange}>
-                        {this.state.status.slice(statusIndex).map((item) => {
-                            return <option value={item}>{item}</option>
-                        })}
-                    </select> : <span>{status}</span>
+                {this.props.page === 'Home' && <td>{assignedTo.name}</td>}
+                {
+                    ((department === this.props.currentUser.department) && (statusIndex!==2 && statusIndex!==3)) ?
+                        <React.Fragment>
+                            <td>
+                                <select name={_id} onChange={this.handleChange}>
+                                    {
+                                        this.state.status.slice(statusIndex).map((item) => <option
+                                                value={item.statusName}
+                                                key={item.id}
+                                            >
+                                                {item.statusName}
+                                            </option>
+                                        )
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <button onClick={() => this.saveAction(_id)}>Commit</button>
+                            </td>
+                        </React.Fragment> :
+                        <td>
+                            <span>{status}</span>
+                        </td>
+
                 }
-                </td>
-                <td>
-                    {((department === this.props.currentUser.department) && (['Completed', 'Closed'].indexOf(status) === -1))
-                        ?
-                        <button onClick={() => this.saveAction(_id)}>Save</button> : null
-                    }
-                </td>
             </tr>
         );
     }
