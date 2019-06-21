@@ -19,31 +19,10 @@ class BuzzPosts extends React.Component {
         };
     }
 
-    componentDidMount() {
-        getInitialBuzzService(this.state.limit).then((res) => {
-            if (res.extractedBuzzs.length > this.state.limit) {
-                this.setState({
-                    showLoadMore: true
-                })
-            }
-            const posts = res.extractedBuzzs.slice(0, this.state.limit);
-            this.props.initBuzzAction(posts);
-            this.setState({
-                uptime: posts[0] ? posts[0].postedOn : null,
-                downtime: posts[0] ? posts[posts.length - 1].postedOn : null,
-                skip: 1
-            });
-        }).catch((err) => {
-            console.error(err);
-        })
-    }
-
     handleLoadMore = () => {
-        console.log(this.props.buzz.buzzList.length, this.state.limit, this.state.skip, this.state.downtime);
         if ((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit) {
             getMoreBuzzs(this.state.limit, this.state.downtime).then((res) => {
                 const posts = res.extractedBuzzs.slice(0, this.state.limit);
-                console.log(posts);
                 this.props.loadMoreBuzzAction(posts);
                 this.setState({
                     skip: this.state.skip + 1,
@@ -83,6 +62,32 @@ class BuzzPosts extends React.Component {
             });
     };
 
+    componentDidMount() {
+        getInitialBuzzService(this.state.limit).then((res) => {
+            if (res.extractedBuzzs.length > this.state.limit) {
+                this.setState({
+                    showLoadMore: true
+                })
+            }
+            const posts = res.extractedBuzzs.slice(0, this.state.limit);
+            this.props.initBuzzAction(posts);
+            this.setState({
+                uptime: posts[0] ? posts[0].postedOn : null,
+                downtime: posts[0] ? posts[posts.length - 1].postedOn : null,
+                skip: 1
+            });
+        }).catch((err) => {
+            console.error(err);
+        });
+        window.onscroll = () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                if(this.showLoadMore()){
+                    this.handleLoadMore();
+                }
+            }
+        };
+    }
+
     render() {
         return (
             <div>
@@ -98,7 +103,6 @@ class BuzzPosts extends React.Component {
                         />
                     )
                 })}
-                {this.showLoadMore() && <button onClick={this.handleLoadMore}>Load More</button>}
             </div>
         )
     }
