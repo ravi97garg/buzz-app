@@ -1,14 +1,15 @@
 import React from "react";
 import {connect} from "react-redux";
 import {initComplaintAction} from "../../actions/complaint.action";
-import {getMyComplaints} from "../../services/complaint.service";
+import {getMyComplaintsBrief} from "../../services/complaint.service";
+import ComplaintRow from "./complaintRow";
 
 class ComplaintTable extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.props.complaints.complaintList[0] ? <table>
+            <div className={'complaint-table-container'}>
+                {this.props.complaints.complaintList[0] ? <table className={'complaint-table'}>
                     <thead>
                     <tr>
                         <td>Complaint Id</td>
@@ -21,14 +22,13 @@ class ComplaintTable extends React.Component {
                     <tbody>
                     {this.props.complaints && this.props.complaints.complaintList.map((item) => {
                         return (
-                            <tr key={item._id}>
-                                <td>{item._id}</td>
-                                <td>{item.subject}</td>
-                                <td>{item.department}</td>
-                                <td>{item.assignedTo}</td>
-                                <td>{item.status}</td>
-                            </tr>
-
+                            <ComplaintRow id={item._id}
+                                          key={item._id}
+                                          subject={item.subject}
+                                          department={item.department}
+                                          status={item.status}
+                                          assignedTo={item.assignedTo}
+                            />
                         )
                     })}
                     </tbody>
@@ -38,7 +38,7 @@ class ComplaintTable extends React.Component {
     }
 
     componentDidMount() {
-        getMyComplaints().then((res) => {
+        getMyComplaintsBrief().then((res) => {
             this.props.initComplaintAction(res.complaints);
         }).catch((err) => {
             console.error(err);
