@@ -4,6 +4,7 @@ const {getDepartments, postComplaint, electAdmin, getUserComplaintsBrief, getUse
 const {getFirstAdminStrategy} = require('../utilities');
 const {multerUploads, dataUri} = require('../config/multer.config');
 const {uploader} = require('../config/cloudinary.config');
+const Complaint = require('../models/Complaint');
 
 router.get('/getDepartments', (req, res) => {
     getDepartments().then((departments) => {
@@ -40,8 +41,13 @@ router.post('/postComplaint', multerUploads, (req, res) => {
                         status: 'Pending'
                     };
                     const newComplaint = await postComplaint(complaintObj);
-
-                    res.send({newComplaint, status: 1})
+                    Complaint.populate(newComplaint, {path:"assignedTo"}, function(err, populatedComment) {
+                        if(err){
+                            res.send({message: 'DBError', status: 2});
+                        } else {
+                            res.send({newComplaint: populatedComment, status: 1});
+                        }
+                    });
                 }).catch((err) => {
                     console.error(err);
                     res.send({message: 'DBError', status: 2});
