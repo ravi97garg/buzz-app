@@ -20,7 +20,6 @@ const buzz = (state = initialState, action) => {
 
         case 'INIT_BUZZ': {
             const buzzs = action.payload;
-            const newState = {...state, buzzList: buzzs};
             const uptime = buzzs[0] ? buzzs[0].postedOn : null;
             return {...state, buzzList: buzzs, uptime: uptime};
         }
@@ -54,6 +53,16 @@ const buzz = (state = initialState, action) => {
             let buzzs = state.buzzList;
             buzzs[buzzIndex].reactions[reactionIndex].reactionType = action.payload.newReaction;
             return {...state, buzzList: buzzs}
+        }
+
+        case 'POST_COMMENT': {
+            console.log(`reached so far with ${JSON.stringify(action.payload)}`);
+            let buzzs = [...state.buzzList];
+            const buzzIndex = state.buzzList.findIndex((obj) => {
+                return obj._id === action.payload.commentPostId
+            } );
+            buzzs[buzzIndex].comments.push(action.payload);
+            return {...state, buzzList: buzzs};
         }
 
         default:
