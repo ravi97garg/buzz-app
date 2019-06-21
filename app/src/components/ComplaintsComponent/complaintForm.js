@@ -2,6 +2,8 @@ import React from "react";
 import {connect} from "react-redux";
 import {createComplaint, getDepartments} from "../../services/complaint.service";
 import {addComplaintAction, initComplaintAction} from "../../actions/complaint.action";
+import UploadComponent from "../uploaderComponent";
+import AttachmentUploadComponent from "../uploaderComponent/attachmentUpload";
 
 class ComplaintForm extends React.Component {
 
@@ -11,7 +13,8 @@ class ComplaintForm extends React.Component {
             departments: [],
             complaintDepartment: '',
             complaintTitle: '',
-            complaintContent: ''
+            complaintContent: '',
+            images: []
         }
     }
 
@@ -21,16 +24,29 @@ class ComplaintForm extends React.Component {
         });
     };
 
+    addImage = (e) => {
+        this.setState({
+            images: e.target.files
+        });
+        console.log(e.target.files)
+    };
+
     submitHandle = (e) => {
         e.preventDefault();
-        console.log(`complaint state:   ${JSON.stringify(this.state)}`);
         const {complaintDepartment, complaintTitle, complaintContent} = this.state;
-        createComplaint({complaintDepartment, complaintTitle, complaintContent})
+        const formData = new FormData();
+        formData.append('complaintDepartment', complaintDepartment);
+        formData.append('complaintTitle', complaintTitle);
+        formData.append('complaintContent', complaintContent);
+        for (var x = 0; x < this.state.images.length; x++) {
+            formData.append(`images[]`, this.state.images[x]);
+        }
+        createComplaint(formData)
             .then((res) => {
                 console.log(res);
                 this.props.addComplaintAction(res.newComplaint);
             }).catch((err) => {
-                console.error(err);
+            console.error(err);
         });
         getDepartments().then((departments) => {
             this.setState({
@@ -50,43 +66,48 @@ class ComplaintForm extends React.Component {
             complaintContent
         } = this.state;
         return (
-            <form onSubmit={this.submitHandle} autoComplete={'off'} className={'complaint-form'}>
-                <label htmlFor={'complaintDepartment'}>Department</label>
-                <select
-                    value={complaintDepartment}
-                    required={true}
-                    onChange={this.changeHandle}
-                    name={'complaintDepartment'}
-                >
-                    {/*<option value="" disabled={true}>Department</option>*/}
-                    {departments.map((department, index) => {
-                        return (
-                            <option value={department} key={index}>{department}</option>
-                        )
-                    })
-                    }
-                </select>
-                <label htmlFor={'complaintTitle'}>Complaint Title</label>
-                <input type={'text'}
-                       name={'complaintTitle'}
-                       onChange={this.changeHandle}
-                       required={true}
-                       value={complaintTitle}
-                       autoComplete={'off'}
-                />
+            <div className={'buzz-form clearfix'}>
+                <form onSubmit={this.submitHandle} autoComplete={'off'} className={'complaint-form'}>
+                    <label htmlFor={'complaintTitle'}>Complaint Title</label>
+                    <input type={'text'}
+                           name={'complaintTitle'}
+                           onChange={this.changeHandle}
+                           required={true}
+                           value={complaintTitle}
+                           autoComplete={'off'}
+                    />
 
-                <label htmlFor={'complaintContent'}>Your Concern</label>
-                <input type={'text'}
-                       name={'complaintContent'}
-                       onChange={this.changeHandle}
-                       required={true}
-                       value={complaintContent}
-                       autoComplete={'off'}
-                />
+                    <label htmlFor={'complaintContent'}>Your Concern</label>
+                    <textarea
+                        name={'complaintContent'}
+                        onChange={this.changeHandle}
+                        required={true}
+                        value={complaintContent}
+                        autoComplete={'off'}
+                    />
+                    <label htmlFor={'complaintDepartment'}>Department</label>
+                    <select
+                        value={complaintDepartment}
+                        required={true}
+                        onChange={this.changeHandle}
+                        name={'complaintDepartment'}
+                    >
+                        {departments.map((department, index) => {
+                            return (
+                                <option value={department} key={index}>{department}</option>
+                            )
+                        })
+                        }
+                    </select>
+                    <UploadComponent addImage={this.addImage}
+                                     id={'1'}
+                                     uploaderLabel={() => <AttachmentUploadComponent id={'1'}/>}
+                                     multiple={true}
+                    />
+                    <input type="submit" value="Log Complaint"/>
 
-                <input type="submit" value="Log Complaint"/>
-
-            </form>
+                </form>
+            </div>
         )
     }
 
