@@ -16,5 +16,11 @@ export const getMoreBuzzs = (limit, endTime) => {
         limit,
         endTime
     })
-}
+};
 
+export const updateBuzzContent = (buzzId, buzzContent) => {
+    return axiosInstance.post('/data/buzz/updateBuzz', {
+        buzzId,
+        buzzContent
+    })
+};

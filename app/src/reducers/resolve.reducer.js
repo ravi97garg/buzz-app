@@ -12,7 +12,7 @@ const complaint = (state = initialState, action) => {
             return {...state, complaintList}
 
         default:
-            return {...state};
+            return state;
     }
 };
 

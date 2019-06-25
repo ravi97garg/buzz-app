@@ -10,7 +10,7 @@ const complaint = (state = initialState, action) => {
             return {...state, complaintList: [...state.complaintList, action.payload.complaint]};
 
         default:
-            return {...state};
+            return state;
     }
 };
 

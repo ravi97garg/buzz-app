@@ -12,7 +12,7 @@ const user = (state = initialState, action) => {
             return {...state, profileImage: action.imageUrl};
 
         default:
-            return {...state};
+            return state;
     }
 };
 

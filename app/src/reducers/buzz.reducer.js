@@ -56,7 +56,6 @@ const buzz = (state = initialState, action) => {
         }
 
         case 'POST_COMMENT': {
-            console.log(`reached so far with ${JSON.stringify(action.payload)}`);
             let buzzs = [...state.buzzList];
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.commentPostId
@@ -65,8 +64,18 @@ const buzz = (state = initialState, action) => {
             return {...state, buzzList: buzzs};
         }
 
+        case 'UPDATE_BUZZ': {
+            console.log(`reached here ${JSON.stringify(action.payload)}`);
+            let buzzs = [...state.buzzList];
+            const buzzIndex = state.buzzList.findIndex((obj) => {
+                return obj._id === action.payload.buzzId
+            } );
+            buzzs[buzzIndex].buzzContent = action.payload.buzzContent;
+            return {...state, buzzList: buzzs};
+        }
+
         default:
-            return {...state};
+            return state;
     }
 };
 
