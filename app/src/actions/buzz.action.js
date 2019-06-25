@@ -13,6 +13,14 @@ const addMoreBuzz = (buzzs) => ({
     payload: buzzs
 });
 
+const updateBuzz = (buzzId, buzzContent) => ({
+    type: 'UPDATE_BUZZ',
+    payload: {
+        buzzId,
+        buzzContent
+    }
+});
+
 export const createBuzzAction = (buzz) => (dispatch) =>{
     console.log(`hell is here ${JSON.stringify(buzz)}`);
     dispatch(createBuzz(buzz));
@@ -24,4 +32,8 @@ export const initBuzzAction = (buzzs) => (dispatch) =>{
 
 export const loadMoreBuzzAction = (extractedBuzzs) => (dispatch) =>{
     dispatch(addMoreBuzz(extractedBuzzs));
+};
+
+export const updateBuzzAction = (buzzId, buzzContent) => (dispatch) => {
+    dispatch(updateBuzz(buzzId, buzzContent));
 };
