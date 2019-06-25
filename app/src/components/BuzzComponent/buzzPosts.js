@@ -1,7 +1,7 @@
 import React from "react";
 import {getInitialBuzzService, getMoreBuzzs} from "../../services/buzz.service";
 import {connect} from "react-redux";
-import {initBuzzAction, loadMoreBuzzAction} from "../../actions/buzz.action";
+import {initBuzzAction, loadMoreBuzzAction, updateBuzzAction} from "../../actions/buzz.action";
 import PostTemplateComponent from "./postTemplate";
 import {reactionService} from "../../services/reaction.service";
 import {reactionAction} from "../../actions/reaction.action";
@@ -17,6 +17,7 @@ class BuzzPosts extends React.Component {
             downtime: null,
             showLoadMore: false
         };
+        console.log(this.props.user);
     }
 
     handleLoadMore = () => {
@@ -72,6 +73,7 @@ class BuzzPosts extends React.Component {
     };
 
     componentDidMount() {
+        console.log(this.props.user);
         getInitialBuzzService(this.state.limit).then((res) => {
             if (res.extractedBuzzs.length > this.state.limit) {
                 this.setState({
@@ -89,7 +91,7 @@ class BuzzPosts extends React.Component {
             console.error(err);
         });
         window.onscroll = () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            if ((window.innerHeight + window.scrollY) + 200 >= document.body.offsetHeight) {
                 if(this.showLoadMore()){
                     this.handleLoadMore();
                 }
@@ -109,6 +111,7 @@ class BuzzPosts extends React.Component {
                             angryClickHandle={this.angryClickHandle}
                             sadClickHandle={this.sadClickHandle}
                             user={this.props.user}
+                            updateBuzzAction = {this.props.updateBuzzAction}
                         />
                     )
                 })}
@@ -127,7 +130,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     initBuzzAction,
     loadMoreBuzzAction,
-    reactionAction
+    reactionAction,
+    updateBuzzAction
 };
 
 const BuzzPostsConnect = connect(mapStateToProps, mapDispatchToProps)(BuzzPosts);
