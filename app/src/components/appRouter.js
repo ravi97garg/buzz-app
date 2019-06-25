@@ -15,6 +15,7 @@ const {authenticateToken} = require('../services/authenticate');
 
 class AppRouterComponent extends React.Component {
     constructor(props) {
+        console.log('inside app router construct')
         super(props);
         console.log(`props: ${JSON.stringify(props)}`);
 
@@ -22,13 +23,15 @@ class AppRouterComponent extends React.Component {
 
 
     render() {
+
+        console.log('inside app router render')
         return (
             <Switch>
                 <Route exact path='/token'
                        render={(props) => <TokenComponent {...props} createUser={this.props.createUser}/>}/>
-                <PrivateRoute exact path={"/dashboard"} isAuth={this.isAuthenticated} component={BuzzComponent}/>
-                <PrivateRoute exact path={"/complaints"} isAuth={this.isAuthenticated} component={ComplaintsComponent}/>
-                <PrivateRoute exact path={"/resolve"} isAuth={this.isAuthenticated} component={ResolveComponent}/>
+                <PrivateRoute exact path={"/dashboard"} component={BuzzComponent}/>
+                <PrivateRoute exact path={"/complaints"} component={ComplaintsComponent}/>
+                <PrivateRoute exact path={"/resolve"} component={ResolveComponent}/>
                 <Route exact path={"/login"} component={LoginComponent}/>
                 <Route component={PageNotFoundComponent}/>
             </Switch>
@@ -36,12 +39,15 @@ class AppRouterComponent extends React.Component {
     }
 
     componentDidMount() {
+        console.log('inside app router did mount')
         if (!localStorage.getItem("Token")) {
             this.props.history.push('/login');
         } else {
+            console.log('runned it');
             authenticateToken(localStorage.getItem("Token"))
                 .then((res) => {
                     if (res) {
+                        console.log('runned it again');
                         this.props.createUser(res);
                         if (this.props.history.location.pathname !== '/') {
                             this.props.history.push(this.props.history.location.pathname);
@@ -65,8 +71,14 @@ class AppRouterComponent extends React.Component {
 const TokenComponent = (props) => {
     const token = props.location.search.split('?q=')[1];
     localStorage.setItem('Token', token);
-    props.createUser(token);
-    props.history.push('/dashboard');
+    authenticateToken(token)
+        .then((user) => {
+        props.createUser(user);
+        props.history.push('/dashboard')
+    })
+        .catch((err) => {
+            props.history.push('/login')
+        });
     return <React.Fragment/>
 };
 
