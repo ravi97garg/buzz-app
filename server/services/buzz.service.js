@@ -50,6 +50,10 @@ const getMoreBuzzService = (limit, endTime) => {
         })
 };
 
+const updateBuzzContentService = (postId, buzzContent) => {
+    return Buzz.updateOne({_id: postId}, {buzzContent: buzzContent});
+}
+
 const getReactionService = (postId) => {
     return Reaction.find({reactionPostId: postId})
 };
@@ -65,5 +69,6 @@ module.exports = {
     getReactionService,
     getCommentService,
     getMoreBuzzService,
-    getNewBuzzs
+    getNewBuzzs,
+    updateBuzzContentService
 };
