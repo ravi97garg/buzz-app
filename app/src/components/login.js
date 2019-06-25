@@ -14,7 +14,7 @@ export default class LoginComponent extends React.Component {
                 <div className={'loginCard'}>
                     <div className={'logo-wrap'}>
                         <img
-                            src={'https://res.cloudinary.com/dnuq1lgqs/image/upload/v1560459432/imageedit_3_7379434939_ukniv1.png'}/>
+                            src={'https://res.cloudinary.com/dnuq1lgqs/image/upload/v1560507335/aii5lyke0nivdkwvbgzh.png'}/>
                     </div>
                     <span className={'card-title'}>TTN BUZZ</span>
                     <div className={'login-btn-wrapper'}>
