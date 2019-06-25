@@ -67,7 +67,7 @@ class TabScreenComponent extends React.Component {
                         }
                         </tbody>)}
 
-                </table> : <span>No complaints to resolveso far</span>}
+                </table> : <span>No complaints to resolve so far</span>}
 
             </div>
         )
