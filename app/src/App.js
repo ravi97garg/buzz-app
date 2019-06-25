@@ -19,9 +19,9 @@ class App extends React.Component{
   }
 
   componentDidMount() {
-      if(localStorage.getItem('Token')){
-          this.props.createUser(localStorage.getItem('Token'))
-      }
+      // if(localStorage.getItem('Token')){
+      //     this.props.createUser(localStorage.getItem('Token'))
+      // }
   }
 }
 const mapStateToProps = (state) => {
