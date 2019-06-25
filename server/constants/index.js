@@ -9,6 +9,9 @@ const CLOUD_NAME = 'dnuq1lgqs';
 const CLOUDINARY_API_KEY = '295531686213238';
 const CLOUDINARY_API_SECRET = '-zMFnMD_rqF2vJtU7vcCfw0B9hY';
 
+const SENDGRID_NAME = 'ttn buzz email';
+const SENDGRID_API_KEY = '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';
+
 module.exports = {
     CLIENT_ID,
     SECRET_KEY,
@@ -16,5 +19,7 @@ module.exports = {
     JWT_KEY,
     CLOUD_NAME,
     CLOUDINARY_API_KEY,
-    CLOUDINARY_API_SECRET
+    CLOUDINARY_API_SECRET,
+    SENDGRID_NAME,
+    SENDGRID_API_KEY
 };
