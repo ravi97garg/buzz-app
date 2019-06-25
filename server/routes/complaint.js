@@ -5,6 +5,7 @@ const {getFirstAdminStrategy} = require('../utilities');
 const {multerUploads, dataUri} = require('../config/multer.config');
 const {uploader} = require('../config/cloudinary.config');
 const Complaint = require('../models/Complaint');
+const sgMail = require('../config/sendgrid.config');
 
 router.get('/getDepartments', (req, res) => {
     getDepartments().then((departments) => {
@@ -18,12 +19,9 @@ router.get('/getDepartments', (req, res) => {
 router.post('/postComplaint', multerUploads, (req, res) => {
         try {
             if (req.files) {
-                console.log(`hello ${Array.isArray(req.files)}`);
                 let uploaderPromises = [];
-                console.log(req.files.length);
                 req.files.forEach((file) => {
                     let base64file = dataUri(file).content;
-                    console.log(`base64file`);
                     uploaderPromises.push(uploader.upload(base64file));
                 });
                 Promise.all(uploaderPromises).then(async (result) => {
@@ -41,11 +39,25 @@ router.post('/postComplaint', multerUploads, (req, res) => {
                         status: 'Pending'
                     };
                     const newComplaint = await postComplaint(complaintObj);
-                    Complaint.populate(newComplaint, {path:"assignedTo"}, function(err, populatedComment) {
+                    Complaint.populate(newComplaint, {path:"assignedTo"}, function(err, populatedComplaint) {
                         if(err){
                             res.send({message: 'DBError', status: 2});
                         } else {
-                            res.send({newComplaint: populatedComment, status: 1});
+                            const msgToLogger = {
+                                to: populatedComplaint.email,
+                                from: 'no-reply@ttn-buzz.com',
+                                subject: `Complaint ID: ${populatedComplaint._id}`,
+                                html: `Hi <strong>${req.user.name}</strong>, <br/>The complaint with the title <strong>${populatedComplaint.subject}</strong> has been logged by you. The complaint is assigned to <strong>${populatedComplaint.assignedTo.name}</strong> successfully. You can go through the complaint details and track the complaints <a href="#">here</a>. <br/>Hope your issue would be resolved soon. <br/><br/>Regards. <br/>Admin. <br/>${populatedComplaint.department} Department`,
+                            };
+                            const msgToAssignee = {
+                                to: populatedComplaint.assignedTo.email,
+                                from: 'no-reply@ttn-buzz.com',
+                                subject: `Complaint ID: ${populatedComplaint._id}`,
+                                html: `Hi <strong>${populatedComplaint.assignedTo.name}</strong>, <br/>The complaint with the title <strong>${populatedComplaint.subject}</strong> has been assigned to you. The complaint is assigned by <strong>${req.user.name}(${populatedComplaint.email})</strong> successfully. You can go through the complaint details and track the complaints <a href="#">here</a>. <br/>Hope you would look into the matter. <br/><br/>Regards. <br/>Admin. <br/>${populatedComplaint.department} Department`,
+                            };
+                            sgMail.send(msgToLogger);
+                            sgMail.send(msgToAssignee);
+                            res.send({newComplaint: populatedComplaint, status: 1});
                         }
                     });
                 }).catch((err) => {
