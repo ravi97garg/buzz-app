@@ -18,21 +18,12 @@ class App extends React.Component{
     );
   }
 
-  componentDidMount() {
-      // if(localStorage.getItem('Token')){
-      //     this.props.createUser(localStorage.getItem('Token'))
-      // }
-  }
 }
 const mapStateToProps = (state) => {
     return {
         user: state.user }
 };
 
-const mapDispatchToProps = {
-    createUser
-};
-
-const AppConnect = connect(mapStateToProps, mapDispatchToProps)(App);
+const AppConnect = connect(mapStateToProps, undefined)(App);
 
 export default AppConnect;

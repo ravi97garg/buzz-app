@@ -9,7 +9,7 @@ class ComplaintTable extends React.Component {
     render() {
         return (
             <div className={'complaint-table-container'}>
-                {this.props.complaints.complaintList[0] ? <table className={'complaint-table'}>
+                {this.props.complaints && this.props.complaints.complaintList[0] ? <table className={'complaint-table'}>
                     <thead>
                     <tr>
                         <td>Complaint Id</td>

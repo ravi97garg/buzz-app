@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {logOutUser} from "../actions/user.action";
+import {logOutUser} from "../services/user.service";
 
 class HeaderComponent extends Component {
     render(){

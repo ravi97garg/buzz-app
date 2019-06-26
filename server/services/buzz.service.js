@@ -72,3 +72,9 @@ module.exports = {
     getNewBuzzs,
     updateBuzzContentService
 };
+
+// comments.forEach(comment => {
+//     // comment.populate({path: 'commentedBy'})
+//
+//     User.findOne({_id: comment.commentedBy}).then((user))
+// })

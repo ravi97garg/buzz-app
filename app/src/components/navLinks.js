@@ -3,7 +3,7 @@ import React from "react";
 import {connect} from "react-redux";
 import UploadComponent from "./uploaderComponent";
 import ProfileUploadComponent from "./uploaderComponent/profileUpload";
-import {changeProfileService} from "../services/authenticate";
+import {changeProfileService} from "../services/user.service";
 import {changeProfileImageAction} from "../actions/user.action";
 
 class NavLinkComponent extends React.Component {

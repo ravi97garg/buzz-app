@@ -13,13 +13,13 @@ router.post('/authenticate', (req, res) => {
         jwt.verify(req.body.token, PRIVATE_KEY, function (err, decoded) {
             if (err) {
                 console.error(err);
-                res.send({message: 'error while verifying in authenticate.js', status: 0})
+                res.send({message: 'error while verifying in authenticate', status: 0})
             } else {
                 res.send(decoded);
             }
         });
     } else {
-        res.send({message: 'error while verifying in authenticate.js', status: 0});
+        res.send({message: 'error while verifying in authenticate', status: 0});
     }
 });
 
