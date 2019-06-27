@@ -1,29 +1,44 @@
 import {
+    STATUS
+} from "../constants";
+import {
     BUZZ_INIT_FAILED,
     BUZZ_INIT_STARTED,
-    BUZZ_INIT_SUCCESS, BUZZ_UPDATE_FAILED, BUZZ_UPDATE_STARTED, BUZZ_UPDATE_SUCCESS,
+    BUZZ_INIT_SUCCESS,
+    BUZZ_UPDATE_FAILED,
+    BUZZ_UPDATE_STARTED,
+    BUZZ_UPDATE_SUCCESS, CREATE_BUZZ_FAILED, CREATE_BUZZ_STARTED, CREATE_BUZZ_SUCCESS,
     LOAD_MORE_BUZZ_FAILED,
     LOAD_MORE_BUZZ_STARTED,
-    LOAD_MORE_BUZZ_SUCCESS, REACTION,
+    LOAD_MORE_BUZZ_SUCCESS,
     REACTION_SET_SUCCESS,
-    REACTION_UNSET_SUCCESS, REACTION_UPDATE_FAILED, REACTION_UPDATE_STARTED,
+    REACTION_UNSET_SUCCESS,
+    REACTION_UPDATE_FAILED,
+    REACTION_UPDATE_STARTED,
     REACTION_UPDATE_SUCCESS,
     SET_BUZZ_STATUS_DEFAULT,
-    STATUS,
     UPDATE_LOAD_MORE
-} from "../constants";
+} from "../constants/buzz";
 
 const initialState = {buzzList: [], uptime: null, buzzStatus: STATUS.DEFAULT, showLoadMore: false};
 
 const buzz = (state = initialState, action) => {
     console.log(action.type, action.payload);
     switch (action.type) {
-        case 'CREATE_BUZZ': {
+        case CREATE_BUZZ_STARTED: {
+            return {...state, buzzStatus: CREATE_BUZZ_STARTED}
+        }
+
+        case CREATE_BUZZ_SUCCESS: {
             const data = action.payload;
             const buzzList = state.buzzList;
             buzzList.unshift(...data);
             let uptime = data[0].postedOn;
-            return {...state, buzzList, uptime};
+            return {...state, buzzList, uptime, buzzStatus: CREATE_BUZZ_SUCCESS};
+        }
+
+        case CREATE_BUZZ_FAILED: {
+            return {...state, buzzStatus: CREATE_BUZZ_FAILED};
         }
 
         case LOAD_MORE_BUZZ_STARTED: {
@@ -116,7 +131,6 @@ const buzz = (state = initialState, action) => {
         }
 
         case BUZZ_UPDATE_SUCCESS: {
-            console.log(`reached here ${JSON.stringify(action.payload)}`);
             let buzzs = [...state.buzzList];
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.buzzId
