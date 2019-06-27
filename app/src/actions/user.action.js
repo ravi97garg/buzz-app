@@ -1,4 +1,3 @@
-import axiosInstance from "../config/axios";
 import {
     USER_LOGIN_FAILED,
     USER_LOGIN_STARTED,
@@ -7,6 +6,11 @@ import {
     USER_LOGOUT_STARTED,
     USER_LOGOUT_SUCCESS
 } from "../constants";
+import {
+    CHANGE_PROFILE_IMAGE_FAILED,
+    CHANGE_PROFILE_IMAGE_STARTED,
+    CHANGE_PROFILE_IMAGE_SUCCESS
+} from "../constants/user";
 
 export const fetchUserStarted = () => ({
     type: USER_LOGIN_STARTED
@@ -33,12 +37,15 @@ export const logOutUserFailed = () => ({
     type: USER_LOGOUT_FAILED
 });
 
-export const changeProfileImage = (imageUrl) => ({
-    type: 'CHANGE_PROFILE_IMAGE',
+export const changeProfileImageStarted = () => ({
+    type: CHANGE_PROFILE_IMAGE_STARTED
+});
+
+export const changeProfileImageSuccess = (imageUrl) => ({
+    type: CHANGE_PROFILE_IMAGE_SUCCESS,
     imageUrl
 });
 
-
-export const changeProfileImageAction = (imageUrl) => (dispatch) => {
-    dispatch(changeProfileImage(imageUrl));
-};
+export const changeProfileImageFailed = () => ({
+    type: CHANGE_PROFILE_IMAGE_FAILED
+});
