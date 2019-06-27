@@ -1,3 +1,4 @@
+
 const initComplaint = (complaints) => ({
     type: 'INIT_COMPLAINT',
     payload: {complaints}
@@ -16,3 +17,4 @@ export const initComplaintAction = (complaints) => (dispatch) =>{
 export const addComplaintAction = (complaint) => (dispatch) =>{
     dispatch(addComplaint(complaint));
 };
+
