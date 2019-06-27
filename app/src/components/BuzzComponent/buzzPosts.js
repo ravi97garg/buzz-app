@@ -40,7 +40,6 @@ class BuzzPosts extends React.Component {
     };
 
     showLoadMore = () => {
-        console.log('##########',this.props.buzz.showLoadMore);
         return (this.props.buzz.buzzList.length > this.state.skip * this.state.limit) || this.props.buzz.showLoadMore;
     };
 
@@ -64,7 +63,7 @@ class BuzzPosts extends React.Component {
         console.log(this.props.buzz.buzzStatus);
 
         window.onscroll = () => {
-            if ((window.innerHeight + window.scrollY+1) >= document.body.offsetHeight) {
+            if (this.props.buzz.buzzStatus !== STATUS.STARTED && (window.innerHeight + window.scrollY+1) + 200 >= document.body.offsetHeight) {
                 if(this.showLoadMore()){
                     this.handleLoadMore();
                 }
