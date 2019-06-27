@@ -2,7 +2,12 @@ import React from "react";
 import {connect} from "react-redux";
 import ResolveTabComponent from "./resolveTab";
 import TabScreenComponent from "./tabScreen";
-import {getInitComplaintsAction, updateStatusAction} from "../../actions/resolve.action";
+import {
+    changeStatus,
+    getInitialComplaints,
+    getMyDeptResolves,
+    setResolveStatusDefaultAction
+} from "../../services/resolve.service";
 
 class ResolveComponent extends React.Component {
 
@@ -11,7 +16,7 @@ class ResolveComponent extends React.Component {
         currentPage: 'Home'
     };
 
-    constructor(props){
+    constructor(props) {
         super(props);
         console.log(this.props.user.role);
     }
@@ -37,17 +42,16 @@ class ResolveComponent extends React.Component {
     };
 
     render() {
-        const {
-            getInitComplaintsAction
-        } = this.props;
         return (
             <div className={'buzz'}>
                 <ResolveTabComponent page={this.state.currentPage} openPage={this.openPage}/>
                 <TabScreenComponent page={this.state.currentPage}
-                                    getInitComplaintsAction={getInitComplaintsAction}
+                                    getInitialComplaints={this.props.getInitialComplaints}
                                     resolve={this.props.resolve}
                                     user={this.props.user}
-                                    updateStatus={this.props.updateStatusAction}
+                                    getMyDeptResolves={this.props.getMyDeptResolves}
+                                    changeStatus={this.props.changeStatus}
+                                    setResolveStatusDefaultAction={this.props.setResolveStatusDefaultAction}
                 />
             </div>
         )
@@ -62,9 +66,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    getInitComplaintsAction,
-    updateStatusAction
-
+    getInitialComplaints,
+    getMyDeptResolves,
+    changeStatus,
+    setResolveStatusDefaultAction
 };
 
 const ResolveComponentConnect = connect(mapStateToProps, mapDispatchToProps)(ResolveComponent);
