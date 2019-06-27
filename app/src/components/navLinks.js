@@ -3,8 +3,7 @@ import React from "react";
 import {connect} from "react-redux";
 import UploadComponent from "./uploaderComponent";
 import ProfileUploadComponent from "./uploaderComponent/profileUpload";
-import {changeProfileService} from "../services/user.service";
-import {changeProfileImageAction} from "../actions/user.action";
+import {changeProfileImageService} from "../services/user.service";
 
 class NavLinkComponent extends React.Component {
 
@@ -12,13 +11,7 @@ class NavLinkComponent extends React.Component {
         console.log('yahaa');
         const formData = new FormData();
         formData.append('image',e.target.files[0]);
-        changeProfileService(formData).then((res) => {
-            console.log(res.imageUrl);
-            this.props.changeProfileImageAction(res.imageUrl);
-            localStorage.setItem('Token', res.token);
-        }).catch((err) => {
-            console.error(err);
-        })
+        this.props.changeProfileImageService(formData);
     };
 
     render() {
@@ -64,7 +57,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    changeProfileImageAction
+    changeProfileImageService
 };
 
 const NavLinkConnect = connect(mapStateToProps, mapDispatchToProps)(NavLinkComponent);
