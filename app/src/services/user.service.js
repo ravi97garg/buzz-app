@@ -1,5 +1,13 @@
 import axiosInstance from "../config/axios";
-import {fetchUserFailed, fetchUserStarted, fetchUserSuccess, logOutUserSuccess} from "../actions/user.action";
+import {
+    changeProfileImageFailed,
+    changeProfileImageStarted, changeProfileImageSuccess,
+    fetchUserFailed,
+    fetchUserStarted,
+    fetchUserSuccess,
+    logOutUserSuccess
+} from "../actions/user.action";
+import {getToken, setToken} from "../utilities";
 
 
 export const authenticateToken = (token) => {
@@ -8,14 +16,23 @@ export const authenticateToken = (token) => {
     })
 };
 
-export const changeProfileService = (formData) => {
-    return axiosInstance.post('/changeProfile', formData)
+export const changeProfileImageService = (formData) => (dispatch) => {
+    dispatch(changeProfileImageStarted());
+    axiosInstance.post('/changeProfile', formData)
+        .then((res) => {
+            setToken(res.token);
+            dispatch(changeProfileImageSuccess(res.imageUrl))
+        })
+        .catch((err) => {
+            console.error(err);
+            dispatch(changeProfileImageFailed());
+        })
 };
 
 export const createUser = () => (dispatch) => {
-    if (localStorage.getItem('Token')) {
+    if (getToken()) {
         dispatch(fetchUserStarted());
-        axiosInstance.post('/authenticate', {token: localStorage.getItem('Token')})
+        axiosInstance.post('/authenticate', {token: getToken()})
             .then((user) => {
                 console.log('reached here with', JSON.stringify(user));
                 dispatch(fetchUserSuccess(user));
