@@ -1,5 +1,4 @@
 import React from 'react';
-import {changeStatus} from "../../services/resolve.service";
 
 class ResolveRowComponent extends React.Component {
 
@@ -29,13 +28,7 @@ class ResolveRowComponent extends React.Component {
 
     saveAction = (id) => {
         if (this.state[id]) {
-            changeStatus(id, this.state[id]).then((res) => {
-                if (res.status) {
-                    this.props.updateStatus(id, this.state[id]);
-                } else {
-                    console.log(res.message);
-                }
-            })
+            this.props.changeStatus(id, this.state[id]);
         }
     };
 
