@@ -38,6 +38,7 @@ export const createUser = () => (dispatch) => {
                 dispatch(fetchUserSuccess(user));
             })
             .catch((err) => {
+                console.error(err);
                 dispatch(fetchUserFailed());
             });
     } else {

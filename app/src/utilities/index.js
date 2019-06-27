@@ -2,6 +2,10 @@ const getToken = () => {
     return localStorage.getItem("Token");
 };
 
+const setToken = (token) => {
+    return localStorage.setItem("Token", token);
+};
+
 const getTimeDifference = (time) => {
     let message = '';
     const timeDiff = Math.trunc((Date.now()-new Date(time))/(1000*60));
@@ -18,6 +22,7 @@ const getTimeDifference = (time) => {
 };
 
 module.exports = {
+    setToken,
     getToken,
     getTimeDifference
 };
