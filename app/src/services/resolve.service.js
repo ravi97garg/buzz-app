@@ -1,7 +1,39 @@
 import axiosInstance from "../config/axios";
+import {
+    getInitComplaintsFailed,
+    getInitComplaintsStarted,
+    getInitComplaintsSuccess,
+    getMyResolvesFailed,
+    getMyResolvesStarted,
+    getMyResolvesSuccess,
+    setResolveStatusDefault,
+    updateComplaintStatusFailed,
+    updateComplaintStatusStarted,
+    updateComplaintStatusSuccess
+} from "../actions/resolve.action";
 
-export const getInitialComplaints = () => {
-    return axiosInstance.get('/data/resolve/getInitComplaints');
+export const getInitialComplaints = () => (dispatchEvent) => {
+    dispatchEvent(getInitComplaintsStarted());
+    axiosInstance.get('/data/resolve/getInitComplaints')
+        .then((data) => {
+            dispatchEvent(getInitComplaintsSuccess(data.complaints));
+        })
+        .catch((err) => {
+            console.error(err);
+            dispatchEvent(getInitComplaintsFailed());
+        })
+};
+
+export const getMyDeptResolves = () => (dispatch) => {
+    dispatch(getMyResolvesStarted());
+    axiosInstance.get(`/data/resolve/getMyDeptResolves`)
+        .then((data) => {
+            dispatch(getMyResolvesSuccess(data.complaints));
+        })
+        .catch((err) => {
+            console.error(err);
+            dispatch(getMyResolvesFailed())
+        })
 };
 
 export const getNewComplaints = (uptime) => {
@@ -17,9 +49,22 @@ export const loadMoreComplaints = (downtime) => {
     });
 };
 
-export const changeStatus = (complaintId, status) => {
-    return axiosInstance.post('/data/resolve/changeStatus', {
+export const changeStatus = (complaintId, status) => (dispatchEvent) => {
+    dispatchEvent(updateComplaintStatusStarted());
+    axiosInstance.post('/data/resolve/changeStatus', {
         complaintId,
         status
     })
-}
+        .then((res) => {
+            console.log(res);
+            dispatchEvent(updateComplaintStatusSuccess(complaintId, status));
+        })
+        .catch((err) => {
+            console.error(err);
+            dispatchEvent(updateComplaintStatusFailed());
+        })
+};
+
+export const setResolveStatusDefaultAction = () => (dispatchEvent) => {
+    dispatchEvent(setResolveStatusDefault());
+};
