@@ -3,7 +3,7 @@ import {
     REACTION_UNSET_SUCCESS, REACTION_UPDATE_FAILED,
     REACTION_UPDATE_STARTED,
     REACTION_UPDATE_SUCCESS
-} from "../constants";
+} from "../constants/buzz";
 
 export const setReactionAction = (reactionObj) => {
     return {
