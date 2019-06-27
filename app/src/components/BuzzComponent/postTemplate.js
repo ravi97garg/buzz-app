@@ -1,9 +1,16 @@
 import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faAngry, faCommentAlt, faSadTear, faSmile, faPenSquare, faSave} from "@fortawesome/free-solid-svg-icons";
+import {
+    faAngry,
+    faCommentAlt,
+    faSadTear,
+    faSmile,
+    faPenSquare,
+    faSave,
+    faExclamationTriangle
+} from "@fortawesome/free-solid-svg-icons";
 import {getTimeDifference} from "../../utilities";
 import CommentComponent from "../CommentComponent";
-import {updateBuzzContent} from "../../services/buzz.service";
 
 export default class PostTemplateComponent extends React.Component {
 
@@ -89,15 +96,11 @@ export default class PostTemplateComponent extends React.Component {
             editBuzz: false,
             showEditIcon: true
         });
-        updateBuzzContent(id, this.state.buzzContent).then((res) => {
-            if(res.status === 1){
-                this.props.updateBuzzAction(id, this.state.buzzContent);
-            } else {
-                console.error(res.message);
-            }
-        }).catch((err) => {
-            console.error(err);
-        })
+        this.props.updateBuzzContent(id, this.state.buzzContent);
+    };
+
+    report = (id) => {
+        this.props.reportBuzz(id);
     };
 
     render() {
@@ -125,7 +128,7 @@ export default class PostTemplateComponent extends React.Component {
                         onChange={this.handleChange}
                         ref={this.textInput}
                     />
-                    {this.state.showEditIcon ? <FontAwesomeIcon
+                    {this.props.post.postedBy._id === this.props.user._id ? (this.state.showEditIcon ? <FontAwesomeIcon
                         icon={faPenSquare}
                         color="blue"
                         onClick={() => this.editBuzzContent(post._id)}
@@ -133,6 +136,10 @@ export default class PostTemplateComponent extends React.Component {
                         icon={faSave}
                         color="green"
                         onClick={() => this.saveBuzz(post._id)}
+                        size="lg"/>) : <FontAwesomeIcon
+                        icon={faExclamationTriangle}
+                        color="yellow"
+                        onClick={() => this.report(post._id)}
                         size="lg"/>}
                     <div className={'post-img-wrapper'}>
                         {post.images.map((image, i) => {

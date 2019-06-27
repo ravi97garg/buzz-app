@@ -33,9 +33,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    initBuzzAction,
-    loadMoreBuzzAction,
-    reactionAction
 };
 
 const CommentListConnect = connect(mapStateToProps, mapDispatchToProps)(CommentListComponent);

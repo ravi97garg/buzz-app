@@ -1,10 +1,16 @@
 import React from "react";
-import {getInitialBuzzService, getMoreBuzzs} from "../../services/buzz.service";
+import {
+    getInitialBuzzService,
+    getMoreBuzzService, reportBuzz,
+    setBuzzStatusDefaultAction,
+    updateBuzzContent
+} from "../../services/buzz.service";
 import {connect} from "react-redux";
-import {initBuzzAction, loadMoreBuzzAction, updateBuzzAction} from "../../actions/buzz.action";
 import PostTemplateComponent from "./postTemplate";
 import {reactionService} from "../../services/reaction.service";
-import {reactionAction} from "../../actions/reaction.action";
+import {REACTION, STATUS} from "../../constants";
+import ErrorView from "../ModalComponent/ErrorView";
+import ErrorDetailsComponent from "../ErrorDetailsComponent";
 
 class BuzzPosts extends React.Component {
 
@@ -15,30 +21,14 @@ class BuzzPosts extends React.Component {
             limit: 10,
             uptime: null,
             downtime: null,
-            showLoadMore: false
+            showLoadMore: this.props.buzz.showLoadMore
         };
         console.log(this.props.user);
     }
 
     handleLoadMore = () => {
         if ((this.props.buzz.buzzList.length - (this.state.limit * this.state.skip)) < this.state.limit) {
-            getMoreBuzzs(this.state.limit, this.state.downtime).then((res) => {
-                if (res.extractedBuzzs.length > this.state.limit) {
-                    this.setState({
-                        showLoadMore: true
-                    })
-                } else {
-                    this.setState({
-                        showLoadMore: false
-                    })
-                }
-                const posts = res.extractedBuzzs.slice(0, this.state.limit);
-                this.props.loadMoreBuzzAction(posts);
-                this.setState({
-                    skip: this.state.skip + 1,
-                    downtime: posts[posts.length - 1].postedOn
-                })
-            })
+            this.props.getMoreBuzzService(this.state.limit, this.state.downtime);
         } else {
             // const startIndex = this.state.limit * this.state.skip;
             // const endIndex = this.props.buzz.buzzList.length;
@@ -50,48 +40,31 @@ class BuzzPosts extends React.Component {
     };
 
     showLoadMore = () => {
-        return (this.props.buzz.buzzList.length > this.state.skip * this.state.limit) || this.state.showLoadMore;
+        console.log('##########',this.props.buzz.showLoadMore);
+        return (this.props.buzz.buzzList.length > this.state.skip * this.state.limit) || this.props.buzz.showLoadMore;
     };
 
     happyClickHandle = (buzzId) => {
-        reactionService(buzzId, 'happy')
-            .then((res) => {
-                this.props.reactionAction(res.action, res.reactionObj, 'happy');
-            });
+        this.props.reactionService(buzzId, REACTION.HAPPY);
     };
     angryClickHandle = (buzzId) => {
-        reactionService(buzzId, 'angry')
-            .then((res) => {
-                this.props.reactionAction(res.action, res.reactionObj, 'angry');
-            });
+        this.props.reactionService(buzzId, REACTION.ANGRY);
     };
     sadClickHandle = (buzzId) => {
-        reactionService(buzzId, 'sad')
-            .then((res) => {
-                this.props.reactionAction(res.action, res.reactionObj, 'sad');
-            });
+        this.props.reactionService(buzzId, REACTION.SAD);
+    };
+
+    onClose = () => {
+        this.props.setBuzzStatusDefaultAction();
     };
 
     componentDidMount() {
         console.log(this.props.user);
-        getInitialBuzzService(this.state.limit).then((res) => {
-            if (res.extractedBuzzs.length > this.state.limit) {
-                this.setState({
-                    showLoadMore: true
-                })
-            }
-            const posts = res.extractedBuzzs.slice(0, this.state.limit);
-            this.props.initBuzzAction(posts);
-            this.setState({
-                uptime: posts[0] ? posts[0].postedOn : null,
-                downtime: posts[0] ? posts[posts.length - 1].postedOn : null,
-                skip: 1
-            });
-        }).catch((err) => {
-            console.error(err);
-        });
+        this.props.getInitialBuzzService(this.state.limit);
+        console.log(this.props.buzz.buzzStatus);
+
         window.onscroll = () => {
-            if ((window.innerHeight + window.scrollY) + 200 >= document.body.offsetHeight) {
+            if ((window.innerHeight + window.scrollY+1) >= document.body.offsetHeight) {
                 if(this.showLoadMore()){
                     this.handleLoadMore();
                 }
@@ -99,22 +72,39 @@ class BuzzPosts extends React.Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+
+        if(this.props.buzz.buzzStatus === STATUS.SUCCESS){
+            this.setState({
+                uptime: this.props.buzz.buzzList[0] ? this.props.buzz.buzzList[0].postedOn : null,
+                downtime: this.props.buzz.buzzList[0] ? this.props.buzz.buzzList[this.props.buzz.buzzList.length - 1].postedOn : null,
+                skip: this.state.skip + 1
+            });
+            this.props.setBuzzStatusDefaultAction();
+        } else if (this.props.buzz.buzzStatus === STATUS.FAILED) {
+            console.error(`err`);
+        }
+
+    }
+
     render() {
         return (
             <div>
-                {this.props.buzz.buzzList && this.props.buzz.buzzList.slice(0, this.state.limit * this.state.skip).map((post) => {
-                    return (
-                        <PostTemplateComponent
-                            post={post}
-                            key={post._id}
-                            happyClickHandle={this.happyClickHandle}
-                            angryClickHandle={this.angryClickHandle}
-                            sadClickHandle={this.sadClickHandle}
-                            user={this.props.user}
-                            updateBuzzAction = {this.props.updateBuzzAction}
-                        />
-                    )
-                })}
+                {this.props.buzz.buzzStatus === STATUS.FAILED ? <ErrorView onClose={this.onClose} component={() => <ErrorDetailsComponent />}/> :
+                    this.props.buzz.buzzList.length>0 && this.props.buzz.buzzList.slice(0, this.state.limit * this.state.skip).map((post) => {
+                        return (
+                            <PostTemplateComponent
+                                post={post}
+                                key={post._id}
+                                happyClickHandle={this.happyClickHandle}
+                                angryClickHandle={this.angryClickHandle}
+                                sadClickHandle={this.sadClickHandle}
+                                user={this.props.user}
+                                updateBuzzContent = {this.props.updateBuzzContent}
+                                reportBuzz={this.props.reportBuzz}
+                            />
+                        )
+                    })}
             </div>
         )
     }
@@ -128,10 +118,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    initBuzzAction,
-    loadMoreBuzzAction,
-    reactionAction,
-    updateBuzzAction
+    getInitialBuzzService,
+    getMoreBuzzService,
+    setBuzzStatusDefaultAction,
+    reactionService,
+    updateBuzzContent,
+    reportBuzz
 };
 
 const BuzzPostsConnect = connect(mapStateToProps, mapDispatchToProps)(BuzzPosts);

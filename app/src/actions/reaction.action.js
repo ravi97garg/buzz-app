@@ -1,24 +1,31 @@
-const setReactionAction = (reactionObj) => {
+import {
+    REACTION_SET_SUCCESS,
+    REACTION_UNSET_SUCCESS, REACTION_UPDATE_FAILED,
+    REACTION_UPDATE_STARTED,
+    REACTION_UPDATE_SUCCESS
+} from "../constants";
+
+export const setReactionAction = (reactionObj) => {
     return {
-        type: 'SET_REACTION',
+        type: REACTION_SET_SUCCESS,
         payload: {
             ...reactionObj
         }
     }
 };
 
-const unsetReactionAction = (reactionObj) => {
+export const unsetReactionAction = (reactionObj) => {
     return {
-        type: 'UNSET_REACTION',
+        type: REACTION_UNSET_SUCCESS,
         payload: {
             ...reactionObj
         }
     }
 };
 
-const updateReactionAction = (reactionObj, newReaction) => {
+export const updateReactionAction = (reactionObj, newReaction) => {
     return {
-        type: 'UPDATE_REACTION',
+        type: REACTION_UPDATE_SUCCESS,
         payload: {
             ...reactionObj,
             newReaction
@@ -26,19 +33,14 @@ const updateReactionAction = (reactionObj, newReaction) => {
     }
 };
 
-
-export const reactionAction = (action, reactionObj, newReaction) => (dispatch) => {
-    switch (action) {
-        case 1:
-            dispatch(setReactionAction(reactionObj));
-            break;
-        case 0:
-            dispatch(updateReactionAction(reactionObj, newReaction));
-            break;
-        case -1:
-            dispatch(unsetReactionAction(reactionObj));
-            break;
-        default:
+export const updateReactionStarted = () => {
+    return {
+        type: REACTION_UPDATE_STARTED
     }
+};
 
+export const updateReactionFailed = () => {
+    return {
+        type: REACTION_UPDATE_FAILED
+    }
 };

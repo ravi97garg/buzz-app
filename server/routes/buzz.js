@@ -1,12 +1,27 @@
 const Express = require('express');
-const {postReactionService, createReactionService, updateReactionService, deleteReactionService} = require("../services/reaction.service");
-const {createBuzzService, getInitialBuzzService, getCommentService, getReactionService, getMoreBuzzService, getNewBuzzs} = require("../services/buzz.service");
+const {
+    postReactionService,
+    createReactionService,
+    updateReactionService,
+    deleteReactionService,
+} = require("../services/reaction.service");
+const {
+    createBuzzService,
+    getInitialBuzzService,
+    getCommentService,
+    getReactionService,
+    getMoreBuzzService,
+    getNewBuzzs,
+    getBuzzByID
+} = require("../services/buzz.service");
 const router = Express.Router();
 const {multerUploads, dataUri} = require('../config/multer.config');
 const {uploader} = require('../config/cloudinary.config');
 const {createCommentService} = require('../services/comment.service');
 const Comment = require('../models/Comment');
 const {updateBuzzContentService} = require("../services/buzz.service");
+const {findUserByID} = require('../services/user.service');
+const sgMail = require('../config/sendgrid.config');
 
 router.post('/createBuzz', multerUploads, (req, res) => {
     try {
@@ -174,6 +189,21 @@ router.post('/updateBuzz', (req, res) => {
         console.error(err);
         res.status(400).send({message: 'DBError', status: 2});
     })
+});
+
+router.post('/report', async (req, res) => {
+    const {
+        buzzId,
+    } = req.body;
+    const buzzer = await getBuzzByID(buzzId);
+    const msgToBuzzer = {
+        to: buzzer.postedBy.email,
+        from: req.user.email,
+        subject: `Your Buzz is reported`,
+        html: `Hi <strong>${buzzer.postedBy.name}</strong>, <br/>Your Buzz #${buzzId} is reported by <strong>${req.user.name}</strong>.`,
+    };
+    sgMail.send(msgToBuzzer);
+    res.send({message: 'OK', status: 1});
 });
 
 module.exports = router;

@@ -1,7 +1,22 @@
-const initialState = {buzzList: [], uptime: null};
+import {
+    BUZZ_INIT_FAILED,
+    BUZZ_INIT_STARTED,
+    BUZZ_INIT_SUCCESS, BUZZ_UPDATE_FAILED, BUZZ_UPDATE_STARTED, BUZZ_UPDATE_SUCCESS,
+    LOAD_MORE_BUZZ_FAILED,
+    LOAD_MORE_BUZZ_STARTED,
+    LOAD_MORE_BUZZ_SUCCESS, REACTION,
+    REACTION_SET_SUCCESS,
+    REACTION_UNSET_SUCCESS, REACTION_UPDATE_FAILED, REACTION_UPDATE_STARTED,
+    REACTION_UPDATE_SUCCESS,
+    SET_BUZZ_STATUS_DEFAULT,
+    STATUS,
+    UPDATE_LOAD_MORE
+} from "../constants";
+
+const initialState = {buzzList: [], uptime: null, buzzStatus: STATUS.DEFAULT, showLoadMore: false};
 
 const buzz = (state = initialState, action) => {
-    // console.log(action.type, action.payload);
+    console.log(action.type, action.payload);
     switch (action.type) {
         case 'CREATE_BUZZ': {
             const data = action.payload;
@@ -11,27 +26,55 @@ const buzz = (state = initialState, action) => {
             return {...state, buzzList, uptime};
         }
 
-        case 'PUSH_BUZZ': {
+        case LOAD_MORE_BUZZ_STARTED: {
+            return {...state, buzzStatus: STATUS.STARTED}
+        }
+
+        case LOAD_MORE_BUZZ_SUCCESS: {
             const data = action.payload;
             let buzzList = state.buzzList;
             buzzList = buzzList.concat(data);
-            return {...state, buzzList};
+            return {...state, buzzList, buzzStatus: STATUS.SUCCESS};
         }
 
-        case 'INIT_BUZZ': {
+        case LOAD_MORE_BUZZ_FAILED: {
+            return {...state, buzzStatus: STATUS.FAILED};
+        }
+
+        case BUZZ_INIT_STARTED: {
+            return {...state, buzzStatus: STATUS.STARTED}
+        }
+
+        case BUZZ_INIT_SUCCESS: {
             const buzzs = action.payload;
             const uptime = buzzs[0] ? buzzs[0].postedOn : null;
-            return {...state, buzzList: buzzs, uptime: uptime};
+            return {...state, buzzList: buzzs, uptime: uptime, buzzStatus: STATUS.SUCCESS};
         }
 
-        case 'SET_REACTION': {
+        case BUZZ_INIT_FAILED: {
+            return {...state, buzzStatus: STATUS.FAILED};
+        }
+
+        case UPDATE_LOAD_MORE: {
+            return {...state, showLoadMore: action.payload};
+        }
+
+        case SET_BUZZ_STATUS_DEFAULT: {
+            return {...state, buzzStatus: STATUS.DEFAULT};
+        }
+
+        case REACTION_UPDATE_STARTED: {
+            return {...state, buzzStatus: REACTION_UPDATE_STARTED}
+        }
+
+        case REACTION_SET_SUCCESS: {
             const reactionBuzzIndex = state.buzzList.findIndex(obj => obj._id === action.payload.reactionPostId);
             let buzzs = state.buzzList;
             buzzs[reactionBuzzIndex].reactions.push(action.payload);
-            return {...state, buzzList: buzzs}
+            return {...state, buzzList: buzzs, buzzStatus: REACTION_SET_SUCCESS}
         }
 
-        case 'UNSET_REACTION': {
+        case REACTION_UNSET_SUCCESS: {
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.reactionPostId
             } );
@@ -40,10 +83,10 @@ const buzz = (state = initialState, action) => {
             });
             let buzzs = state.buzzList;
             buzzs[buzzIndex].reactions.splice(reactionIndex, 1);
-            return {...state, buzzList: buzzs}
+            return {...state, buzzList: buzzs, buzzStatus: REACTION_UNSET_SUCCESS}
         }
 
-        case 'UPDATE_REACTION': {
+        case REACTION_UPDATE_SUCCESS: {
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.reactionPostId
             } );
@@ -52,7 +95,11 @@ const buzz = (state = initialState, action) => {
             });
             let buzzs = state.buzzList;
             buzzs[buzzIndex].reactions[reactionIndex].reactionType = action.payload.newReaction;
-            return {...state, buzzList: buzzs}
+            return {...state, buzzList: buzzs, buzzStatus: REACTION_UPDATE_SUCCESS}
+        }
+
+        case REACTION_UPDATE_FAILED: {
+            return {...state, buzzStatus: REACTION_UPDATE_FAILED}
         }
 
         case 'POST_COMMENT': {
@@ -64,14 +111,22 @@ const buzz = (state = initialState, action) => {
             return {...state, buzzList: buzzs};
         }
 
-        case 'UPDATE_BUZZ': {
+        case BUZZ_UPDATE_STARTED: {
+            return {...state, buzzStatus: BUZZ_UPDATE_STARTED}
+        }
+
+        case BUZZ_UPDATE_SUCCESS: {
             console.log(`reached here ${JSON.stringify(action.payload)}`);
             let buzzs = [...state.buzzList];
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.buzzId
             } );
             buzzs[buzzIndex].buzzContent = action.payload.buzzContent;
-            return {...state, buzzList: buzzs};
+            return {...state, buzzList: buzzs, buzzStatus: BUZZ_UPDATE_SUCCESS};
+        }
+
+        case BUZZ_UPDATE_FAILED: {
+            return {...state, buzzStatus: BUZZ_UPDATE_FAILED}
         }
 
         default:

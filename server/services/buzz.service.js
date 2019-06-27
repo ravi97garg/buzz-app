@@ -50,9 +50,16 @@ const getMoreBuzzService = (limit, endTime) => {
         })
 };
 
+const getBuzzByID = (buzzId) => {
+    return Buzz.findOne({_id: buzzId})
+        .populate({
+            path: 'postedBy'
+        });
+};
+
 const updateBuzzContentService = (postId, buzzContent) => {
     return Buzz.updateOne({_id: postId}, {buzzContent: buzzContent});
-}
+};
 
 const getReactionService = (postId) => {
     return Reaction.find({reactionPostId: postId})
@@ -70,7 +77,8 @@ module.exports = {
     getCommentService,
     getMoreBuzzService,
     getNewBuzzs,
-    updateBuzzContentService
+    updateBuzzContentService,
+    getBuzzByID
 };
 
 // comments.forEach(comment => {
