@@ -1,6 +1,5 @@
 import React from "react";
 import {createBuzzService} from "../../services/buzz.service";
-import {createBuzzAction} from "../../actions/buzz.action";
 import {connect} from "react-redux";
 import UploadComponent from "../uploaderComponent";
 import AttachmentUploadComponent from "../uploaderComponent/attachmentUpload";
@@ -20,22 +19,14 @@ class BuzzFormComponent extends React.Component {
         e.preventDefault();
         if(this.state.buzzContent){
             const formData = new FormData();
-            // formData.append('image', this.state.images[0],'myimage');
             formData.append('buzzContent', this.state.buzzContent);
             formData.append('category', this.state.category);
             formData.append('startTime', this.props.buzz.uptime);
-            for (var x = 0; x < this.state.images.length; x++) {
+            for (let x = 0; x < this.state.images.length; x++) {
                 formData.append(`images[]`, this.state.images[x]);
             }
             console.log(`Formdata: ${JSON.stringify(formData)}`);
-            createBuzzService(formData)
-                .then((response) => {
-                    console.log(response.extractedBuzzs);
-                    this.props.createBuzzAction(response.extractedBuzzs);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            this.props.createBuzzService(formData);
             this.setState({
                 buzzContent: '',
                 category: 'activity',
@@ -101,7 +92,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    createBuzzAction
+    createBuzzService
 };
 
 const BuzzFormConnect = connect(mapStateToProps, mapDispatchToProps)(BuzzFormComponent);
