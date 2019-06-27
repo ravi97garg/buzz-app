@@ -110,10 +110,22 @@ const PrivateRoute = ({component: Component, path, userStatus, ...rest}) => {
                 console.log('2');
                 rest.history.push('/dashboard');
                 return <Route {...rest} render={() => <Fragment/>}/>
-            } else {
+            } else if (userStatus === STATUS.FAILED){
                 console.log('3');
                 rest.history.push('/login');
                 return <Route {...rest} render={() => <Fragment/>}/>
+            } else {
+                return <Route {...rest} path={path} render={(props) => (
+                    <div>
+                        <HeaderComponent/>
+                        <div className={'actual-body'}>
+                            <div className={'container'}>
+                                <NavLinkComponent/>
+                                <Component {...props}/>
+                            </div>
+                        </div>
+                        <FooterComponent/>
+                    </div>)}/>
             }
         }
     } else {
