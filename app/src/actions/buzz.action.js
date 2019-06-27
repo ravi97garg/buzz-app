@@ -1,14 +1,33 @@
 import {
     BUZZ_INIT_FAILED,
     BUZZ_INIT_STARTED,
-    BUZZ_INIT_SUCCESS, BUZZ_UPDATE_FAILED, BUZZ_UPDATE_STARTED, BUZZ_UPDATE_SUCCESS, LOAD_MORE_BUZZ_FAILED,
+    BUZZ_INIT_SUCCESS,
+    BUZZ_UPDATE_FAILED,
+    BUZZ_UPDATE_STARTED,
+    BUZZ_UPDATE_SUCCESS,
+    CREATE_BUZZ_FAILED,
+    CREATE_BUZZ_STARTED,
+    CREATE_BUZZ_SUCCESS,
+    LOAD_MORE_BUZZ_FAILED,
     LOAD_MORE_BUZZ_STARTED,
-    LOAD_MORE_BUZZ_SUCCESS, REPORT_BUZZ_FAILED, REPORT_BUZZ_STARTED, REPORT_BUZZ_SUCCESS, SET_BUZZ_STATUS_DEFAULT
-} from "../constants";
+    LOAD_MORE_BUZZ_SUCCESS,
+    REPORT_BUZZ_FAILED,
+    REPORT_BUZZ_STARTED,
+    REPORT_BUZZ_SUCCESS,
+    SET_BUZZ_STATUS_DEFAULT
+} from "../constants/buzz";
 
-const createBuzz = (buzz) => ({
-    type: 'CREATE_BUZZ',
+export const createBuzzSuccess = (buzz) => ({
+    type: CREATE_BUZZ_SUCCESS,
     payload: buzz
+});
+
+export const createBuzzFailed = () => ({
+    type: CREATE_BUZZ_FAILED
+});
+
+export const createBuzzStarted = () => ({
+    type: CREATE_BUZZ_STARTED
 });
 
 export const initBuzzSuccess = (buzzs) => ({
@@ -50,15 +69,15 @@ export const updateBuzzFailed = () => ({
 });
 
 export const reportBuzzStarted = () => ({
-type: REPORT_BUZZ_STARTED
+    type: REPORT_BUZZ_STARTED
 });
 
 export const reportBuzzSuccess = () => ({
-type: REPORT_BUZZ_SUCCESS
+    type: REPORT_BUZZ_SUCCESS
 });
 
 export const reportBuzzFailed = () => ({
-type: REPORT_BUZZ_FAILED
+    type: REPORT_BUZZ_FAILED
 });
 
 export const updateBuzzSuccess = (buzzId, buzzContent) => ({
@@ -68,8 +87,3 @@ export const updateBuzzSuccess = (buzzId, buzzContent) => ({
         buzzContent
     }
 });
-
-export const createBuzzAction = (buzz) => (dispatch) => {
-    console.log(`hell is here ${JSON.stringify(buzz)}`);
-    dispatch(createBuzz(buzz));
-};
