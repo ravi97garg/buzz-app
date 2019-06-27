@@ -1,5 +1,7 @@
 import axiosInstance from "../config/axios";
 import {
+    createBuzzFailed,
+    createBuzzStarted, createBuzzSuccess,
     initBuzzFailed,
     initBuzzStarted,
     initBuzzSuccess,
@@ -13,10 +15,18 @@ import {
     updateBuzzStarted,
     updateBuzzSuccess
 } from "../actions/buzz.action";
-import {UPDATE_LOAD_MORE} from "../constants";
+import {UPDATE_LOAD_MORE} from "../constants/buzz";
 
-export const createBuzzService = (formData) => {
-    return axiosInstance.post('/data/buzz/createBuzz', formData);
+export const createBuzzService = (formData) => (dispatch) =>{
+    dispatch(createBuzzStarted());
+    axiosInstance.post('/data/buzz/createBuzz', formData)
+        .then((res)=> {
+            dispatch(createBuzzSuccess(res.extractedBuzzs))
+        })
+        .catch((err) => {
+            console.error(err);
+            dispatch(createBuzzFailed());
+        })
 };
 
 export const getInitialBuzzService = (limit) => (dispatch) => {
@@ -61,6 +71,7 @@ export const getMoreBuzzService = (limit, endTime) => (dispatch) => {
             dispatch(loadMoreBuzzSuccess(posts));
         })
         .catch((err) => {
+            console.error(err);
             dispatch(loadMoreBuzzFailed());
         });
 };
@@ -87,9 +98,11 @@ export const reportBuzz = (buzzId) => (dispatch) => {
         buzzId
     })
         .then((res) => {
+            console.log(res);
             dispatch(reportBuzzSuccess());
         })
         .catch((err) => {
+            console.error(err);
             dispatch(reportBuzzFailed());
         })
 };
