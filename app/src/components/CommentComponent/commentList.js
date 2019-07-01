@@ -1,7 +1,4 @@
 import React from 'react';
-import {initBuzzAction, loadMoreBuzzAction} from "../../actions/buzz.action";
-import {reactionAction} from "../../actions/reaction.action";
-import {connect} from "react-redux";
 import CommentRowComponent from "./commentRow";
 
 class CommentListComponent extends React.Component {
@@ -26,15 +23,4 @@ class CommentListComponent extends React.Component {
 
 }
 
-const mapStateToProps = (state) => {
-    return {
-        buzz: state.buzz.buzzList
-    }
-};
-
-const mapDispatchToProps = {
-};
-
-const CommentListConnect = connect(mapStateToProps, mapDispatchToProps)(CommentListComponent);
-
-export default CommentListConnect;
+export default CommentListComponent;

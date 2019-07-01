@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import ResolveTabComponent from "./resolveTab";
+import ResolveTabComponent from "./ResolveTab";
 import TabScreenComponent from "./tabScreen";
 import {
     changeStatus,

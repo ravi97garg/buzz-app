@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 const modalRoot = document.getElementById('modal-root');
 
-class Modal extends React.Component {
+class Index extends React.Component {
 
     componentDidMount() {
         document.getElementsByTagName('body')[0].style.overflow = 'hidden';
@@ -26,4 +26,4 @@ class Modal extends React.Component {
 
 }
 
-export default Modal;
+export default Index;

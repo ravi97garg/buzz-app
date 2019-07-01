@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 const Schema = mongoose.Schema;
-const Buzz = require('./Buzz');
 
 const ReactionSchema = new Schema({
     reactionType : {
@@ -15,8 +14,7 @@ const ReactionSchema = new Schema({
     },
     reactionPostId : {
         type: Schema.Types.ObjectId,
-        required: true,
-        ref: Buzz
+        required: true
     }
 });
 

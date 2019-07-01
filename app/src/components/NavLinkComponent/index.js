@@ -1,9 +1,9 @@
 import {NavLink} from 'react-router-dom'
 import React from "react";
 import {connect} from "react-redux";
-import UploadComponent from "./uploaderComponent";
-import ProfileUploadComponent from "./uploaderComponent/profileUpload";
-import {changeProfileImageService} from "../services/user.service";
+import UploadComponent from "../UploaderComponent";
+import ProfileUploadComponent from "../UploaderComponent/ProfileUpload";
+import {changeProfileImageService} from "../../services/user.service";
 
 class NavLinkComponent extends React.Component {
 

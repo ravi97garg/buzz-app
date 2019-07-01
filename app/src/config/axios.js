@@ -2,6 +2,7 @@ import axios from 'axios';
 import {BASE_URL} from './index';
 import {getToken} from '../utilities';
 import store from '../store';
+import {USER_LOGOUT_SUCCESS} from "../constants";
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -23,7 +24,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use((response) => {
     if(response.data.status === 0){
         localStorage.removeItem('Token');
-        store.dispatch({type: 'USER_LOGGED_OUT'});
+        store.dispatch({type: USER_LOGOUT_SUCCESS});
     }
     return response.data;
 });

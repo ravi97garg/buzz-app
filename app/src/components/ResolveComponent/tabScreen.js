@@ -1,8 +1,18 @@
 import React from 'react';
-import ResolveRowComponent from "./resolveRow";
+import ResolveRowComponent from "./ResolveRow";
 import {STATUS} from "../../constants";
 
 class TabScreenComponent extends React.Component {
+
+    state = {
+        searchComplaint: ''
+    };
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    };
 
     componentDidMount() {
         if (this.props.page === 'Home') {
@@ -15,7 +25,7 @@ class TabScreenComponent extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.page !== this.props.page){
+        if (prevProps.page !== this.props.page) {
             this.props.setResolveStatusDefaultAction();
         }
         if (this.props.page === 'Home') {
@@ -35,6 +45,14 @@ class TabScreenComponent extends React.Component {
     render() {
         return (
             <div className={'tabcontent'}>
+                <input
+                    name={'searchComplaint'}
+                    onChange={this.handleChange}
+                    value={this.state.searchComplaint}
+                    className={'searchBar'}
+                    placeholder={'Search Complaint by logger name'}
+                    style={{width: '100%', padding: '10px', boxSizing: 'border-box', marginBottom: '10px'}}
+                />
                 {this.props.resolve.complaintList[0] ? <table>
                     <thead>
                     <tr>
@@ -48,7 +66,15 @@ class TabScreenComponent extends React.Component {
 
                     {(this.props.page === 'Home') ? (
                         <tbody>
-                        {this.props.resolve && this.props.resolve.complaintList.map(item => {
+                        {this.props.resolve && this.props.resolve.complaintList
+                            .filter((item) => {
+                                if(this.state.searchComplaint === ''){
+                                    return true
+                                } else {
+                                    return item.loggedBy.name.toLowerCase().startsWith(this.state.searchComplaint.toLowerCase());
+                                }
+                            })
+                            .map(item => {
                             return (
                                 <ResolveRowComponent resolves={item}
                                                      currentUser={this.props.user}
@@ -63,6 +89,13 @@ class TabScreenComponent extends React.Component {
                     ) : (
                         <tbody>
                         {this.props.resolve && this.props.resolve.myResolves
+                            .filter((item) => {
+                                if(this.state.searchComplaint === ''){
+                                    return true
+                                } else {
+                                    return item.loggedBy.name.toLowerCase().startsWith(this.state.searchComplaint.toLowerCase());
+                                }
+                            })
                             .map(item => {
                                 console.log(item);
                                 return (

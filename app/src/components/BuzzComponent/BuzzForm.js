@@ -1,31 +1,31 @@
 import React from "react";
-import {createBuzzService} from "../../services/buzz.service";
-import {connect} from "react-redux";
-import UploadComponent from "../uploaderComponent";
-import AttachmentUploadComponent from "../uploaderComponent/attachmentUpload";
+import UploadComponent from "../UploaderComponent";
+import AttachmentUploadComponent from "../UploaderComponent/AttachmentUpload";
+import {CREATE_BUZZ_STARTED} from "../../constants/buzz";
+import LoaderView from "../Loader/view";
+import {addCarriageReturn} from "../../utilities";
 
 class BuzzFormComponent extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-        buzzContent: '',
-        category: 'activity',
-        images: []
-    }
+            buzzContent: '',
+            category: 'activity',
+            images: []
+        }
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        if(this.state.buzzContent){
+        if (this.state.buzzContent.trim()) {
             const formData = new FormData();
-            formData.append('buzzContent', this.state.buzzContent);
+            formData.append('buzzContent', addCarriageReturn(this.state.buzzContent.trim(), 50));
             formData.append('category', this.state.category);
             formData.append('startTime', this.props.buzz.uptime);
             for (let x = 0; x < this.state.images.length; x++) {
                 formData.append(`images[]`, this.state.images[x]);
             }
-            console.log(`Formdata: ${JSON.stringify(formData)}`);
             this.props.createBuzzService(formData);
             this.setState({
                 buzzContent: '',
@@ -50,11 +50,7 @@ class BuzzFormComponent extends React.Component {
         this.setState({
             images: e.target.files
         });
-        console.log(e.target.files)
     };
-
-    // handleImageUpload
-
 
     render() {
         return (
@@ -70,7 +66,6 @@ class BuzzFormComponent extends React.Component {
                         <option value={'activity'}>Activity</option>
                         <option value={'lostFound'}>Lost and Found</option>
                     </select>
-                    {/*<input type={'file'} name={'images'} onChange={this.addImage} multiple={true}/>*/}
                     <UploadComponent id={'2'}
                                      addImage={this.addImage}
                                      uploaderLabel={() => <AttachmentUploadComponent id={'2'}/>}
@@ -78,23 +73,10 @@ class BuzzFormComponent extends React.Component {
                     />
                     <input type={'submit'} value={'POST'}/>
                 </form>
-
-                {/*<button onClick={this.click}>Click</button>*/}
+                {this.props.buzz.buzzStatus === CREATE_BUZZ_STARTED && <LoaderView loadingText={'Please Wait!'}/>}
             </div>
         )
     }
-
 }
 
-const mapStateToProps = (state) => {
-    return {
-        buzz: state.buzz }
-};
-
-const mapDispatchToProps = {
-    createBuzzService
-};
-
-const BuzzFormConnect = connect(mapStateToProps, mapDispatchToProps)(BuzzFormComponent);
-
-export default BuzzFormConnect;
+export default BuzzFormComponent;

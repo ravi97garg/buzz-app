@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from "../modal";
+import Index from "./index";
 
 export default class ErrorView extends React.Component {
 
@@ -7,7 +7,7 @@ export default class ErrorView extends React.Component {
 
         const RecievedComponent = this.props.component;
         return (
-            <Modal component={
+            <Index component={
                 <div>
                     <div className={'modal-title'}>
                         {this.props.modalTitle}

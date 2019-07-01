@@ -1,9 +1,8 @@
 import React from "react";
-import {connect} from "react-redux";
-import {createComplaint, getDepartments} from "../../services/complaint.service";
-import {addComplaintAction, initComplaintAction} from "../../actions/complaint.action";
-import UploadComponent from "../uploaderComponent";
-import AttachmentUploadComponent from "../uploaderComponent/attachmentUpload";
+import {getDepartments} from "../../services/complaint.service";
+import UploadComponent from "../UploaderComponent";
+import AttachmentUploadComponent from "../UploaderComponent/AttachmentUpload";
+import {ADD_COMPLAINT_STARTED, ADD_COMPLAINT_SUCCESS} from "../../constants/complaints";
 
 class ComplaintForm extends React.Component {
 
@@ -14,7 +13,22 @@ class ComplaintForm extends React.Component {
             complaintDepartment: '',
             complaintTitle: '',
             complaintContent: '',
-            images: []
+            images: [],
+            toastClasses: 'snackbar '
+        }
+    }
+
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     if (this.state.toastClasses !== nextState.toastClasses) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.complaints.complaintStatus !== this.props.complaints.complaintStatus && this.props.complaints.complaintStatus === ADD_COMPLAINT_SUCCESS){
+            this.setToast();
+            console.log('hi', this.props.complaints.complaintStatus);
         }
     }
 
@@ -31,31 +45,44 @@ class ComplaintForm extends React.Component {
         console.log(e.target.files)
     };
 
+    setToast = () => {
+        console.log(1)
+        this.setState({
+            toastClasses: this.state.toastClasses + 'show-toast'
+        }, () => console.log(2));
+        
+        setTimeout(() => {
+            console.log(3)
+            this.setState({
+                toastClasses: 'snackbar '
+            }, () => {this.props.setComplaintStatusDefaultService(); console.log(4)});
+        }, 3000)
+    };
+
     submitHandle = (e) => {
         e.preventDefault();
         const {complaintDepartment, complaintTitle, complaintContent} = this.state;
-        const formData = new FormData();
-        formData.append('complaintDepartment', complaintDepartment);
-        formData.append('complaintTitle', complaintTitle);
-        formData.append('complaintContent', complaintContent);
-        for (var x = 0; x < this.state.images.length; x++) {
-            formData.append(`images[]`, this.state.images[x]);
+        if(complaintTitle.trim() && complaintContent.trim()){
+            const formData = new FormData();
+            formData.append('complaintDepartment', complaintDepartment);
+            formData.append('complaintTitle', complaintTitle.trim());
+            formData.append('complaintContent', complaintContent.trim());
+            for (let x = 0; x < this.state.images.length; x++) {
+                formData.append(`images[]`, this.state.images[x]);
+            }
+            this.props.createComplaint(formData);
+            getDepartments().then((departments) => {
+                this.setState({
+                    departments: departments,
+                    complaintDepartment: departments[0],
+                    complaintTitle: '',
+                    complaintContent: ''
+                })
+            });
+        } else {
+            alert("Fill something in Complaint Box");
         }
-        createComplaint(formData)
-            .then((res) => {
-                console.log(res);
-                this.props.addComplaintAction(res.newComplaint);
-            }).catch((err) => {
-            console.error(err);
-        });
-        getDepartments().then((departments) => {
-            this.setState({
-                departments: departments,
-                complaintDepartment: departments[0],
-                complaintTitle: '',
-                complaintContent: ''
-            })
-        });
+
     };
 
     render() {
@@ -75,6 +102,7 @@ class ComplaintForm extends React.Component {
                            required={true}
                            value={complaintTitle}
                            autoComplete={'off'}
+                           placeholder={'Complaint Subject Here'}
                     />
 
                     <label htmlFor={'complaintContent'}>Your Concern</label>
@@ -84,6 +112,7 @@ class ComplaintForm extends React.Component {
                         required={true}
                         value={complaintContent}
                         autoComplete={'off'}
+                        placeholder={'Complaint Details Here'}
                     />
                     <label htmlFor={'complaintDepartment'}>Department</label>
                     <select
@@ -107,6 +136,7 @@ class ComplaintForm extends React.Component {
                     <input type="submit" value="Log Complaint"/>
 
                 </form>
+                <div className={this.state.toastClasses}>Complaint added succesfully</div>
             </div>
         )
     }
@@ -121,18 +151,4 @@ class ComplaintForm extends React.Component {
     }
 }
 
-
-const mapStateToProps = (state) => {
-    return {
-        complaints: state.complaint
-    }
-};
-
-const mapDispatchToProps = {
-    initComplaintAction,
-    addComplaintAction
-};
-
-const ComplaintFormConnect = connect(mapStateToProps, mapDispatchToProps)(ComplaintForm);
-
-export default ComplaintFormConnect;
+export default ComplaintForm;

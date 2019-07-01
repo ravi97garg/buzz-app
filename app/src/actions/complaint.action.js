@@ -1,20 +1,38 @@
+import {
+    ADD_COMPLAINT_FAILED,
+    ADD_COMPLAINT_STARTED,
+    ADD_COMPLAINT_SUCCESS,
+    INIT_COMPLAINT_FAILED,
+    INIT_COMPLAINT_STARTED,
+    INIT_COMPLAINT_SUCCESS, SET_COMPLAINT_STATUS_DEFAULT
+} from "../constants/complaints";
 
-const initComplaint = (complaints) => ({
-    type: 'INIT_COMPLAINT',
+export const initComplaintStarted = () => ({
+    type: INIT_COMPLAINT_STARTED
+});
+
+export const initComplaintSuccess = (complaints) => ({
+    type: INIT_COMPLAINT_SUCCESS,
     payload: {complaints}
 });
 
-const addComplaint = (complaint) => ({
-    type: 'ADD_COMPLAINT',
+export const initComplaintFailed = () => ({
+    type: INIT_COMPLAINT_FAILED
+});
+
+export const addComplaintStarted = () => ({
+    type: ADD_COMPLAINT_STARTED
+});
+
+export const addComplaintSuccess = (complaint) => ({
+    type: ADD_COMPLAINT_SUCCESS,
     payload: {complaint}
 });
 
+export const addComplaintFailed = () => ({
+    type: ADD_COMPLAINT_FAILED
+});
 
-export const initComplaintAction = (complaints) => (dispatch) =>{
-    dispatch(initComplaint(complaints));
-};
-
-export const addComplaintAction = (complaint) => (dispatch) =>{
-    dispatch(addComplaint(complaint));
-};
-
+export const setComplaintStatusDefault = () => ({
+    type: SET_COMPLAINT_STATUS_DEFAULT
+});

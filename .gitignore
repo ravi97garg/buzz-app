@@ -319,7 +319,7 @@ lint/tmp/
 *.idea
 
 # My Constants
-server/constants/index.js
+server/constants/ComplaintTable.js
 
 # lint/reports/
 

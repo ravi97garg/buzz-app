@@ -2,6 +2,10 @@
     width: 80%;
     margin: 0 auto;
 }
+.app-title a{
+    text-decoration: none;
+    color: white;
+}
 
 .loginBg {
     position: relative;
@@ -45,10 +49,17 @@
 .login-btn-wrapper button {
     background-color: #c0392b;
     color: white;
-    padding: 6px 14px;
+    padding: 6px 20px;
     border: none;
     display: block;
     margin: auto;
+    font-weight: bolder;
+    border-radius: 20px;
+    font-size: 16px;
+}
+
+.login-btn-wrapper button:focus {
+    outline: none;
 }
 
 header {
@@ -172,7 +183,8 @@ header {
 }
 
 .nav-profile-img-wrapper {
-    width: 100%;
+    width: 220px;
+    height: 220px;
     border-radius: 200px;
     padding: 20px;
     box-sizing: border-box;
@@ -186,11 +198,11 @@ header {
 
 .nav-profile-img-wrapper > img {
     width: 100%;
+    height: 100%;
     border-radius: inherit;
     transition: filter .5s ease-in-out;
     -webkit-filter: grayscale(0%);
     filter: grayscale(0%);
-
 }
 
 .nav-profile-info-wrapper {
@@ -216,8 +228,8 @@ header {
 
 .post-wrapper-profile-img > img {
     width: 100%;
+    height: 100%;
     border-radius: inherit;
-
 }
 
 .post-wrapper {
@@ -225,6 +237,9 @@ header {
     border: 1px solid whitesmoke;
     padding: 10px;
     margin: 10px 0;
+    -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.4);
 }
 
 .post-header {
@@ -233,17 +248,13 @@ header {
 
 .post-header .post-type {
     display: block;
-    padding: 2px 8px;
     background-color: #2980b9;
     color: white;
     width: fit-content;
     font-weight: bolder;
-    border-radius: 4px;
-}
-
-.post-content {
-    font-size: 16px;
-    margin: 5px 0;
+    border-radius: 8px;
+    padding: 4px 10px;
+    margin-top: 4px;
 }
 
 .post-wrapper-profile-right {
@@ -252,20 +263,8 @@ header {
     padding-left: 10px;
 }
 
-.post-content {
-    padding: 10px 20px;
-    line-height: 20px;
-    background-color: white;
-}
-
 .post-footer > .reactions {
     padding: 5px 0;
-}
-
-.post-footer > .reactions > span {
-    padding: 2px 8px;
-    border-radius: 50%;
-    margin-right: 12px;
 }
 
 #notfound {
@@ -401,11 +400,6 @@ header {
     color: #000;
 }
 
-.active-reaction {
-    color: #c0392b;
-    background-color: yellow;
-}
-
 .complaint-form > * {
     display: block;
 }
@@ -521,7 +515,6 @@ header {
     z-index: 1;
 }
 
-
 .modal-overlay {
     position: fixed;
     width: 100%;
@@ -531,6 +524,20 @@ header {
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
+}
+
+.modal-close-btn {
+    float: right;
+    background: red;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.modal-close-btn:focus {
+    outline: none;
 }
 
 .tabcontent td:nth-child(1) {
@@ -549,9 +556,15 @@ header {
     display: none;
 }
 
+.reactions > svg {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 30px;
+}
+
 .reactions > svg:hover {
     /*font-size: 1.8em;*/
-    transform: scale(1.5);
+    transform: scale(1.2);
     transition: .2s ease-in-out;
 }
 
@@ -640,6 +653,41 @@ table {
     background-color: white;
 }
 
+.complaint-user-img-wrapper {
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.complaint-user-img-wrapper span {
+    display: block;
+    text-align: center;
+}
+
+.bold-text {
+    font-weight: bolder;
+}
+
+.user-icons-container {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.complaint-user-img-wrapper > img {
+    width: 100%;
+    border-radius: 100px;
+}
+
 .complaint-form select {
     display: inline-block;
 }
@@ -661,17 +709,133 @@ th, td {
     text-align: left;
 }
 
+.buzz-text {
+    word-wrap:break-word;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.post-content {
+    font-size: 16px;
+    margin: 5px 0;
+    line-height: 20px;
+    position: relative;
+    padding: 10px 20px 10px 10px;
+    background-color: white;
+    margin-top: 25px;
+    box-shadow: 0 2px 2px rgba(0 ,0 ,0 ,0.2);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
 .post-content textarea {
-    border: none;
-    background-color: inherit;
+    border: 1px solid #888;
+    border-radius: 3px;
+    background-color: #fff;
     color: #000000;
-    width: 94%;
-    /*resize: vertical;*/
+    width: 100%;
     font-size: 16px;
     resize: none;
+    padding: 4px;
 }
 
 .post-content svg {
-    float: right;
+    position: absolute;
+    top: 14px;
+    right: 17px;
 }
 
+.post-content textarea:focus {
+    outline-color: #2980b9;
+    border: 1px solid #2980b9;
+    
+}
+
+.post-content textarea:disabled {
+    border: 1px solid transparent;
+}
+
+.loader-text {
+    color: #2980b9;
+    font-size: 50px;
+    margin-left: 20px;
+}
+
+.loader-container {
+    display: block;
+    text-align: center;
+}
+
+.icon-count {
+    position: absolute;
+    transform: translate(-100%, -40%);
+    font-size: 14px;
+    padding: 2px 8px;
+    margin-right: 12px;
+    border-radius: 20px;
+    background-color: white;
+}
+
+.active-reaction {
+    color: white;
+    background-color: red;
+    font-weight: bolder;
+}
+
+/*Snackbar*/
+.snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+.show-toast {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+footer {
+    padding: 10px;
+    text-align: center;
+}
+
+.text-ellipsis {
+    text-overflow: 'ellipsis';
+    width: 120px;
+}
+
+.text-ellipsis:hover {
+    cursor: pointer;
+    color: #2980b9;
+}

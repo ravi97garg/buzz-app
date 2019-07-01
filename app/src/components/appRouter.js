@@ -1,14 +1,14 @@
 import React, {Fragment} from 'react';
 import {Switch, Route, Redirect} from "react-router-dom";
 import BuzzComponent from "./BuzzComponent";
-import LoginComponent from "./login";
+import LoginComponent from "./Login";
 import ResolveComponent from "./ResolveComponent";
 import ComplaintsComponent from "./ComplaintsComponent";
-import NavLinkComponent from "./navLinks";
+import NavLinkComponent from "./NavLinkComponent";
 import {connect} from "react-redux";
-import HeaderComponent from "./header";
-import FooterComponent from "./footer";
-import PageNotFoundComponent from "./pageNotFound";
+import HeaderComponent from "./HeaderComponent";
+import FooterComponent from "./FooterComponent";
+import PageNotFoundComponent from "./PageNotFoundComponent";
 import {createUser, userLoginFailed} from "../services/user.service";
 import {STATUS} from "../constants";
 import LoaderComponent from "./Loader";
@@ -17,7 +17,6 @@ import LoaderComponent from "./Loader";
 class AppRouterComponent extends React.Component {
 
     render() {
-        console.log('inside app router render', this.props.user.currentStatus);
         return (
             <Fragment>
                 {(this.props.user.currentStatus === STATUS.STARTED) ?
@@ -55,7 +54,6 @@ class AppRouterComponent extends React.Component {
     }
 
     componentDidMount() {
-        console.log('inside app router did mount');
         if (!localStorage.getItem("Token")) {
             // this.props.userLoginFailed();
             this.props.history.push('/login');
@@ -67,9 +65,7 @@ class AppRouterComponent extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
 
         if (this.props.user.currentStatus === STATUS.FAILED) {
-            console.log('reached up here and moving to login');
         } else if (this.props.user.currentStatus === STATUS.SUCCESS) {
-            console.log(`hello ${JSON.stringify(this.props)}`);
             if (this.props.location.pathname === '/' || this.props.location.pathname === '/token') {
                 this.props.history.push('/dashboard');
             }
@@ -78,7 +74,6 @@ class AppRouterComponent extends React.Component {
 }
 
 const TokenComponent = (props) => {
-    console.log('man=====', props.userStatus);
     const token = props.location.search.split('?q=')[1];
     localStorage.setItem('Token', token);
     props.history.push('/dashboard');
@@ -87,7 +82,6 @@ const TokenComponent = (props) => {
 
 const PrivateRoute = ({component: Component, path, userStatus, ...rest}) => {
     if (localStorage.getItem('Token') && userStatus === STATUS.SUCCESS) {
-        console.log(`hello location`);
         return <Route {...rest} path={path} render={(props) => (
             <div>
                 <HeaderComponent/>
@@ -100,18 +94,13 @@ const PrivateRoute = ({component: Component, path, userStatus, ...rest}) => {
                 <FooterComponent/>
             </div>)}/>
     } else if (localStorage.getItem('Token')) {
-        console.log('hey');
-        // rest.createUser();
         if (userStatus === STATUS.DEFAULT || userStatus === STATUS.STARTED) {
-            console.log('1', Component, path, userStatus);
             return <Route path={path} {...rest} render={() => <LoaderComponent/>}/>
         } else {
             if (userStatus === STATUS.SUCCESS) {
-                console.log('2');
                 rest.history.push('/dashboard');
                 return <Route {...rest} render={() => <Fragment/>}/>
             } else if (userStatus === STATUS.FAILED){
-                console.log('3');
                 rest.history.push('/login');
                 return <Route {...rest} render={() => <Fragment/>}/>
             } else {
@@ -129,7 +118,6 @@ const PrivateRoute = ({component: Component, path, userStatus, ...rest}) => {
             }
         }
     } else {
-        console.log("Invalid login");
         return <Route {...rest} path={path} render={(props) => <Redirect {...props} to={'/login'}/>
         }/>
     }

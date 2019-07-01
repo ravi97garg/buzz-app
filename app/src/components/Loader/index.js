@@ -1,11 +1,14 @@
 import React from 'react';
-import Modal from "../modal";
+import Index from "../ModalComponent";
+import LoaderView from "./view";
 
-class LoaderComponent extends React.Component{
+class LoaderComponent extends React.Component {
     render() {
         return (
-            <Modal
-                component={<h1>Loading</h1>}
+            <Index
+                component={<div className={'loader-container'}>
+                    <LoaderView/>
+                </div>}
             />
         )
     }

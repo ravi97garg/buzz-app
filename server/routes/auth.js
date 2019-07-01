@@ -2,6 +2,7 @@ const Express = require('express');
 const passport = require("passport");
 const router = Express.Router();
 const jwt = require('jsonwebtoken');
+const {generateToken} = require("../controllers/AuthController");
 const JWT_KEY =  require('../constants').JWT_KEY;
 
 router.get('/logout', (req, res) => {
@@ -23,19 +24,8 @@ router.get('/google', passport.authenticate('google',
 router.get('/google/redirect',
     passport.authenticate('google', {
         failureRedirect: '/google',
-        // successRedirect: '/'
     }),
-    function (req, res) {
-        jwt.sign(req.user.toJSON(), JWT_KEY, {expiresIn: "10h"},
-            function(err, token) {
-                if(err){
-                    console.error(`err: ${err}`);
-                } else {
-                    console.log(`token: ${token}`);
-                }
-                res.redirect(`http://localhost:3000/token?q=${token}`);
-        });
-    });
+    generateToken);
 
 
 

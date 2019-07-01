@@ -50,16 +50,4 @@ class CommentFormComponent extends React.Component {
 
 }
 
-const mapStateToProps = (state) => {
-    return {
-        buzz: state.buzz.buzzList
-    }
-};
-
-const mapDispatchToProps = {
-    createCommentAction
-};
-
-const CommentFormConnect = connect(mapStateToProps, mapDispatchToProps)(CommentFormComponent);
-
-export default CommentFormConnect;
+export default CommentFormComponent;

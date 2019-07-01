@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from "../modal";
+import Index from "./index";
 
 export default class ModalView extends React.Component {
 
@@ -7,9 +7,9 @@ export default class ModalView extends React.Component {
 
         const RecievedComponent = this.props.component;
         return (
-            <Modal component={
+            <Index component={
                 <div>
-                    <div className={'modal-title'}>
+                    <div className={'modal-title clearfix'}>
                         {this.props.modalTitle}
                         <button className={'modal-close-btn'} onClick={this.props.onClose}>
                             x

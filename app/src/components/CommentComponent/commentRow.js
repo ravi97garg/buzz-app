@@ -1,5 +1,4 @@
 import React from 'react';
-
 const {getTimeDifference} = require("../../utilities");
 
 class CommentRowComponent extends React.Component {

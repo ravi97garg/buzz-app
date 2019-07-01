@@ -16,7 +16,6 @@ export default class ComplaintDetails extends React.Component {
 
     componentDidMount() {
         getMyComplaintsDetailed(this.props.id).then((res) => {
-            console.log(`hey there ${JSON.stringify(res)}`);
             this.setState({
                 subject: res.complaints.subject,
                 complaintContent: res.complaints.complaintContent,
@@ -37,15 +36,21 @@ export default class ComplaintDetails extends React.Component {
         } = this.state;
         return (
             <div>
-                <div className={'comment-img-wrapper'}>
-                    <img alt={createdAt} src={loggedBy.profileImage}/>
-                </div>
-                <div className={'comment-img-wrapper'}>
-                    <img alt={createdAt} src={assignedTo.profileImage}/>
+                <div className={'user-icons-container clearfix'}>
+                    <div className={'complaint-user-img-wrapper left'}>
+                        <img alt={createdAt} src={loggedBy.profileImage}/>
+                        <span>Assigned by</span>
+                        <span className={'bold-text'}>{loggedBy.name}</span>
+                    </div>
+                    <div className={'complaint-user-img-wrapper right'}>
+                        <img alt={createdAt} src={assignedTo.profileImage}/>
+                        <span>Assigned to</span>
+                        <span className={'bold-text'}>{assignedTo.name}</span>
+                    </div>
                 </div>
                 <h2>{subject}</h2>
                 <p>{complaintContent}</p>
-                <span>{createdAt}</span>
+                <span>Logged on {new Date(createdAt).toLocaleString()}</span>
             </div>
         )
     }

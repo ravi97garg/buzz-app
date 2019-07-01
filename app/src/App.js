@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import AppRouterComponent from "./components/appRouter";
-import {createUser} from "./actions/user.action";
 import {connect} from "react-redux";
 
 class App extends React.Component{
@@ -10,7 +9,6 @@ class App extends React.Component{
   render() {
     return (
       <div>
-
         <Router>
           <Route component={AppRouterComponent}/>
         </Router>

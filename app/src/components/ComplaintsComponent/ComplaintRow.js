@@ -1,6 +1,6 @@
 import React from 'react';
 import ModalView from "../ModalComponent/ModalView";
-import ComplaintDetails from "./complaintDetails";
+import ComplaintDetails from "./ComplaintDetails";
 
 export default class ComplaintRow extends React.Component {
 
@@ -38,7 +38,7 @@ export default class ComplaintRow extends React.Component {
         return (
             <React.Fragment>
                 <tr key={id}>
-                    <td onClick={() => this.openDetailsModal(id)}><span style={{textOverflow: 'ellipsis', width: '120px'}}>{id}</span></td>
+                    <td onClick={() => this.openDetailsModal(id)}><span className={'text-ellipsis'}>{id}</span></td>
                     <td>{subject}</td>
                     <td>{department}</td>
                     <td>{name}</td>

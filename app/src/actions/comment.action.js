@@ -6,3 +6,4 @@ const createComment = (comment) => ({
 export const createCommentAction = (comment) => (dispatch) =>{
     dispatch(createComment(comment));
 };
+

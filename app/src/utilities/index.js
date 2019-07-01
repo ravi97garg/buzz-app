@@ -21,8 +21,19 @@ const getTimeDifference = (time) => {
     return message;
 };
 
+const addCarriageReturn = (text, cols) => {
+    let modifiedText = '';
+    let i=0;
+    for(i=0; i<Math.trunc(text.length/cols); i+=1){
+        modifiedText += text.slice(cols*i,cols*(i+1))+'\n';
+    }
+    modifiedText += text.slice(cols*i,cols*(i+1));
+    return modifiedText;
+};
+
 module.exports = {
     setToken,
     getToken,
-    getTimeDifference
+    getTimeDifference,
+    addCarriageReturn
 };
