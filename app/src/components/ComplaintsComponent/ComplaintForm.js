@@ -2,7 +2,7 @@ import React from "react";
 import {getDepartments} from "../../services/complaint.service";
 import UploadComponent from "../UploaderComponent";
 import AttachmentUploadComponent from "../UploaderComponent/AttachmentUpload";
-import {ADD_COMPLAINT_STARTED, ADD_COMPLAINT_SUCCESS} from "../../constants/complaints";
+import {ADD_COMPLAINT_SUCCESS} from "../../constants/complaints";
 
 class ComplaintForm extends React.Component {
 
@@ -18,17 +18,9 @@ class ComplaintForm extends React.Component {
         }
     }
 
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     if (this.state.toastClasses !== nextState.toastClasses) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.complaints.complaintStatus !== this.props.complaints.complaintStatus && this.props.complaints.complaintStatus === ADD_COMPLAINT_SUCCESS){
             this.setToast();
-            console.log('hi', this.props.complaints.complaintStatus);
         }
     }
 
@@ -42,20 +34,17 @@ class ComplaintForm extends React.Component {
         this.setState({
             images: e.target.files
         });
-        console.log(e.target.files)
     };
 
     setToast = () => {
-        console.log(1)
         this.setState({
             toastClasses: this.state.toastClasses + 'show-toast'
-        }, () => console.log(2));
+        });
         
         setTimeout(() => {
-            console.log(3)
             this.setState({
                 toastClasses: 'snackbar '
-            }, () => {this.props.setComplaintStatusDefaultService(); console.log(4)});
+            }, () => this.props.setComplaintStatusDefaultService());
         }, 3000)
     };
 
