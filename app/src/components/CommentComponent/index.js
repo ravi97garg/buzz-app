@@ -3,6 +3,7 @@ import CommentFormComponent from "./commentForm";
 import CommentListComponent from "./commentList";
 import {createCommentAction} from "../../actions/comment.action";
 import {connect} from "react-redux";
+import {setBuzzStatusDefaultAction} from "../../services/buzz.service";
 
 class CommentComponent extends React.Component {
 
@@ -13,6 +14,7 @@ class CommentComponent extends React.Component {
                     buzzId={this.props.buzzId}
                     post={this.props.post}
                     createCommentAction={this.props.createCommentAction}
+                    setBuzzStatusDefaultAction={this.props.setBuzzStatusDefaultAction}
                 />
                 <CommentListComponent
                     buzzId={this.props.buzzId}
@@ -31,7 +33,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    createCommentAction
+    createCommentAction,
+    setBuzzStatusDefaultAction
 };
 
 const CommentComponentConnect = connect(mapStateToProps, mapDispatchToProps)(CommentComponent);
