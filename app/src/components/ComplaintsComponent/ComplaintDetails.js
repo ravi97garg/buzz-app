@@ -35,8 +35,8 @@ export default class ComplaintDetails extends React.Component {
             assignedTo
         } = this.state;
         return (
-            <div>
-                <div className={'user-icons-container clearfix'}>
+            <div className='modalcontainer'>
+                <div className={'user-icons-container'}>
                     <div className={'complaint-user-img-wrapper left'}>
                         <img alt={createdAt} src={loggedBy.profileImage}/>
                         <span>Assigned by</span>
@@ -48,7 +48,7 @@ export default class ComplaintDetails extends React.Component {
                         <span className={'bold-text'}>{assignedTo.name}</span>
                     </div>
                 </div>
-                <h2>{subject}</h2>
+                <h2 className='complaintheading'>{subject}</h2>
                 <p>{complaintContent}</p>
                 <span>Logged on {new Date(createdAt).toLocaleString()}</span>
             </div>
