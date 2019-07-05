@@ -1,26 +1,35 @@
 import React from 'react';
-import Index from "./index";
+import Modal from "./index";
+import {faWindowClose} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export default class ModalView extends React.Component {
 
     render() {
 
-        const RecievedComponent = this.props.component;
+        const ReceivedComponent = this.props.component;
         return (
-            <Index component={
+            <Modal component={
                 <div>
                     <div className={'modal-title clearfix'}>
                         {this.props.modalTitle}
-                        <button className={'modal-close-btn'} onClick={this.props.onClose}>
-                            x
-                        </button>
+                        <FontAwesomeIcon
+                            icon={faWindowClose}
+                            color="red"
+                            onClick={this.props.onClose}
+                            size="lg"
+                            title={'Close'}
+                            className={'modal-close-btn'}
+                        />
                     </div>
-                    <RecievedComponent/>
+                    <ReceivedComponent/>
                     <div className={'modal-footer'}>
                         {this.props.modalFooter}
                     </div>
                 </div>
-            }/>
+            }
+                   onClose={this.props.onClose}
+            />
         )
     }
 }
