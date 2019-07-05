@@ -8,7 +8,6 @@ import {changeProfileImageService} from "../../services/user.service";
 class NavLinkComponent extends React.Component {
 
     changeProfile = (e) => {
-        console.log('yahaa');
         const formData = new FormData();
         formData.append('image',e.target.files[0]);
         this.props.changeProfileImageService(formData);
