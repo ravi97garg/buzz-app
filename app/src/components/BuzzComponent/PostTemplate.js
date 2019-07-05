@@ -12,6 +12,8 @@ import {
 import {getTimeDifference} from "../../utilities";
 import CommentComponent from "../CommentComponent";
 import {REACTION} from "../../constants";
+import ImagesContainer from "./ImagesContainer";
+import ImageModalView from "../ModalComponent/ImageView";
 
 export default class PostTemplateComponent extends React.Component {
 
@@ -22,7 +24,9 @@ export default class PostTemplateComponent extends React.Component {
             editBuzz: false,
             showEditIcon: true,
             buzzContent: props.post.buzzContent,
-            noOfLines: props.post.buzzContent.split("\n").length
+            noOfLines: props.post.buzzContent.split("\n").length,
+            showFullSizeImage: false,
+            zoomImage: null
         };
         this.textInput = React.createRef();
     }
@@ -38,9 +42,9 @@ export default class PostTemplateComponent extends React.Component {
 
     autoExpand = (field) => {
 
-        var computed = window.getComputedStyle(field);
+        const computed = window.getComputedStyle(field);
 
-        var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+        const height = parseInt(computed.getPropertyValue('border-top-width'), 10)
             + parseInt(computed.getPropertyValue('padding-top'), 10)
             + field.scrollHeight
             + parseInt(computed.getPropertyValue('padding-bottom'), 10)
@@ -61,7 +65,7 @@ export default class PostTemplateComponent extends React.Component {
         }
     };
 
-    editBuzzContent = (id) => {
+    editBuzzContent = () => {
         this.textInput.current.focus();
         this.setState({
             editBuzz: true,
@@ -81,6 +85,20 @@ export default class PostTemplateComponent extends React.Component {
         } else {
             return 'hide-comments'
         }
+    };
+
+    zoomImage = (index) => {
+        console.log('hi');
+        this.setState({
+            showFullSizeImage: true,
+            zoomImage: this.props.post.images[index]
+        })
+    };
+
+    onCloseImageModal = () => {
+        this.setState({
+            showFullSizeImage: false
+        })
     };
 
     handleChange = (e) => {
@@ -152,7 +170,7 @@ export default class PostTemplateComponent extends React.Component {
                     {postedBy._id === user._id ? (this.state.showEditIcon ? <FontAwesomeIcon
                         icon={faPenSquare}
                         color="blue"
-                        onClick={() => this.editBuzzContent(_id)}
+                        onClick={this.editBuzzContent}
                         size="lg"
                         title={'Edit Buzz'}
                     /> : <FontAwesomeIcon
@@ -168,16 +186,7 @@ export default class PostTemplateComponent extends React.Component {
                         size="lg"
                         title={'Report Post'}
                     />}
-                    <div className={'post-img-wrapper'}>
-                        {images.map((image, i) => {
-                            return <img
-                                key={'image' + i}
-                                alt={'image' + i}
-                                src={`${image.split('upload')[0]}upload/q_60,h_200${image.split('upload')[1]}`}
-                            />
-                        })}
-
-                    </div>
+                    <ImagesContainer images={images} type={'view'} onImageClick={this.zoomImage}/>
                 </div>
                 <div className={'post-footer'}>
                     <div className={'reactions'}>
@@ -222,6 +231,7 @@ export default class PostTemplateComponent extends React.Component {
                         />
                     </div>
                 </div>
+                {this.state.showFullSizeImage && <ImageModalView imageUrl={this.state.zoomImage} onClose={this.onCloseImageModal}/>}
             </div>
         )
     }
