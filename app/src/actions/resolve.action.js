@@ -1,4 +1,6 @@
 import {
+    ASSIGN_ROLE_FAILED,
+    ASSIGN_ROLE_STARTED, ASSIGN_ROLE_SUCCESS,
     GET_MY_RESOLVE_FAILED,
     GET_MY_RESOLVE_STARTED,
     GET_MY_RESOLVE_SUCCESS,
@@ -36,10 +38,6 @@ export const getMyResolvesFailed = () => ({
     type: GET_MY_RESOLVE_FAILED
 });
 
-// export const updateStatusAction = (complaintId, status) => (dispatch) => {
-//     dispatch(updateComplaintStatus(complaintId, status));
-// };
-
 export const updateComplaintStatusStarted = () => ({
     type: UPDATE_COMPLAINT_STATUS_STARTED
 });
@@ -55,4 +53,17 @@ export const updateComplaintStatusSuccess = (complaintId, status) => ({
 
 export const setResolveStatusDefault = () => ({
     type: SET_RESOLVE_STATUS_DEFAULT
+});
+
+export const assignResolveStarted = () => ({
+    type: ASSIGN_ROLE_STARTED
+});
+
+export const assignResolveSuccess = (user) => ({
+    type: ASSIGN_ROLE_SUCCESS,
+    payload: {user}
+});
+
+export const assignResolveFailed = () => ({
+    type: ASSIGN_ROLE_FAILED
 });
