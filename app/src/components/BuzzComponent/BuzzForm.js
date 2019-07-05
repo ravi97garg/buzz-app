@@ -4,6 +4,7 @@ import AttachmentUploadComponent from "../UploaderComponent/AttachmentUpload";
 import {CREATE_BUZZ_STARTED} from "../../constants/buzz";
 import LoaderView from "../Loader/view";
 import {addCarriageReturn} from "../../utilities";
+import ImagesContainer from "./ImagesContainer";
 
 class BuzzFormComponent extends React.Component {
 
@@ -39,7 +40,6 @@ class BuzzFormComponent extends React.Component {
 
     };
 
-
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -48,8 +48,15 @@ class BuzzFormComponent extends React.Component {
 
     addImage = (e) => {
         this.setState({
-            images: e.target.files
+            images: this.state.images.concat(Array.from(e.target.files))
         });
+        console.log(Array.from(e.target.files));
+    };
+
+    deleteImage = (index) => {
+        this.setState({
+            images: this.state.images.filter((val, i) => {return i!== index})
+        })
     };
 
     render() {
@@ -62,16 +69,23 @@ class BuzzFormComponent extends React.Component {
                         value={this.state.buzzContent}
                         placeholder={'Create your own buzz...'}
                     />
-                    <select name={'category'} onChange={this.handleChange}>
-                        <option value={'activity'}>Activity</option>
-                        <option value={'lostFound'}>Lost and Found</option>
-                    </select>
-                    <UploadComponent id={'2'}
-                                     addImage={this.addImage}
-                                     uploaderLabel={() => <AttachmentUploadComponent id={'2'}/>}
-                                     multiple={true}
+                    <div>
+                        <select name={'category'} onChange={this.handleChange}>
+                            <option value={'activity'}>Activity</option>
+                            <option value={'lostFound'}>Lost and Found</option>
+                        </select>
+                        <UploadComponent id={'2'}
+                                         addImage={this.addImage}
+                                         uploaderLabel={() => <AttachmentUploadComponent id={'2'}/>}
+                                         multiple={true}
+                        />
+                        <input type={'submit'} value={'POST'}/>
+                    </div>
+                    <ImagesContainer
+                        images={this.state.images}
+                        type={'upload'}
+                        onImageClick={this.deleteImage}
                     />
-                    <input type={'submit'} value={'POST'}/>
                 </form>
                 {this.props.buzz.buzzStatus === CREATE_BUZZ_STARTED && <LoaderView loadingText={'Please Wait!'}/>}
             </div>
