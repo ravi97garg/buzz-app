@@ -5,7 +5,6 @@ export default class PageNotFoundComponent extends React.Component{
 
     goBack = () => {
         this.props.history.push('/dashboard');
-        // this.props.history.goBack();
     };
 
     render(){
