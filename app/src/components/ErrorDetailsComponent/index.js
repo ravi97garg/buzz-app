@@ -5,7 +5,7 @@ export default class ErrorDetailsComponent extends React.Component {
     render() {
         return (
             <div>
-                Error!
+                Oops! An Error Occured
             </div>
         )
     }
