@@ -1,14 +1,13 @@
 import React from 'react';
 import {postCommentService} from "../../services/comment.service";
-import {connect} from "react-redux";
-import {createCommentAction} from "../../actions/comment.action";
 
 class CommentFormComponent extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            comment: ''
+            comment: '',
+            toastClasses: 'snackbar '
         }
     }
 
@@ -18,17 +17,29 @@ class CommentFormComponent extends React.Component {
         })
     };
 
+    showToast = () => {
+        this.setState({
+            toastClasses: this.state.toastClasses + 'show-toast'
+        });
+
+        setTimeout(() => {
+            this.setState({
+                toastClasses: 'snackbar '
+            }, this.props.setBuzzStatusDefaultAction());
+        }, 3000)
+    };
+
     handleSubmit = (e) => {
         e.preventDefault();
         postCommentService(this.props.buzzId, this.state.comment).then((res) => {
-            console.log(res.comment);
             this.props.createCommentAction(res.comment);
-        }).catch((err) => {
-            console.error(err);
+            this.setState({
+                comment: ''
+            })
+        }).catch(() => {
+            this.showToast()
         });
-        this.setState({
-            comment: ''
-        })
+
     };
 
     render() {
@@ -44,10 +55,10 @@ class CommentFormComponent extends React.Component {
                     />
                     <input type={'submit'} value={'POST'}/>
                 </form>
+                <div className={this.state.toastClasses}>Oops! An Error Occured</div>
             </div>
         )
     }
-
 }
 
 export default CommentFormComponent;
