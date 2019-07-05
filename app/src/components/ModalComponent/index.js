@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 const modalRoot = document.getElementById('modal-root');
 
-class Index extends React.Component {
+class Modal extends React.Component {
 
     componentDidMount() {
         document.getElementsByTagName('body')[0].style.overflow = 'hidden';
@@ -11,8 +11,12 @@ class Index extends React.Component {
 
     render() {
         return ReactDOM.createPortal(
-            <div className={'modal-overlay'}>
-                <div className={'modal-wrapper'}>
+            <div className={'modal-overlay'}
+                 onClick={this.props.onClose}
+            >
+                <div className={'modal-wrapper'}
+                     onClick={(e) => {e.stopPropagation();}}
+                >
                     {this.props.component}
                 </div>
             </div>
@@ -26,4 +30,4 @@ class Index extends React.Component {
 
 }
 
-export default Index;
+export default Modal;
