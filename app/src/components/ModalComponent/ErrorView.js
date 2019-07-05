@@ -5,7 +5,7 @@ export default class ErrorView extends React.Component {
 
     render() {
 
-        const RecievedComponent = this.props.component;
+        const ReceivedComponent = this.props.component;
         return (
             <Index component={
                 <div>
@@ -15,7 +15,7 @@ export default class ErrorView extends React.Component {
                             x
                         </button>
                     </div>
-                    <RecievedComponent/>
+                    <ReceivedComponent/>
                     <div className={'modal-footer'}>
                         {this.props.modalFooter}
                     </div>
