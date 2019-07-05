@@ -14,7 +14,8 @@ class BuzzPosts extends React.Component {
             limit: 10,
             uptime: null,
             downtime: null,
-            showLoadMore: props.buzz.showLoadMore
+            showLoadMore: props.buzz.showLoadMore,
+            toastClasses: 'snackbar '
         };
     }
 
@@ -35,6 +36,18 @@ class BuzzPosts extends React.Component {
                 this.handleLoadMore();
             }
         }
+    };
+
+    showToast = () => {
+        this.setState({
+            toastClasses: this.state.toastClasses + 'show-toast'
+        });
+
+        setTimeout(() => {
+            this.setState({
+                toastClasses: 'snackbar '
+            }, this.props.setBuzzStatusDefaultAction());
+        }, 3000)
     };
 
     showLoadMore = () => {
@@ -70,9 +83,8 @@ class BuzzPosts extends React.Component {
             });
             this.props.setBuzzStatusDefaultAction();
         } else if (this.props.buzz.buzzStatus === STATUS.FAILED) {
-            console.error(`err`);
+            this.showToast()
         }
-
     }
 
     render() {
@@ -100,6 +112,7 @@ class BuzzPosts extends React.Component {
                         </Fragment>
                     )
                 }
+                <div className={this.state.toastClasses}>Oops! An Error Occured</div>
             </div>
         )
     }
