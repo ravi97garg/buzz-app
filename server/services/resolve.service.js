@@ -26,8 +26,13 @@ const changeStatusService = (complaintId, status) => {
     return Complaint.updateOne({_id: complaintId}, {status: status});
 };
 
+const assignResolve = (resolveId, userId) => {
+    return Complaint.updateOne({_id: resolveId}, {assignedTo: userId})
+};
+
 module.exports = {
     getInitResolves,
     changeStatusService,
-    getMyDepartmentResolves
+    getMyDepartmentResolves,
+    assignResolve
 };

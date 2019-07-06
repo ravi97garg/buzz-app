@@ -37,7 +37,9 @@ const getUserComplaintsDetailed = (complaintId) => {
 };
 
 const getUserComplaintsBrief = (user) => {
-    return Complaint.find({loggedBy: user}, {subject: 1, department: 1, status: 1, assignedTo: 1})
+    return Complaint
+        .find({loggedBy: user}, {subject: 1, department: 1, status: 1, assignedTo: 1})
+        .sort({'createdAt': -1})
         .populate({
             path: 'assignedTo'
         })

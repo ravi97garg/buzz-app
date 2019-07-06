@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('./User');
 const Reactions = require('./Reaction');
+const {buzzCategory} = require('../constants');
+
 
 const BuzzSchema = new Schema({
     buzzContent: {
@@ -10,6 +12,8 @@ const BuzzSchema = new Schema({
     },
     category: {
         type: String,
+        enum: [buzzCategory.ACTIVITY, buzzCategory.LOSTFOUND],
+        default: buzzCategory.ACTIVITY,
         required: true
     },
     images: {

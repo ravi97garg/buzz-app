@@ -10,8 +10,31 @@ const CLOUDINARY_API_KEY = '295531686213238';
 const CLOUDINARY_API_SECRET = '-zMFnMD_rqF2vJtU7vcCfw0B9hY';
 
 const SENDGRID_NAME = 'ttn buzz email';
-const SENDGRID_API_KEY = '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';
+const SENDGRID_API_KEY = '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';
 // const SENDGRID_API_KEY = 'SG.pammAjw9RpGUjJlJhVjAzw.qYAmYpCdvQRJcGaTYjHJSrj-uNmgfVLrRvElewJVTSI';
+
+const userRoles = {
+    USER: 'User',
+    ADMIN: 'Admin'
+};
+
+const buzzCategory = {
+    ACTIVITY: 'activity',
+    LOSTFOUND: 'lostFound'
+};
+
+const adminDepartments = {
+    HR: 'HR',
+    IT: 'IT',
+    OTHERS: 'Others'
+};
+
+const complaintStatus = {
+    PENDING: 'Pending',
+    INPROGRESS: 'In Progress',
+    COMPLETED: 'Completed',
+    CLOSED: 'Closed'
+}
 
 module.exports = {
     CLIENT_ID,
@@ -22,5 +45,10 @@ module.exports = {
     CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET,
     SENDGRID_NAME,
-    SENDGRID_API_KEY
+    SENDGRID_API_KEY,
+
+    userRoles,
+    buzzCategory,
+    adminDepartments,
+    complaintStatus
 };

@@ -60,7 +60,7 @@ const createNewComplaint = (req, res) => {
                             .then(() => console.log("mailed successfully to logger"))
                             .catch(() => console.log("mail failed"));
                         sgMail.send(msgToAssignee)
-                            .then(() => console.log("mailed successfully to logger"))
+                            .then(() => console.log("mailed successfully to assignee"))
                             .catch(() => console.log("mail failed"));
                         res.send({newComplaint: populatedComplaint, status: 1});
                     }

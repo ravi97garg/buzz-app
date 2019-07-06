@@ -1,13 +1,20 @@
 const {verifyToken} = require("../utilities");
+const {findUserByEmail} = require('../services/user.service');
 
 const dataRouteMiddleware = (req, res, next) => {
-    let user = verifyToken(req.headers.authorization);
-    if(user){
-        req.userId = user._id;
-        req.user = user;
-        next();
+    let decodedToken = verifyToken(req.headers.authorization);
+    if (decodedToken.email) {
+        findUserByEmail(decodedToken.email)
+            .then((user) => {
+                req.userId = user._id;
+                req.user = user;
+                next();
+            })
+            .catch((err) => {
+                res.status(401).send(err)
+            })
     } else {
-        res.send({message: 'Not authenticated', status: 0});
+        res.status(401).send({message: 'Not authenticated', status: 0});
     }
 };
 

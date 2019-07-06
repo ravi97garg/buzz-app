@@ -46,7 +46,6 @@ const getMoreBuzzService = (limit, endTime) => {
         .limit(limit + 1)
         .populate({
             path: 'postedBy',
-
         })
 };
 
@@ -66,7 +65,10 @@ const getReactionService = (postId) => {
 };
 
 const getCommentService = (postId) => {
-    return Comment.find({commentPostId: postId}).populate({path: 'commentBy'})
+    return Comment
+        .find({commentPostId: postId})
+        .sort({'commentedOn': -1})
+        .populate({path: 'commentBy'})
 };
 
 

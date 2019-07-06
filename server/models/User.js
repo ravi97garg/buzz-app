@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const {adminDepartments, userRoles} = require('../constants');
 
 const UserSchema = new Schema({
     googleId : {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     name : {
         type: String,
@@ -12,10 +14,16 @@ const UserSchema = new Schema({
     },
     email : {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     role : {
         type: String,
+        enum: [
+            userRoles.USER,
+            userRoles.ADMIN
+        ],
+        default: userRoles.USER,
         required: true
     },
     profileImage : {
@@ -24,6 +32,11 @@ const UserSchema = new Schema({
     },
     department : {
         type: String,
+        enum: [
+            adminDepartments.HR,
+            adminDepartments.IT,
+            adminDepartments.OTHERS
+        ],
         required: true
     },
     provider : {

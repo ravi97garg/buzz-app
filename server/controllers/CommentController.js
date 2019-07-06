@@ -1,4 +1,5 @@
 const {createCommentService} = require("../services/comment.service");
+const Comment = require("../models/Comment");
 
 const postComment = (req, res) => {
     const {buzzId, comment} = req.body;

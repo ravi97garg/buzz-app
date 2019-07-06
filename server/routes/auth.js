@@ -1,12 +1,10 @@
 const Express = require('express');
 const passport = require("passport");
 const router = Express.Router();
-const jwt = require('jsonwebtoken');
+const {authenticateUser} = require("../controllers/UserController");
 const {generateToken} = require("../controllers/AuthController");
-const JWT_KEY =  require('../constants').JWT_KEY;
 
 router.get('/logout', (req, res) => {
-    // req.logout();
     console.log(`Hello ${req.user}`);
     res.send(req.user)
 });
@@ -27,6 +25,14 @@ router.get('/google/redirect',
     }),
     generateToken);
 
-
+router.get('/authenticate/:token',
+    (req, res, next) => {
+        if (req.params.token) {
+            next();
+        } else {
+            res.status(401).send()
+        }
+    }, authenticateUser
+);
 
 module.exports = router;

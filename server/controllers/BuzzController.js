@@ -8,7 +8,7 @@ const {getNewBuzzs} = require("../services/buzz.service");
 const {createBuzzService} = require("../services/buzz.service");
 const {dataUri} = require("../config/multer.config");
 const {uploader} = require("../config/cloudinary.config");
-const {sgMail} = require('../config/sendgrid.config');
+const sgMail = require('../config/sendgrid.config');
 
 const createNewBuzz = (req, res) => {
     try {
@@ -30,7 +30,7 @@ const createNewBuzz = (req, res) => {
                             reactionPromises.push(getReactionService(item._id));
                             commentPromises.push(getCommentService(item._id));
                         });
-                        let buzzsWithReactions = await Promise.all(reactionPromises); //Promise.all([...reactionPromises]);
+                        let buzzsWithReactions = await Promise.all(reactionPromises);
                         let buzzsWithComments = await Promise.all(commentPromises);
                         let tempBuzzs = buzzs;
                         buzzs = tempBuzzs.map((item, index) => {
@@ -56,10 +56,15 @@ const createNewBuzz = (req, res) => {
     }
 };
 
-const getInitialBuzzs = async (req, res) => {
+const getBuzzs = async (req, res) => {
     try {
-        const {limit} = req.body;
-        let buzzs = await getInitialBuzzService(limit);
+        const {limit, endTime} = req.query;
+        let buzzs = [];
+        if(endTime){
+            buzzs = await getMoreBuzzService(+limit, new Date(endTime));
+        } else {
+            buzzs = await getInitialBuzzService(+limit);
+        }
         const reactionPromises = [];
         const commentPromises = [];
         buzzs.forEach(item => {
@@ -79,32 +84,6 @@ const getInitialBuzzs = async (req, res) => {
         console.error(e);
         res.status(400).send({message: 'DBError', status: 2});
     }
-};
-
-const getMoreBuzzs = (req, res) => {
-    const {limit, endTime} = req.body;
-    let extractedBuzzs = [];
-    getMoreBuzzService(limit, endTime).then(async (buzzs) => {
-        extractedBuzzs = buzzs;
-        const reactionPromises = [];
-        const commentPromises = [];
-        buzzs.forEach(item=>{
-            reactionPromises.push(getReactionService(item._id));
-            commentPromises.push(getCommentService(item._id));
-        });
-        const buzzsWithReactions = await Promise.all(reactionPromises); //Promise.all([...reactionPromises]);
-        const buzzsWithComments = await Promise.all(commentPromises);
-        let tempBuzzs = buzzs;
-        buzzs = tempBuzzs.map((item, index) => {
-            item._doc['reactions'] = buzzsWithReactions[index];
-            item._doc['comments'] = buzzsWithComments[index];
-            return item;
-        });
-        res.send({extractedBuzzs: buzzs, status: 1});
-    }).catch((err) => {
-        console.error(err);
-        res.status(400).send({message: 'DBError', status: 2});
-    });
 };
 
 const updateBuzz = (req, res) => {
@@ -137,8 +116,7 @@ const reportBuzz = async (req, res) => {
 
 module.exports = {
     createNewBuzz,
-    getInitialBuzzs,
-    getMoreBuzzs,
+    getBuzzs,
     updateBuzz,
     reportBuzz
 };

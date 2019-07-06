@@ -5,7 +5,7 @@ const {postComment} = require("../controllers/CommentController");
 const {postReaction} = require("../controllers/ReactionController");
 const {
     createNewBuzz,
-    getInitialBuzzs,
+    getBuzzs,
     getMoreBuzzs,
     updateBuzz,
     reportBuzz
@@ -16,13 +16,20 @@ router.post('/createBuzz',
     createNewBuzz
 );
 
-router.post('/getInitialBuzz',
-    getInitialBuzzs
+router.get('/getBuzz',
+    (req, res, next) => {
+        if (req.query.limit) {
+            next();
+        } else {
+            res.status(400).send()
+        }
+    }
+    , getBuzzs
 );
 
-router.post('/getMoreBuzz',
-    getMoreBuzzs
-);
+// router.post('/getMoreBuzz',
+//     getMoreBuzzs
+// );
 
 router.post('/postReaction',
     postReaction
