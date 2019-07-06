@@ -6,13 +6,20 @@ const {postReaction} = require("../controllers/ReactionController");
 const {
     createNewBuzz,
     getBuzzs,
-    getMoreBuzzs,
     updateBuzz,
     reportBuzz
 } = require("../controllers/BuzzController");
 
 router.post('/createBuzz',
     multerUploads,
+    (req, res, next) => {
+        if (req.files && req.userId) {
+            req.body.postedBy = req.userId;
+            next()
+        } else {
+            res.status(400).send();
+        }
+    },
     createNewBuzz
 );
 
@@ -27,23 +34,57 @@ router.get('/getBuzz',
     , getBuzzs
 );
 
-// router.post('/getMoreBuzz',
-//     getMoreBuzzs
-// );
-
 router.post('/postReaction',
+    (req, res, next) => {
+        const {buzzId, reactionType} = req.body;
+        if (buzzId && reactionType && req.userId) {
+            next();
+        } else {
+            res.status(400).send();
+        }
+    },
     postReaction
 );
 
 router.post('/postComment',
+    (req, res, next) => {
+        const {buzzId, comment} = req.body;
+        if (buzzId && comment && req.userId) {
+            next();
+        } else {
+            res.status(400).send();
+        }
+    },
     postComment
 );
 
 router.post('/updateBuzz',
+    (req, res, next) => {
+        const {
+            buzzId,
+            buzzContent
+        } = req.body;
+        if (buzzId && buzzContent) {
+            next();
+        } else {
+            res.status(400).send();
+        }
+    },
     updateBuzz
-);
+)
+;
 
 router.post('/report',
+    (req, res, next) => {
+        const {
+            buzzId,
+        } = req.body;
+        if (buzzId) {
+            next();
+        } else {
+            res.status(400).send();
+        }
+    },
     reportBuzz
 );
 

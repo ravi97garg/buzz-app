@@ -21,7 +21,9 @@ router.get('/google', passport.authenticate('google',
 
 router.get('/google/redirect',
     passport.authenticate('google', {
-        failureRedirect: '/google',
+        // failureRedirect: '/google',
+        failureRedirect: 'http://localhost:3000/authenticationFailed',
+        failureFlash: true
     }),
     generateToken);
 

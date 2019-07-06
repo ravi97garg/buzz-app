@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('./User');
-const Reactions = require('./Reaction');
 const {buzzCategory} = require('../constants');
 
 

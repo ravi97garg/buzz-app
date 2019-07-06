@@ -8,8 +8,7 @@ router.get('/:id', (req, res) => {
     findUserByID(req.params.id).then((user) => {
         res.send(user);
     }).catch((err) => {
-        console.error(err);
-        res.send({message: 'DBError', status: 2})
+        res.status(400).send({message: 'DBError', status: 2})
     });
 });
 

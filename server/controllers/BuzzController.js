@@ -12,44 +12,39 @@ const sgMail = require('../config/sendgrid.config');
 
 const createNewBuzz = (req, res) => {
     try {
-        req.body.postedBy = req.userId;
-        if (req.files) {
-            let uploaderPromises = [];
-            req.files.forEach((file) => {
-                uploaderPromises.push(uploader.upload(dataUri(file).content));
+        let uploaderPromises = [];
+        req.files.forEach((file) => {
+            uploaderPromises.push(uploader.upload(dataUri(file).content));
+        });
+        Promise.all(uploaderPromises).then((result) => {
+            req.body.images = result.map((file) => {
+                return file.secure_url
             });
-            Promise.all(uploaderPromises).then((result) => {
-                req.body.images = result.map((file) => {
-                    return file.secure_url
-                });
-                createBuzzService(req.body).then(() => {
-                    getNewBuzzs(req.body.startTime).then(async (buzzs) => {
-                        const reactionPromises = [];
-                        const commentPromises = [];
-                        buzzs.forEach(item => {
-                            reactionPromises.push(getReactionService(item._id));
-                            commentPromises.push(getCommentService(item._id));
-                        });
-                        let buzzsWithReactions = await Promise.all(reactionPromises);
-                        let buzzsWithComments = await Promise.all(commentPromises);
-                        let tempBuzzs = buzzs;
-                        buzzs = tempBuzzs.map((item, index) => {
-                            item._doc['reactions'] = buzzsWithReactions[index];
-                            item._doc['comments'] = buzzsWithComments[index];
-                            return item;
-                        });
-                        res.send({message: 'OK', status: 1, extractedBuzzs: buzzs})
-                    })
-                }).catch(() => {
-                    res.status(400).send({message: 'DBError', status: 2});
+            createBuzzService(req.body).then(() => {
+                getNewBuzzs(req.body.startTime).then(async (buzzs) => {
+                    const reactionPromises = [];
+                    const commentPromises = [];
+                    buzzs.forEach(item => {
+                        reactionPromises.push(getReactionService(item._id));
+                        commentPromises.push(getCommentService(item._id));
+                    });
+                    let buzzsWithReactions = await Promise.all(reactionPromises);
+                    let buzzsWithComments = await Promise.all(commentPromises);
+                    let tempBuzzs = buzzs;
+                    buzzs = tempBuzzs.map((item, index) => {
+                        item._doc['reactions'] = buzzsWithReactions[index];
+                        item._doc['comments'] = buzzsWithComments[index];
+                        return item;
+                    });
+                    res.send({message: 'OK', status: 1, extractedBuzzs: buzzs})
                 })
-            }).catch((err) => {
-                console.error(err);
+            }).catch(() => {
                 res.status(400).send({message: 'DBError', status: 2});
-            });
-
-        }
-
+            })
+        }).catch((err) => {
+            console.error(err);
+            res.status(400).send({message: 'DBError', status: 2});
+        });
     } catch (e) {
         console.error(e);
         res.status(400).send({message: 'DBError', status: 2});
@@ -60,7 +55,7 @@ const getBuzzs = async (req, res) => {
     try {
         const {limit, endTime} = req.query;
         let buzzs = [];
-        if(endTime){
+        if (endTime) {
             buzzs = await getMoreBuzzService(+limit, new Date(endTime));
         } else {
             buzzs = await getInitialBuzzService(+limit);
@@ -71,7 +66,7 @@ const getBuzzs = async (req, res) => {
             reactionPromises.push(getReactionService(item._id));
             commentPromises.push(getCommentService(item._id));
         });
-        const buzzsWithReactions = await Promise.all(reactionPromises); //Promise.all([...reactionPromises]);
+        const buzzsWithReactions = await Promise.all(reactionPromises);
         const buzzsWithComments = await Promise.all(commentPromises);
         let tempBuzzs = buzzs;
         buzzs = tempBuzzs.map((item, index) => {

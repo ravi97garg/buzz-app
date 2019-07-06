@@ -42,6 +42,11 @@ const reaction = {
     SAD: 'sad'
 };
 
+const complaintReqType = {
+    BRIEF: 'brief',
+    DETAILED: 'detailed'
+};
+
 module.exports = {
     CLIENT_ID,
     SECRET_KEY,
@@ -57,5 +62,6 @@ module.exports = {
     buzzCategory,
     adminDepartments,
     complaintStatus,
-    reaction
+    reaction,
+    complaintReqType
 };

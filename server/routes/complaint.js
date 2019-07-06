@@ -13,10 +13,34 @@ router.get('/getDepartments',
 
 router.post('/postComplaint',
     multerUploads,
+    (req, res, next) => {
+        const {
+            complaintDepartment,
+            complaintTitle,
+            complaintContent,
+        } = req.body;
+        const {
+            _id,
+            email
+        } = req.user;
+        if (req.files && _id && email && complaintDepartment && complaintContent && complaintTitle) {
+            next();
+        } else {
+            res.status(400).send();
+        }
+    },
     createNewComplaint
 );
 
 router.get('/getMyComplaint',
+    (req, res, next) => {
+        const complaintRequestType = req.query.type;
+        if (complaintRequestType === complaintReqType.BRIEF || complaintRequestType === complaintReqType.DETAILED) {
+            next();
+        } else {
+            res.status(401).send();
+        }
+    },
     getMyComplaints
 );
 

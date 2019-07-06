@@ -17,7 +17,7 @@ const getResolvesByDepartment = (req, res) => {
         res.send({complaints: resolves, status: 1});
     }).catch((err) => {
         console.error(err);
-        res.status(400).status(400).send({message: 'DBError', status: 2})
+        res.status(400).send({message: 'DBError', status: 2})
     });
 };
 
