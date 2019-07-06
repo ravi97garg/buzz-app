@@ -31,9 +31,14 @@ const addCarriageReturn = (text, cols) => {
     return modifiedText;
 };
 
+const getRandomInt = (max) => {
+    return Math.floor(Math.random() * Math.floor(max));
+};
+
 module.exports = {
     setToken,
     getToken,
     getTimeDifference,
-    addCarriageReturn
+    addCarriageReturn,
+    getRandomInt
 };

@@ -55,9 +55,9 @@ class AppRouterComponent extends React.Component {
 
     componentDidMount() {
         if (!localStorage.getItem("Token")) {
-            // this.props.userLoginFailed();
             this.props.history.push('/login');
         } else {
+            console.log('mount from router');
             this.props.createUser();
         }
     }
@@ -101,7 +101,8 @@ const PrivateRoute = ({component: Component, path, userStatus, ...rest}) => {
                 rest.history.push('/dashboard');
                 return <Route {...rest} render={() => <Fragment/>}/>
             } else if (userStatus === STATUS.FAILED){
-                rest.history.push('/login');
+                localStorage.clear();
+                rest.history && rest.history.push('/login');
                 return <Route {...rest} render={() => <Fragment/>}/>
             } else {
                 return <Route {...rest} path={path} render={(props) => (

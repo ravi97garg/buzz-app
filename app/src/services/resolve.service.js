@@ -1,5 +1,7 @@
 import axiosInstance from "../config/axios";
 import {
+    assignResolveFailed,
+    assignResolveStarted, assignResolveSuccess,
     getInitComplaintsFailed,
     getInitComplaintsStarted,
     getInitComplaintsSuccess,
@@ -44,7 +46,7 @@ export const getNewComplaints = (uptime) => {
 
 export const loadMoreComplaints = (downtime) => {
     return axiosInstance.post('/data/resolve/loadMoreComplaints', {
-        limit : 10,
+        limit: 10,
         downtime
     });
 };
@@ -64,6 +66,17 @@ export const changeStatus = (complaintId, status) => (dispatchEvent) => {
             dispatchEvent(updateComplaintStatusFailed());
         })
 };
+
+export const assignResolveService = (resolveId, user) => (dispatchEvent) => {
+    dispatchEvent(assignResolveStarted());
+    axiosInstance.get(`/data/resolve/assignResolve/${resolveId}`)
+        .then(() => {
+            dispatchEvent(assignResolveSuccess(user));
+        })
+        .catch(() => {
+            dispatchEvent(assignResolveFailed());
+        })
+}
 
 export const setResolveStatusDefaultAction = () => (dispatchEvent) => {
     dispatchEvent(setResolveStatusDefault());

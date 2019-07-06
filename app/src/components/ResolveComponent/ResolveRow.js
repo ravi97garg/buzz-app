@@ -1,6 +1,7 @@
 import React from 'react';
 import ModalView from "../ModalComponent/ModalView";
 import ComplaintDetails from "../ComplaintsComponent/ComplaintDetails";
+import ChangeStatusView from "./ChangeStatusView";
 
 class ResolveRowComponent extends React.Component {
 
@@ -25,8 +26,22 @@ class ResolveRowComponent extends React.Component {
                     statusName: 'Closed'
                 }
             ],
-            isModalOpen: false
+            isModalOpen: false,
+            toastClasses: 'snackbar ',
+            [this.props.resolves._id]: this.props.resolves.status
         }
+    };
+
+    setToast = () => {
+        this.setState({
+            toastClasses: this.state.toastClasses + 'show-toast'
+        });
+
+        setTimeout(() => {
+            this.setState({
+                toastClasses: 'snackbar '
+            });
+        }, 3000)
     };
 
     openDetailsModal = () => {
@@ -42,12 +57,18 @@ class ResolveRowComponent extends React.Component {
     };
 
     saveAction = (id) => {
-        if (this.state[id]) {
+        if (this.state[id] !== this.props.resolves.status) {
             this.props.changeStatus(id, this.state[id]);
+            this.setToast();
         }
     };
 
+    assignResolve = (id) => {
+        this.props.assignResolveService(id, this.props.currentUser);
+    };
+
     handleChange = (e) => {
+        console.log('hi', e.target.value);
         this.setState({[e.target.name]: e.target.value})
     };
 
@@ -59,9 +80,9 @@ class ResolveRowComponent extends React.Component {
                 loggedBy,
                 assignedTo,
                 department
-            }
+            },
+            currentUser
         } = this.props;
-        console.log('assigned to ', assignedTo.name);
         const statusIndex = this.state.status.findIndex(element => element.statusName === status);
 
         return (
@@ -71,25 +92,16 @@ class ResolveRowComponent extends React.Component {
                     <td>{loggedBy.name}</td>
                     {this.props.page === 'Home' && <td>{assignedTo.name}</td>}
                     {
-                        ((department === this.props.currentUser.department) && (statusIndex !== 2 && statusIndex !== 3)) ?
-                            <React.Fragment>
-                                <td>
-                                    <select name={_id} onChange={this.handleChange}>
-                                        {
-                                            this.state.status.slice(statusIndex).map((item) => <option
-                                                    value={item.statusName}
-                                                    key={item.id}
-                                                >
-                                                    {item.statusName}
-                                                </option>
-                                            )
-                                        }
-                                    </select>
-                                </td>
-                                <td>
-                                    <button onClick={() => this.saveAction(_id)}>Commit</button>
-                                </td>
-                            </React.Fragment> :
+                        ((department === currentUser.department) && (statusIndex !== 2 && statusIndex !== 3)) ?
+                            <ChangeStatusView
+                                resolveAssignedTo={assignedTo}
+                                currentUser={currentUser}
+                                saveAction={this.saveAction}
+                                id={_id}
+                                statusIndex={statusIndex}
+                                handleChange={this.handleChange}
+                                assignRole={this.assignResolve}
+                            /> :
                             <td>
                                 <span>{status}</span>
                             </td>
@@ -98,6 +110,7 @@ class ResolveRowComponent extends React.Component {
                 </tr>
                 {this.state.isModalOpen ?
                     <ModalView onClose={this.onClose} component={() => <ComplaintDetails id={_id}/>}/> : null}
+                <div className={this.state.toastClasses}>Status changed successfully</div>
             </React.Fragment>
         );
     }

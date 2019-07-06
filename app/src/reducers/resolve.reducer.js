@@ -1,4 +1,6 @@
 import {
+    ASSIGN_ROLE_FAILED,
+    ASSIGN_ROLE_STARTED, ASSIGN_ROLE_SUCCESS,
     GET_MY_RESOLVE_FAILED,
     GET_MY_RESOLVE_STARTED,
     GET_MY_RESOLVE_SUCCESS,
@@ -11,7 +13,12 @@ import {
 } from "../constants/resolve";
 import {STATUS} from "../constants";
 
-const initialState = {complaintList: [], myResolves: [], resolveStatus: STATUS.DEFAULT};
+const initialState = {
+    complaintList: [],
+    myResolves: [],
+    resolveStatus: STATUS.DEFAULT,
+    assignRoleStatus: STATUS.DEFAULT
+ };
 
 const resolve = (state = initialState, action) => {
     switch (action.type) {
@@ -47,6 +54,15 @@ const resolve = (state = initialState, action) => {
 
         case SET_RESOLVE_STATUS_DEFAULT:
             return {...state, resolveStatus: STATUS.DEFAULT};
+
+        case ASSIGN_ROLE_STARTED:
+            return {...state, assignRoleStatus: STATUS.STARTED};
+
+        case ASSIGN_ROLE_SUCCESS:
+            return {...state, assignRoleStatus: STATUS.SUCCESS};
+
+        case ASSIGN_ROLE_FAILED:
+            return {...state, assignRoleStatus: STATUS.FAILED}
 
         default:
             return state;

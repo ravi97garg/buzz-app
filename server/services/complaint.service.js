@@ -3,7 +3,9 @@ const User = require('../models/User');
 const {getFirstAdminStrategy} = require('../utilities');
 
 const getDepartments = () => {
-    return User.find({role: 'Admin'}).distinct('department');
+    return User
+        .find({role: 'Admin'})
+        .distinct('department');
 };
 
 const postComplaint = (complaint) => {
@@ -27,7 +29,8 @@ const electAdmin = async (department, strategy = getFirstAdminStrategy) => {
 };
 
 const getUserComplaintsDetailed = (complaintId) => {
-    return Complaint.findOne({_id: complaintId})
+    return Complaint
+        .findOne({_id: complaintId})
         .populate({
             path: 'assignedTo'
         })

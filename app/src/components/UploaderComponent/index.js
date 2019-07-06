@@ -6,8 +6,6 @@ class UploadComponent extends React.Component {
         const UploaderLabel = this.props.uploaderLabel;
         return (
             <div className="box">
-                {/*<input type="file" name="file-5[]" id="file-5" className="inputfile inputfile-4"*/}
-                {/*       data-multiple-caption="{count} files selected" multiple/>*/}
                 <input
                     type={'file'}
                     name={'images'}

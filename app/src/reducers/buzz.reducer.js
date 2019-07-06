@@ -95,7 +95,7 @@ const buzz = (state = initialState, action) => {
         case REACTION_UNSET_SUCCESS: {
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.reactionPostId
-            } );
+            });
             const reactionIndex = state.buzzList[buzzIndex].reactions.findIndex((reaction) => {
                 return reaction._id === action.payload._id
             });
@@ -107,7 +107,7 @@ const buzz = (state = initialState, action) => {
         case REACTION_UPDATE_SUCCESS: {
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.reactionPostId
-            } );
+            });
             const reactionIndex = state.buzzList[buzzIndex].reactions.findIndex((reaction) => {
                 return reaction._id === action.payload._id
             });
@@ -124,7 +124,7 @@ const buzz = (state = initialState, action) => {
             let buzzs = [...state.buzzList];
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.commentPostId
-            } );
+            });
             buzzs[buzzIndex].comments.push(action.payload);
             return {...state, buzzList: buzzs};
         }
@@ -137,7 +137,7 @@ const buzz = (state = initialState, action) => {
             let buzzs = [...state.buzzList];
             const buzzIndex = state.buzzList.findIndex((obj) => {
                 return obj._id === action.payload.buzzId
-            } );
+            });
             buzzs[buzzIndex].buzzContent = action.payload.buzzContent;
             return {...state, buzzList: buzzs, buzzStatus: BUZZ_UPDATE_SUCCESS};
         }

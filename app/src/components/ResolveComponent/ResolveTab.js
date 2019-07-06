@@ -2,22 +2,6 @@ import React from 'react';
 
 class ResolveTabComponent extends React.Component {
 
-    componentDidMount() {
-        if(this.props.page === 'Home'){
-            console.log('Home called from resolveTab');
-        } else if(this.props.page === 'News'){
-            console.log('News called from resolveTab');
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if(this.props.page === 'Home'){
-            console.log('Home called from resolveTab update');
-        } else if(this.props.page === 'News'){
-            console.log('News called from resolveTab update');
-        }
-    }
-
     render() {
         const {page} = this.props;
         return (

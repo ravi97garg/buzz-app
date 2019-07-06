@@ -12,7 +12,10 @@ const BuzzSchema = new Schema({
     },
     category: {
         type: String,
-        enum: [buzzCategory.ACTIVITY, buzzCategory.LOSTFOUND],
+        enum: [
+            buzzCategory.ACTIVITY,
+            buzzCategory.LOSTFOUND
+        ],
         default: buzzCategory.ACTIVITY,
         required: true
     },

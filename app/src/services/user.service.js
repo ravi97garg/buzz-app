@@ -18,7 +18,7 @@ export const authenticateToken = (token) => {
 
 export const changeProfileImageService = (formData) => (dispatch) => {
     dispatch(changeProfileImageStarted());
-    axiosInstance.post('/changeProfile', formData)
+    axiosInstance.post('/data/user/changeProfile', formData)
         .then((res) => {
             setToken(res.token);
             dispatch(changeProfileImageSuccess(res.imageUrl))
@@ -32,7 +32,7 @@ export const changeProfileImageService = (formData) => (dispatch) => {
 export const createUser = () => (dispatch) => {
     if (getToken()) {
         dispatch(fetchUserStarted());
-        axiosInstance.post('/authenticate', {token: getToken()})
+        axiosInstance.get(`/auth/authenticate/${getToken()}`)
             .then((user) => {
                 console.log('reached here with', JSON.stringify(user));
                 dispatch(fetchUserSuccess(user));

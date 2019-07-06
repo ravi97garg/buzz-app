@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import ResolveTabComponent from "./ResolveTab";
 import TabScreenComponent from "./tabScreen";
 import {
+    assignResolveService,
     changeStatus,
     getInitialComplaints,
     getMyDeptResolves,
@@ -16,21 +17,15 @@ class ResolveComponent extends React.Component {
         currentPage: 'Home'
     };
 
-    constructor(props) {
-        super(props);
-        console.log(this.props.user.role);
-    }
 
     componentDidMount() {
         if (this.props.user.role && this.props.user.role !== 'Admin') {
-            console.log('here', this.props.user.role);
             this.props.history.push('/pageNotFound');
         }
     }
 
     componentDidUpdate() {
         if (this.props.user.role && this.props.user.role !== 'Admin') {
-            console.log('here', this.props.user.role);
             this.props.history.push('/pageNotFound');
         }
     }
@@ -52,6 +47,7 @@ class ResolveComponent extends React.Component {
                                     getMyDeptResolves={this.props.getMyDeptResolves}
                                     changeStatus={this.props.changeStatus}
                                     setResolveStatusDefaultAction={this.props.setResolveStatusDefaultAction}
+                                    assignResolveService={this.props.assignResolveService}
                 />
             </div>
         )
@@ -69,7 +65,8 @@ const mapDispatchToProps = {
     getInitialComplaints,
     getMyDeptResolves,
     changeStatus,
-    setResolveStatusDefaultAction
+    setResolveStatusDefaultAction,
+    assignResolveService
 };
 
 const ResolveComponentConnect = connect(mapStateToProps, mapDispatchToProps)(ResolveComponent);

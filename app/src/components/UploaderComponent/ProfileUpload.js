@@ -8,11 +8,9 @@ class ProfileUploadComponent extends React.Component {
                 <div className={'nav-profile-img-wrapper'}>
                     <img alt={'profile'} src={this.props.profileImage}/>
                 </div>
-                {/*<span>Choose a file&hellip;</span>*/}
             </label>
         )
     }
-
 }
 
 export default ProfileUploadComponent;

@@ -1,8 +1,9 @@
 .container {
-    width: 80%;
+    width: 94%;
     margin: 0 auto;
 }
-.app-title a{
+
+.app-title a {
     text-decoration: none;
     color: white;
 }
@@ -56,6 +57,7 @@
     font-weight: bolder;
     border-radius: 20px;
     font-size: 16px;
+    cursor: pointer;
 }
 
 .login-btn-wrapper button:focus {
@@ -112,16 +114,17 @@ header {
 .nav-container {
     vertical-align: top;
     display: inline-block;
-    width: 25%;
+    width: 21%;
     padding: 2px;
     border-radius: 3px;
     background-color: #ffffff;
+    box-shadow: 0 0 10px 5px rgba(41, 128, 185, 0.4);
 }
 
 .buzz {
     vertical-align: top;
     display: inline-block;
-    width: 65%;
+    width: 72%;
     margin-left: 80px;
 }
 
@@ -133,6 +136,14 @@ header {
 .buzz-form * {
     outline-color: #2980b9;
     font-size: 14px;
+}
+
+.buzz-form form {
+    padding: 20px;
+    border: 1px solid #2980b9;
+    border-radius: 5px;
+    background-color: #dae3f1;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.4);
 }
 
 .buzz-form textarea {
@@ -502,7 +513,7 @@ header {
     display: none
 }
 
-.modal-wrapper {
+.modal-wrapper > div {
     padding: 20px;
     background: #fff;
     border-radius: 2px;
@@ -512,7 +523,8 @@ header {
     transform: translate(-50%, -50%);
     width: 25%;
     max-height: 400px;
-    z-index: 1;
+    z-index: 10;
+    overflow: auto;
 }
 
 .modal-overlay {
@@ -528,16 +540,6 @@ header {
 
 .modal-close-btn {
     float: right;
-    background: red;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
-    font-weight: bolder;
-}
-
-.modal-close-btn:focus {
-    outline: none;
 }
 
 .tabcontent td:nth-child(1) {
@@ -622,13 +624,37 @@ header {
     margin-left: 20px;
 }
 
+.complaint-table td {
+    overflow: hidden;
+    word-break: break-all;
+}
+
 .complaint-table td:nth-child(1) {
     white-space: nowrap;
-    width: 150px;
+    width: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
     cursor: pointer;
+}
+
+.complaint-table td:nth-child(2) {
+    width: 30%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.complaint-table td:nth-child(3) {
+    width: 20%;
+}
+
+.complaint-table td:nth-child(4) {
+    width: 20%;
+}
+
+.complaint-table td:nth-child(5) {
+    width: 12%;
 }
 
 table thead {
@@ -646,6 +672,7 @@ table tr:nth-child(even) {
 table {
     border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
 }
 
 .complaint-table-container {
@@ -660,6 +687,7 @@ table {
     display: inline-block;
     vertical-align: middle;
 }
+
 .complaint-user-img-wrapper span {
     display: block;
     text-align: center;
@@ -669,18 +697,43 @@ table {
     font-weight: bolder;
 }
 
+.modalcontainer {
+    width: 100%;
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.modalcontainer p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+}
+
 .user-icons-container {
-    width: 80%;
-    margin: auto;
-    margin-bottom: 20px;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .left {
-    float: left;
+    flex-basis: 30%;
+    /*float: left;*/
 }
 
 .right {
-    float: right;
+    flex-basis: 30%;
+    /*float: right;*/
+}
+
+.complaintheading {
+    margin-top: 40px;
+    padding-top: 40px;
 }
 
 .complaint-user-img-wrapper > img {
@@ -705,12 +758,12 @@ table {
 }
 
 th, td {
-    padding: 5px 10px;
+    padding: 10px 2px;
     text-align: left;
 }
 
 .buzz-text {
-    word-wrap:break-word;
+    word-wrap: break-word;
     white-space: normal;
     word-break: break-all;
 }
@@ -723,7 +776,7 @@ th, td {
     padding: 10px 20px 10px 10px;
     background-color: white;
     margin-top: 25px;
-    box-shadow: 0 2px 2px rgba(0 ,0 ,0 ,0.2);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     margin-bottom: 10px;
 }
@@ -748,7 +801,7 @@ th, td {
 .post-content textarea:focus {
     outline-color: #2980b9;
     border: 1px solid #2980b9;
-    
+
 }
 
 .post-content textarea:disabled {
@@ -772,8 +825,9 @@ th, td {
     font-size: 14px;
     padding: 2px 8px;
     margin-right: 12px;
+    margin-left: 2px;
     border-radius: 20px;
-    background-color: white;
+    background-color: #f4f58e;
 }
 
 .active-reaction {
@@ -806,23 +860,47 @@ th, td {
 }
 
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
 @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
 footer {
@@ -831,11 +909,85 @@ footer {
 }
 
 .text-ellipsis {
-    text-overflow: 'ellipsis';
+    text-overflow: ellipsis;
     width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
 }
 
 .text-ellipsis:hover {
     cursor: pointer;
     color: #2980b9;
+}
+
+td select, td button {
+    border: none;
+    padding: 2px 10px;
+    font-size: inherit;
+}
+
+td button {
+    border-radius: 20px;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    -webkit-box-shadow: 2px 2px 11px -1px rgba(52, 152, 219, 1);
+    -moz-box-shadow: 2px 2px 11px -1px rgba(52, 152, 219, 1);
+    box-shadow: 2px 2px 11px -1px rgba(52, 152, 219, 1);
+}
+
+svg:hover {
+    cursor: pointer;
+}
+
+.upload-image-container {
+    position: relative;
+    width: 22%;
+    display: inline-block;
+    margin: 10px;
+}
+
+.upload-image-container > img {
+    width: 100%;
+}
+
+.blank-wrapper {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.blank-wrapper:hover {
+    color: #3498db;
+}
+
+.image-full-view-modal {
+    border: 2px solid #000;
+}
+
+.image-full-view-modal > img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.image-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(240, 240, 240, 0.75);
+}
+
+.upload-image-container:hover .image-overlay {
+    display: block;
+}
+
+.image-overlay > svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
 }

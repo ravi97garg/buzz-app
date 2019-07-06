@@ -11,26 +11,20 @@ const axiosInstance = axios.create({
 
 // Axios Interceptors
 
-// (function() {
-//     const token = getToken();
-//     console.log('=========',token);
-//     if (token) {
-//         axios.defaults.headers.common['Authorization'] = token;
-//     } else {
-//         axios.defaults.headers.common['Authorization'] = null;
-//     }
-// })();
-
 axiosInstance.interceptors.response.use((response) => {
-    if(response.data.status === 0){
+    return response.data;
+}, (error) => {
+    console.log(error);
+    if(error.response.status === 401){
         localStorage.removeItem('Token');
         store.dispatch({type: USER_LOGOUT_SUCCESS});
     }
-    return response.data;
+    return Promise.reject(error);
 });
 
 axiosInstance.interceptors.request.use((config) => {
     const token = getToken();
+    console.log(`token: ${token}`);
     config.headers.Authorization = token;
     return config;
 });

@@ -31,7 +31,7 @@ export const createBuzzService = (formData) => (dispatch) =>{
 
 export const getInitialBuzzService = (limit) => (dispatch) => {
     dispatch(initBuzzStarted());
-    axiosInstance.post('/data/buzz/getInitialBuzz', {
+    axiosInstance.get(`/data/buzz/getBuzz?limit=${limit}`, {
         limit
     })
         .then((buzzs) => {
@@ -55,9 +55,8 @@ export const setBuzzStatusDefaultAction = () => (dispatchEvent) => {
 };
 
 export const getMoreBuzzService = (limit, endTime) => (dispatch) => {
-    // console.log('getting called');
     dispatch(loadMoreBuzzStarted());
-    axiosInstance.post('/data/buzz/getMoreBuzz', {
+    axiosInstance.get(`/data/buzz/getBuzz?limit=${limit}&endTime=${endTime}`, {
         limit,
         endTime
     })

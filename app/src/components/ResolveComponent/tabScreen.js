@@ -17,9 +17,7 @@ class TabScreenComponent extends React.Component {
     componentDidMount() {
         if (this.props.page === 'Home') {
             this.props.getInitialComplaints();
-            console.log('Home called from resolveTab');
         } else if (this.props.page === 'News') {
-            console.log('News called from resolveTab');
             this.props.getMyDeptResolves();
         }
     }
@@ -29,13 +27,10 @@ class TabScreenComponent extends React.Component {
             this.props.setResolveStatusDefaultAction();
         }
         if (this.props.page === 'Home') {
-            console.log('Home called from resolveTab update',);
             if (this.props.resolve.resolveStatus === STATUS.DEFAULT) {
-                console.log('never is he reaching here');
                 this.props.getInitialComplaints();
             }
         } else if (this.props.page === 'News') {
-            console.log('News called from resolveTab update');
             if (this.props.resolve.resolveStatus === STATUS.DEFAULT) {
                 this.props.getMyDeptResolves();
             }
@@ -82,6 +77,7 @@ class TabScreenComponent extends React.Component {
                                                      page={this.props.page}
                                                      key={item._id}
                                                      changeStatus={this.props.changeStatus}
+                                                     assignResolveService={this.props.assignResolveService}
                                 />
                             )
                         })}
@@ -97,13 +93,14 @@ class TabScreenComponent extends React.Component {
                                 }
                             })
                             .map(item => {
-                                console.log(item);
                                 return (
                                     <ResolveRowComponent resolves={item}
                                                          currentUser={this.props.user}
                                                          updateStatus={this.props.updateStatus}
                                                          page={this.props.page}
                                                          key={item._id}
+                                                         changeStatus={this.props.changeStatus}
+                                                         assignResolveService={this.props.assignResolveService}
                                     />
                                 )
                             })
@@ -114,10 +111,6 @@ class TabScreenComponent extends React.Component {
 
             </div>
         )
-    }
-
-    componentWillUnmount() {
-
     }
 
 }

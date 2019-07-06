@@ -34,7 +34,13 @@ const complaintStatus = {
     INPROGRESS: 'In Progress',
     COMPLETED: 'Completed',
     CLOSED: 'Closed'
-}
+};
+
+const reaction = {
+    HAPPY: 'happy',
+    ANGRY: 'angry',
+    SAD: 'sad'
+};
 
 module.exports = {
     CLIENT_ID,
@@ -50,5 +56,6 @@ module.exports = {
     userRoles,
     buzzCategory,
     adminDepartments,
-    complaintStatus
+    complaintStatus,
+    reaction
 };
