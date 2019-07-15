@@ -36,22 +36,18 @@ const createNewBuzz = (req, res) => {
                             res.send({message: 'OK', status: 1, extractedBuzzs: copyBuzz});
                         })
                         .catch((err) => {
-                            console.error(err);
                             res.status(400).send({message: err, status: 2});
                         })
                 })
             })
                 .catch((err) => {
-                    console.error(err);
                     res.status(400).send({message: err, status: 2});
                 })
         })
             .catch((err) => {
-                console.error(err);
                 res.status(400).send({message: err, status: 2});
             })
     } catch (err) {
-        console.error(err);
         res.status(400).send({message: err, status: 2});
     }
 };
@@ -74,7 +70,6 @@ const getBuzzs = async (req, res) => {
                 res.send({message: 'OK', status: 1, extractedBuzzs: copyBuzz});
             })
             .catch((err) => {
-                console.error(err);
                 res.status(400).send({message: err, status: 2});
             })
     } catch (err) {

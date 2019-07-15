@@ -2,25 +2,26 @@ const Buzz = require('../models/Buzz');
 const Reaction = require('../models/Reaction');
 const Comment = require('../models/Comment');
 
-const createBuzz = (buzzData) => {
+const createBuzz = ({buzzContent, postedBy, category, images}) => {
     var buzz = new Buzz();
-    buzz.buzzContent = buzzData.buzzContent;
-    buzz.postedBy = buzzData.postedBy;
-    buzz.category = buzzData.category;
-    buzz.images = buzzData.images;
-    console.log(buzzData);
+    buzz.buzzContent = buzzContent;
+    buzz.postedBy = postedBy;
+    buzz.category = category;
+    buzz.images = images;
     return buzz.save();
 };
 
 const getNewBuzzs = (uptime) => {
     if (uptime) {
-        return Buzz.find({postedOn: {$gt: uptime}})
+        return Buzz
+            .find({postedOn: {$gt: uptime}})
             .sort({'postedOn': -1})
             .populate({
                 path: 'postedBy',
             })
     } else {
-        return Buzz.find()
+        return Buzz
+            .find()
             .sort({'postedOn': -1})
             .populate({
                 path: 'postedBy',
@@ -30,7 +31,8 @@ const getNewBuzzs = (uptime) => {
 };
 
 const getInitialBuzz = (limit) => {
-    return Buzz.find()
+    return Buzz
+        .find()
         .sort({'postedOn': -1})
         .limit(limit + 1)
         .populate({
@@ -82,9 +84,3 @@ module.exports = {
     updateBuzzContent,
     getBuzzByID
 };
-
-// comments.forEach(comment => {
-//     // comment.populate({path: 'commentedBy'})
-//
-//     User.findOne({_id: comment.commentedBy}).then((user))
-// })

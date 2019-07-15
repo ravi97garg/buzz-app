@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken');
-const {JWT_KEY} = require('../constants');
+
+const {
+    JWT_KEY,
+    CLIENT_URL
+} = require('../constants');
 
 const generateToken = (req, res) => {
     const {
@@ -8,9 +12,9 @@ const generateToken = (req, res) => {
     jwt.sign({'email': email}, JWT_KEY, {expiresIn: "10h"},
         (err, token) => {
             if(err){
-                res.redirect(`http://localhost:3000/authenticationFailed`);
+                res.redirect(`${CLIENT_URL}/authenticationFailed`);
             } else {
-                res.redirect(`http://localhost:3000/token?q=${token}`);
+                res.redirect(`${CLIENT_URL}/token?q=${token}`);
             }
         });
 };

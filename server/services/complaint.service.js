@@ -1,23 +1,34 @@
 const Complaint = require('../models/Complaint');
 const User = require('../models/User');
 const {getFirstAdminStrategy} = require('../utilities');
+const {userRoles} = require('../constants');
 
 const getDepartments = () => {
     return User
-        .find({role: 'Admin'})
+        .find({role: userRoles.ADMIN})
         .distinct('department');
 };
 
 const postComplaint = (complaint) => {
+    const {
+        department,
+        subject,
+        complaintContent,
+        email,
+        images,
+        loggedBy,
+        assignedTo,
+        status
+    } = complaint;
     const newComplaint = new Complaint;
-    newComplaint.department = complaint.department;
-    newComplaint.subject = complaint.subject;
-    newComplaint.complaintContent = complaint.complaintContent;
-    newComplaint.email = complaint.email;
-    newComplaint.images = complaint.images;
-    newComplaint.loggedBy = complaint.loggedBy;
-    newComplaint.assignedTo = complaint.assignedTo;
-    newComplaint.status = complaint.status;
+    newComplaint.department = department;
+    newComplaint.subject = subject;
+    newComplaint.complaintContent = complaintContent;
+    newComplaint.email = email;
+    newComplaint.images = images;
+    newComplaint.loggedBy = loggedBy;
+    newComplaint.assignedTo = assignedTo;
+    newComplaint.status = status;
 
     return newComplaint.save();
 

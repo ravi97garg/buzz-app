@@ -1,11 +1,13 @@
 const Express = require('express');
-const {reassignResolve} = require("../controllers/ResolveController");
-const router = Express.Router();
+
 const {
     getInitialResolves,
     getResolvesByDepartment,
-    changeResolveStatus
+    changeResolveStatus,
+    reassignResolve
 } = require('../controllers/ResolveController');
+
+const router = Express.Router();
 
 router.get('/getInitComplaints',
     getInitialResolves
@@ -23,9 +25,12 @@ router.get('/getMyDeptResolves',
 );
 
 router.post('/changeStatus',
-    (req, res, next)=> {
-        const {complaintId, status} = req.body;
-        if(complaintId && status){
+    (req, res, next) => {
+        const {
+            complaintId,
+            status
+        } = req.body;
+        if (complaintId && status) {
             next();
         } else {
             res.status(400).send();
@@ -36,11 +41,14 @@ router.post('/changeStatus',
 
 router.get('/assignResolve/:resolveId',
     (req, res, next) => {
-        if (req.params.resolveId) {
-            req.resolveId = req.params.resolveId;
+        const {
+            resolveId
+        } = req.params;
+        if (resolveId) {
+            req.resolveId = resolveId;
             next()
         } else {
-            res.status(400).send()
+            res.status(400).send();
         }
     }, reassignResolve
 );

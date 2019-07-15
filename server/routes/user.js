@@ -1,14 +1,16 @@
 const Express = require('express');
+
 const {changeUserProfile} = require("../controllers/UserController");
 const {findUserByID} = require('../services/user.service');
-const router = Express.Router();
 const {multerUploads} = require("../config/multer.config");
+
+const router = Express.Router();
 
 router.get('/:id', (req, res) => {
     findUserByID(req.params.id).then((user) => {
         res.send(user);
     }).catch((err) => {
-        res.status(400).send({message: 'DBError', status: 2})
+        res.status(400).send({message: err, status: 2})
     });
 });
 

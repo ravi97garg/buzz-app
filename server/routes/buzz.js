@@ -1,5 +1,5 @@
 const Express = require('express');
-const router = Express.Router();
+
 const {multerUploads} = require('../config/multer.config');
 const {postComment} = require("../controllers/CommentController");
 const {handleReaction} = require("../controllers/ReactionController");
@@ -9,6 +9,8 @@ const {
     updateBuzz,
     reportBuzz
 } = require("../controllers/BuzzController");
+
+const router = Express.Router();
 
 router.post('/createBuzz',
     multerUploads,

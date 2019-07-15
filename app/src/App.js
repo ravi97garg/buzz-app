@@ -19,7 +19,8 @@ class App extends React.Component{
 }
 const mapStateToProps = (state) => {
     return {
-        user: state.user }
+        user: state.user
+    }
 };
 
 const AppConnect = connect(mapStateToProps, undefined)(App);

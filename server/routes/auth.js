@@ -3,28 +3,22 @@ const passport = require("passport");
 
 const {authenticateUser} = require("../controllers/UserController");
 const {generateToken} = require("../controllers/AuthController");
+const {USER_INFO} = require("../constants");
 
 const router = Express.Router();
-
-router.get('/logout', (req, res) => {
-    console.log(`Hello ${req.user}`);
-    res.send(req.user)
-});
 
 router.get('/google', passport.authenticate('google',
     {
         scope: [
-            'https://www.googleapis.com/auth/userinfo.profile',
-            'https://www.googleapis.com/auth/userinfo.email',
+            USER_INFO.PROFILE,
+            USER_INFO.EMAIL,
         ],
-    }
-    )
+    })
 );
 
 router.get('/google/redirect',
     passport.authenticate('google', {
-        // failureRedirect: '/google',
-        failureRedirect: 'http://localhost:3000/authenticationFailed',
+        failureRedirect: '/google',
         failureFlash: true
     }), generateToken);
 

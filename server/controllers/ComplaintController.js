@@ -101,7 +101,6 @@ const createNewComplaint = (req, res) => {
         });
     })
         .catch((err) => {
-            console.error(err);
             res.status(400).send({message: err, status: 2});
 
         })

@@ -1016,6 +1016,7 @@ svg:hover {
     border-bottom: 2px solid #ecf0f1;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    padding: 10px 20px;
 }
 
 .pagination-label button{
@@ -1026,9 +1027,23 @@ svg:hover {
     border: 0;
 }
 
+.pagination-label button:focus {
+    outline: none;
+}
+
+.pagination-label button:hover {
+    cursor: pointer;
+}
+
 .page-button-container {
     width: fit-content;
     margin: auto;
+}
+
+.active-page-btn {
+    background-color: #c0392b;
+    font-weight: bold;
+    color: #ffffff;
 }
 
 .complaint-attach {

@@ -32,22 +32,34 @@ const changeResolveStatus = (req, res) => {
     changeStatus(complaintId, status).then(() => {
         getResolveById(complaintId
             .then((complaint) => {
+                const {
+                    loggedBy: {
+                        email: loggedByEmail,
+                        name: loggedbyName
+                    },
+                    assignedTo: {
+                        email: assignedToEmail,
+                        name: assignedToName
+                    },
+                    department,
+                    subject
+                } = complaint;
                 msgToLogger(
-                    complaint.loggedBy.email,
+                    loggedByEmail,
                     complaintId,
-                    complaint.loggedBy.name,
-                    complaint.subject,
-                    complaint.assignedTo.name,
-                    complaint.department,
+                    loggedbyName,
+                    subject,
+                    assignedToName,
+                    department,
                     status
-                )
+                );
                 msgToAssignee(
-                    complaint.assignedTo.email,
+                    assignedToEmail,
                     complaintId,
-                    complaint.assignedTo.name,
-                    complaint.subject,
+                    assignedToName,
+                    subject,
                     status,
-                    complaint.department
+                    department
                 )
             })
             .catch((err) => {

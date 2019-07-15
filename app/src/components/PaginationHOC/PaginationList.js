@@ -2,13 +2,6 @@ import React, {Component} from 'react';
 
 class PaginationList extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentPage: props.currentPage,
-        }
-    }
-
     changePage = (requestedPageIndex) => {
         if(requestedPageIndex > -1 && requestedPageIndex < this.props.complaintPages){
             this.props.changePageHandle(requestedPageIndex);
@@ -16,7 +9,6 @@ class PaginationList extends Component {
     };
 
     changeLimit = (e) => {
-        console.log(`Limit: ${e.target.value} ${this.props.changeLimitHandle}`);
         this.props.changeLimitHandle(e.target.value);
     };
 
@@ -33,7 +25,7 @@ class PaginationList extends Component {
                     </button>
                     {arr.map((item, index) => {
                         return (
-                            <button onClick={() => this.changePage(index)}>
+                            <button className={this.props.currentPage === index ? 'active-page-btn' : null} onClick={() => this.changePage(index)}>
                                 {index + 1}
                             </button>
                         )
