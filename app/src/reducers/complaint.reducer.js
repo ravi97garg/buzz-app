@@ -8,7 +8,7 @@ import {
     INIT_COMPLAINT_SUCCESS, SET_COMPLAINT_STATUS_DEFAULT
 } from "../constants/complaints";
 
-const initialState = {complaintList: [], complaintStatus: STATUS.DEFAULT};
+const initialState = {complaintList: [], complaintStatus: STATUS.DEFAULT, complaintsCount: 0};
 
 const complaint = (state = initialState, action) => {
     // console.log(` fired ${JSON.stringify(action)}`);
@@ -21,6 +21,7 @@ const complaint = (state = initialState, action) => {
             return {
                 ...state,
                 complaintList: action.payload.complaints,
+                complaintsCount: action.payload.complaintsCount,
                 complaintStatus: INIT_COMPLAINT_SUCCESS
             };
 
@@ -39,8 +40,9 @@ const complaint = (state = initialState, action) => {
         case ADD_COMPLAINT_SUCCESS:
             return {
                 ...state,
-                complaintList: [...state.complaintList, action.payload.complaint],
-                complaintStatus: ADD_COMPLAINT_SUCCESS
+                complaintList: [action.payload.complaint, ...state.complaintList],
+                complaintStatus: ADD_COMPLAINT_SUCCESS,
+                complaintsCount: state.complaintsCount+1
             };
 
         case ADD_COMPLAINT_FAILED:

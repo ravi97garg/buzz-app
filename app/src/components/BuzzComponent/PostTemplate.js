@@ -93,6 +93,7 @@ export default class PostTemplateComponent extends React.Component {
             showFullSizeImage: true,
             zoomImage: this.props.post.images[index]
         })
+        console.log(this.props.post.images, index);
     };
 
     onCloseImageModal = () => {
@@ -210,14 +211,16 @@ export default class PostTemplateComponent extends React.Component {
                         </span>
                         <FontAwesomeIcon
                             icon={faSadTear}
-                            color="orange"
+                            color="#EE7600"
                             onClick={() => sadClickHandle(_id)}
                             size="lg"
                             title={"Sad"}/>
                         <span className={this.activeReaction(reactions, REACTION.SAD)}>
                             {reactions.filter((reaction) => reaction.reactionType === REACTION.SAD).length}
                         </span>
-                        <FontAwesomeIcon icon={faCommentAlt} color="yellow" onClick={this.commentClickHandle}
+                        <FontAwesomeIcon icon={faCommentAlt}
+                                         color="#07c1fa"
+                                         onClick={this.commentClickHandle}
                                          size="lg"
                                          title={"Comment"}
                         />

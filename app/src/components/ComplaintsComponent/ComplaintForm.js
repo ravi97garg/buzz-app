@@ -3,6 +3,7 @@ import {getDepartments} from "../../services/complaint.service";
 import UploadComponent from "../UploaderComponent";
 import AttachmentUploadComponent from "../UploaderComponent/AttachmentUpload";
 import {ADD_COMPLAINT_SUCCESS} from "../../constants/complaints";
+import ImagesContainer from "../BuzzComponent/ImagesContainer";
 
 class ComplaintForm extends React.Component {
 
@@ -32,7 +33,7 @@ class ComplaintForm extends React.Component {
 
     addImage = (e) => {
         this.setState({
-            images: e.target.files
+            images: this.state.images.concat(Array.from(e.target.files))
         });
     };
 
@@ -46,6 +47,12 @@ class ComplaintForm extends React.Component {
                 toastClasses: 'snackbar '
             }, () => this.props.setComplaintStatusDefaultService());
         }, 3000)
+    };
+
+    deleteImage = (index) => {
+        this.setState({
+            images: this.state.images.filter((val, i) => {return i!== index})
+        })
     };
 
     submitHandle = (e) => {
@@ -123,7 +130,11 @@ class ComplaintForm extends React.Component {
                                      multiple={true}
                     />
                     <input type="submit" value="Log Complaint"/>
-
+                    <ImagesContainer
+                        images={this.state.images}
+                        type={'upload'}
+                        onImageClick={this.deleteImage}
+                    />
                 </form>
                 <div className={this.state.toastClasses}>Complaint added succesfully</div>
             </div>

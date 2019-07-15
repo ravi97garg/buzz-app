@@ -2,7 +2,7 @@ const Express = require('express');
 const router = Express.Router();
 const {multerUploads} = require('../config/multer.config');
 const {postComment} = require("../controllers/CommentController");
-const {postReaction} = require("../controllers/ReactionController");
+const {handleReaction} = require("../controllers/ReactionController");
 const {
     createNewBuzz,
     getBuzzs,
@@ -34,7 +34,7 @@ router.get('/getBuzz',
     , getBuzzs
 );
 
-router.post('/postReaction',
+router.post('/handleReaction',
     (req, res, next) => {
         const {buzzId, reactionType} = req.body;
         if (buzzId && reactionType && req.userId) {
@@ -43,7 +43,7 @@ router.post('/postReaction',
             res.status(400).send();
         }
     },
-    postReaction
+    handleReaction
 );
 
 router.post('/postComment',

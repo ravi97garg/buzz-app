@@ -1,53 +1,58 @@
-const {updateBuzzContentService} = require("../services/buzz.service");
-const {getBuzzByID} = require("../services/buzz.service");
-const {getMoreBuzzService} = require("../services/buzz.service");
-const {getCommentService} = require("../services/buzz.service");
-const {getInitialBuzzService} = require("../services/buzz.service");
-const {getReactionService} = require("../services/buzz.service");
-const {getNewBuzzs} = require("../services/buzz.service");
-const {createBuzzService} = require("../services/buzz.service");
+const async = require('async');
+
 const {dataUri} = require("../config/multer.config");
 const {uploader} = require("../config/cloudinary.config");
-const sgMail = require('../config/sendgrid.config');
+
+const {
+    updateBuzzContent,
+    getBuzzByID,
+    getMoreBuzz,
+    getComment,
+    getInitialBuzz,
+    getReaction,
+    getNewBuzzs,
+    createBuzz
+} = require("../services/buzz.service");
+const {
+    msgToBuzzCreator,
+    msgToBuzzReporter
+} = require("../mailTemplates/buzz/reportBuzzEventMail");
 
 const createNewBuzz = (req, res) => {
     try {
-        let uploaderPromises = [];
-        req.files.forEach((file) => {
-            uploaderPromises.push(uploader.upload(dataUri(file).content));
-        });
-        Promise.all(uploaderPromises).then((result) => {
-            req.body.images = result.map((file) => {
-                return file.secure_url
-            });
-            createBuzzService(req.body).then(() => {
+        req.body.images = [];
+        async.forEachOf(req.files, async (file) => {
+            let image = await uploader.upload(dataUri(file).content);
+            req.body.images.push(image.secure_url);
+        }).then(() => {
+            createBuzz(req.body).then(() => {
                 getNewBuzzs(req.body.startTime).then(async (buzzs) => {
-                    const reactionPromises = [];
-                    const commentPromises = [];
-                    buzzs.forEach(item => {
-                        reactionPromises.push(getReactionService(item._id));
-                        commentPromises.push(getCommentService(item._id));
-                    });
-                    let buzzsWithReactions = await Promise.all(reactionPromises);
-                    let buzzsWithComments = await Promise.all(commentPromises);
-                    let tempBuzzs = buzzs;
-                    buzzs = tempBuzzs.map((item, index) => {
-                        item._doc['reactions'] = buzzsWithReactions[index];
-                        item._doc['comments'] = buzzsWithComments[index];
-                        return item;
-                    });
-                    res.send({message: 'OK', status: 1, extractedBuzzs: buzzs})
+                    let copyBuzz = buzzs;
+                    async.forEachOf(buzzs, async (item, index) => {
+                        copyBuzz[index]._doc['reactions'] = await getReaction(item._id);
+                        copyBuzz[index]._doc['comments'] = await getComment(item._id);
+                    })
+                        .then(() => {
+                            res.send({message: 'OK', status: 1, extractedBuzzs: copyBuzz});
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            res.status(400).send({message: err, status: 2});
+                        })
                 })
-            }).catch(() => {
-                res.status(400).send({message: 'DBError', status: 2});
             })
-        }).catch((err) => {
-            console.error(err);
-            res.status(400).send({message: 'DBError', status: 2});
-        });
-    } catch (e) {
-        console.error(e);
-        res.status(400).send({message: 'DBError', status: 2});
+                .catch((err) => {
+                    console.error(err);
+                    res.status(400).send({message: err, status: 2});
+                })
+        })
+            .catch((err) => {
+                console.error(err);
+                res.status(400).send({message: err, status: 2});
+            })
+    } catch (err) {
+        console.error(err);
+        res.status(400).send({message: err, status: 2});
     }
 };
 
@@ -56,28 +61,24 @@ const getBuzzs = async (req, res) => {
         const {limit, endTime} = req.query;
         let buzzs = [];
         if (endTime) {
-            buzzs = await getMoreBuzzService(+limit, new Date(endTime));
+            buzzs = await getMoreBuzz(+limit, new Date(endTime));
         } else {
-            buzzs = await getInitialBuzzService(+limit);
+            buzzs = await getInitialBuzz(+limit);
         }
-        const reactionPromises = [];
-        const commentPromises = [];
-        buzzs.forEach(item => {
-            reactionPromises.push(getReactionService(item._id));
-            commentPromises.push(getCommentService(item._id));
-        });
-        const buzzsWithReactions = await Promise.all(reactionPromises);
-        const buzzsWithComments = await Promise.all(commentPromises);
-        let tempBuzzs = buzzs;
-        buzzs = tempBuzzs.map((item, index) => {
-            item._doc['reactions'] = buzzsWithReactions[index];
-            item._doc['comments'] = buzzsWithComments[index];
-            return item;
-        });
-        res.send({extractedBuzzs: buzzs, status: 1})
-    } catch (e) {
-        console.error(e);
-        res.status(400).send({message: 'DBError', status: 2});
+        let copyBuzz = buzzs;
+        async.forEachOf(buzzs, async (item, index) => {
+            copyBuzz[index]._doc['reactions'] = await getReaction(item._id);
+            copyBuzz[index]._doc['comments'] = await getComment(item._id);
+        })
+            .then(() => {
+                res.send({message: 'OK', status: 1, extractedBuzzs: copyBuzz});
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(400).send({message: err, status: 2});
+            })
+    } catch (err) {
+        res.status(400).send({message: err, status: 2});
     }
 };
 
@@ -86,11 +87,10 @@ const updateBuzz = (req, res) => {
         buzzId,
         buzzContent
     } = req.body;
-    updateBuzzContentService(buzzId, buzzContent).then(() => {
+    updateBuzzContent(buzzId, buzzContent).then(() => {
         res.send({message: 'OK', status: 1})
     }).catch((err) => {
-        console.error(err);
-        res.status(400).send({message: 'DBError', status: 2});
+        res.status(400).send({message: err, status: 2});
     })
 };
 
@@ -99,13 +99,34 @@ const reportBuzz = async (req, res) => {
         buzzId,
     } = req.body;
     const buzzer = await getBuzzByID(buzzId);
-    const msgToBuzzer = {
-        to: buzzer.postedBy.email,
-        from: req.user.email,
-        subject: `Your Buzz is reported`,
-        html: `Hi <strong>${buzzer.postedBy.name}</strong>, <br/>Your Buzz #${buzzId} is reported by <strong>${req.user.name}</strong>.`,
-    };
-    sgMail.send(msgToBuzzer);
+    const {
+        buzzer: {
+            postedBy: {
+                email: buzzerMail,
+                name: buzzerName
+            }
+        }
+    } = buzzer;
+    const {
+        user: {
+            email: reporterEmail,
+            name: reporterName
+        }
+    } = req;
+
+    msgToBuzzCreator(
+        buzzerMail,
+        reporterEmail,
+        buzzerName,
+        buzzId,
+        reporterName
+    );
+    msgToBuzzReporter(
+        reporterEmail,
+        buzzerMail,
+        buzzId,
+        reporterName
+    );
     res.send({message: 'OK', status: 1});
 };
 

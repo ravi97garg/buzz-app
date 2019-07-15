@@ -1,8 +1,10 @@
 const Express = require('express');
 const passport = require("passport");
-const router = Express.Router();
+
 const {authenticateUser} = require("../controllers/UserController");
 const {generateToken} = require("../controllers/AuthController");
+
+const router = Express.Router();
 
 router.get('/logout', (req, res) => {
     console.log(`Hello ${req.user}`);
@@ -24,8 +26,7 @@ router.get('/google/redirect',
         // failureRedirect: '/google',
         failureRedirect: 'http://localhost:3000/authenticationFailed',
         failureFlash: true
-    }),
-    generateToken);
+    }), generateToken);
 
 router.get('/authenticate/:token',
     (req, res, next) => {
@@ -34,7 +35,6 @@ router.get('/authenticate/:token',
         } else {
             res.status(401).send()
         }
-    }, authenticateUser
-);
+    }, authenticateUser);
 
 module.exports = router;

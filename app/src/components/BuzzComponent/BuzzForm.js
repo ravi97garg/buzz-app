@@ -50,7 +50,6 @@ class BuzzFormComponent extends React.Component {
         this.setState({
             images: this.state.images.concat(Array.from(e.target.files))
         });
-        console.log(Array.from(e.target.files));
     };
 
     deleteImage = (index) => {

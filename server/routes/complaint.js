@@ -1,13 +1,20 @@
 const Express = require('express');
-const router = Express.Router();
 const {multerUploads} = require('../config/multer.config');
 const {
     getAdminDepartments,
     createNewComplaint,
-    getMyComplaints
+    getMyComplaints,
+    getComplaintsCount
 } = require("../controllers/ComplaintController");
+const {complaintReqType} = require('../constants');
+
+const router = Express.Router();
 
 router.get('/getDepartments',
+    (req,res, next)=> {
+    console.log(`authorization: ${req.headers.authorization}`);
+    next();
+    },
     getAdminDepartments
 );
 
@@ -34,6 +41,7 @@ router.post('/postComplaint',
 
 router.get('/getMyComplaint',
     (req, res, next) => {
+    console.log(`hello auth: ${req.headers.authorization}`)
         const complaintRequestType = req.query.type;
         if (complaintRequestType === complaintReqType.BRIEF || complaintRequestType === complaintReqType.DETAILED) {
             next();
@@ -44,5 +52,8 @@ router.get('/getMyComplaint',
     getMyComplaints
 );
 
+router.get('/getComplaintCount',
+    getComplaintsCount
+);
 
 module.exports = router;

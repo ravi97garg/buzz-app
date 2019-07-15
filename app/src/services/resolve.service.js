@@ -71,12 +71,13 @@ export const assignResolveService = (resolveId, user) => (dispatchEvent) => {
     dispatchEvent(assignResolveStarted());
     axiosInstance.get(`/data/resolve/assignResolve/${resolveId}`)
         .then(() => {
-            dispatchEvent(assignResolveSuccess(user));
+            dispatchEvent(assignResolveSuccess(resolveId, user));
         })
-        .catch(() => {
+        .catch((err) => {
+            console.log(err);
             dispatchEvent(assignResolveFailed());
         })
-}
+};
 
 export const setResolveStatusDefaultAction = () => (dispatchEvent) => {
     dispatchEvent(setResolveStatusDefault());

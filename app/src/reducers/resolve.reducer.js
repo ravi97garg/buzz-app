@@ -1,6 +1,7 @@
 import {
-    ASSIGN_ROLE_FAILED,
-    ASSIGN_ROLE_STARTED, ASSIGN_ROLE_SUCCESS,
+    ASSIGN_RESOLVE_STARTED,
+    ASSIGN_RESOLVE_FAILED,
+    ASSIGN_RESOLVE_SUCCESS,
     GET_MY_RESOLVE_FAILED,
     GET_MY_RESOLVE_STARTED,
     GET_MY_RESOLVE_SUCCESS,
@@ -17,7 +18,7 @@ const initialState = {
     complaintList: [],
     myResolves: [],
     resolveStatus: STATUS.DEFAULT,
-    assignRoleStatus: STATUS.DEFAULT
+    assignResolveStatus: STATUS.DEFAULT
  };
 
 const resolve = (state = initialState, action) => {
@@ -55,14 +56,31 @@ const resolve = (state = initialState, action) => {
         case SET_RESOLVE_STATUS_DEFAULT:
             return {...state, resolveStatus: STATUS.DEFAULT};
 
-        case ASSIGN_ROLE_STARTED:
-            return {...state, assignRoleStatus: STATUS.STARTED};
+        case ASSIGN_RESOLVE_STARTED:
+            return {...state, assignResolveStatus: STATUS.STARTED};
 
-        case ASSIGN_ROLE_SUCCESS:
-            return {...state, assignRoleStatus: STATUS.SUCCESS};
+        case ASSIGN_RESOLVE_SUCCESS: {
+            const {
+                resolveId,
+                user
+            } = action.payload;
+            const updatedComplaintIndex = state.complaintList.findIndex((item) => item._id === resolveId);
+            const updatedResolveIndex = state.myResolves.findIndex((item) => item._id === resolveId);
+            const complaints = [...state.complaintList];
+            const resolves= [...state.myResolves];
+            complaints[updatedComplaintIndex].assignedTo = user;
+            if(resolves[0]){
+                resolves[updatedResolveIndex].assignedTo = user;
+            }
+            return {...state,
+                assignResolveStatus: STATUS.SUCCESS,
+                complaintList: complaints,
+                myResolves: resolves
+            };
+        }
 
-        case ASSIGN_ROLE_FAILED:
-            return {...state, assignRoleStatus: STATUS.FAILED}
+        case ASSIGN_RESOLVE_FAILED:
+            return {...state, assignResolveStatus: STATUS.FAILED};
 
         default:
             return state;

@@ -2,7 +2,7 @@ const Buzz = require('../models/Buzz');
 const Reaction = require('../models/Reaction');
 const Comment = require('../models/Comment');
 
-const createBuzzService = (buzzData) => {
+const createBuzz = (buzzData) => {
     var buzz = new Buzz();
     buzz.buzzContent = buzzData.buzzContent;
     buzz.postedBy = buzzData.postedBy;
@@ -29,7 +29,7 @@ const getNewBuzzs = (uptime) => {
 
 };
 
-const getInitialBuzzService = (limit) => {
+const getInitialBuzz = (limit) => {
     return Buzz.find()
         .sort({'postedOn': -1})
         .limit(limit + 1)
@@ -38,7 +38,7 @@ const getInitialBuzzService = (limit) => {
         })
 };
 
-const getMoreBuzzService = (limit, endTime) => {
+const getMoreBuzz = (limit, endTime) => {
     return Buzz.find({
         postedOn: {$lt: endTime}
     })
@@ -56,15 +56,15 @@ const getBuzzByID = (buzzId) => {
         });
 };
 
-const updateBuzzContentService = (postId, buzzContent) => {
+const updateBuzzContent = (postId, buzzContent) => {
     return Buzz.updateOne({_id: postId}, {buzzContent: buzzContent});
 };
 
-const getReactionService = (postId) => {
+const getReaction = (postId) => {
     return Reaction.find({reactionPostId: postId})
 };
 
-const getCommentService = (postId) => {
+const getComment = (postId) => {
     return Comment
         .find({commentPostId: postId})
         .sort({'commentedOn': -1})
@@ -73,13 +73,13 @@ const getCommentService = (postId) => {
 
 
 module.exports = {
-    createBuzzService,
-    getInitialBuzzService,
-    getReactionService,
-    getCommentService,
-    getMoreBuzzService,
+    createBuzz,
+    getInitialBuzz,
+    getReaction,
+    getComment,
+    getMoreBuzz,
     getNewBuzzs,
-    updateBuzzContentService,
+    updateBuzzContent,
     getBuzzByID
 };
 

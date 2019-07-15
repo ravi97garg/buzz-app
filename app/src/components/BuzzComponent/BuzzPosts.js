@@ -12,7 +12,6 @@ class BuzzPosts extends React.Component {
         this.state = {
             skip: 0,
             limit: 10,
-            uptime: null,
             downtime: null,
             showLoadMore: props.buzz.showLoadMore,
             toastClasses: 'snackbar '
@@ -82,7 +81,9 @@ class BuzzPosts extends React.Component {
                 skip: this.state.skip + 1
             });
             this.props.setBuzzStatusDefaultAction();
-        } else if (this.props.buzz.buzzStatus === STATUS.FAILED) {
+        } else if (!this.state.toastClasses.includes('show-toast')
+            &&
+            this.props.buzz.buzzStatus === STATUS.FAILED) {
             this.showToast()
         }
     }

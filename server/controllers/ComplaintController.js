@@ -1,99 +1,154 @@
-const {postComplaint} = require("../services/complaint.service");
-const {getFirstAdminStrategy} = require("../utilities");
-const {electAdmin} = require("../services/complaint.service");
-const {dataUri} = require("../config/multer.config");
-const {getDepartments} = require("../services/complaint.service");
-const {uploader} = require("../config/cloudinary.config");
+const async = require('async');
+
 const Complaint = require("../models/Complaint");
-const sgMail = require('../config/sendgrid.config');
-const {getUserComplaintsDetailed} = require("../services/complaint.service");
-const {getUserComplaintsBrief} = require("../services/complaint.service");
+const {getFirstAdminStrategy} = require("../utilities");
+const {dataUri} = require("../config/multer.config");
+const {uploader} = require("../config/cloudinary.config");
+
+const {
+    complaintReqType,
+    complaintStatus
+} = require('../constants');
+const {
+    postComplaint,
+    electAdmin,
+    getComplaintsTotalCount,
+    getDepartments,
+    getUserComplaintsBrief,
+    getUserComplaintsDetailed
+} = require("../services/complaint.service");
+const {
+    msgToLogger,
+    msgToAssignee
+} = require("../mailTemplates/complaint/newComplaintEventMail");
 
 const getAdminDepartments = (req, res) => {
     getDepartments().then((departments) => {
         res.send(departments);
-    }).catch(() => {
-        res.send({message: 'Unable to get all the departments', status: 2})
+    }).catch((err) => {
+        res.send({message: err, status: 2})
     })
 };
 
 const createNewComplaint = (req, res) => {
-    try {
-        let uploaderPromises = [];
-        req.files.forEach((file) => {
-            uploaderPromises.push(uploader.upload(dataUri(file).content));
+    req.body.images = [];
+    async.forEachOf(req.files, async (file) => {
+        let image = await uploader.upload(dataUri(file).content);
+        req.body.images.push(image.secure_url);
+    }).then(async () => {
+        const {
+            body: {
+                complaintDepartment,
+                complaintTitle,
+                complaintContent,
+                images
+            },
+            user: {
+                _id,
+                email
+            }
+        } = req;
+
+        const complaintObj = {
+            department: complaintDepartment,
+            subject: complaintTitle,
+            complaintContent: complaintContent,
+            email: email,
+            images: images,
+            loggedBy: _id,
+            assignedTo: await electAdmin(complaintDepartment, getFirstAdminStrategy),
+            status: complaintStatus.PENDING
+        };
+        const newComplaint = await postComplaint(complaintObj);
+        Complaint.populate(newComplaint, {path: "assignedTo"}, function (err, populatedComplaint) {
+            if (err) {
+                res.send({message: err, status: 2});
+            } else {
+                const {
+                    email: loggedByEmail,
+                    _id: complaintId,
+                    subject: complaintSubject,
+                    assignedTo: {
+                        name: assignedToName,
+                        email: assignedToEmail
+                    },
+                    department
+                } = populatedComplaint;
+                const {
+                    user: {
+                        name: loggedByName
+                    }
+                } = req;
+                msgToLogger(
+                    loggedByEmail,
+                    complaintId,
+                    loggedByName,
+                    complaintSubject,
+                    assignedToName,
+                    department
+                );
+                msgToAssignee(
+                    assignedToEmail,
+                    complaintId,
+                    assignedToName,
+                    complaintSubject,
+                    loggedByName,
+                    loggedByEmail,
+                    department
+                );
+                res.send({newComplaint: populatedComplaint, status: 1});
+            }
         });
-        Promise.all(uploaderPromises).then(async (result) => {
-            req.body.images = result.map((file) => {
-                return file.secure_url
-            });
-            const complaintObj = {
-                department: req.body.complaintDepartment,
-                subject: req.body.complaintTitle,
-                complaintContent: req.body.complaintContent,
-                email: req.user.email,
-                images: req.body.images,
-                loggedBy: req.user._id,
-                assignedTo: await electAdmin(req.body.complaintDepartment, getFirstAdminStrategy),
-                status: complaintStatus.PENDING
-            };
-            const newComplaint = await postComplaint(complaintObj);
-            Complaint.populate(newComplaint, {path: "assignedTo"}, function (err, populatedComplaint) {
-                if (err) {
-                    res.send({message: 'DBError', status: 2});
-                } else {
-                    const msgToLogger = {
-                        to: populatedComplaint.email,
-                        from: 'no-reply@ttn-buzz.com',
-                        subject: `Complaint ID: ${populatedComplaint._id}`,
-                        html: `Hi <strong>${req.user.name}</strong>, <br/>The complaint with the title <strong>${populatedComplaint.subject}</strong> has been logged by you. The complaint is assigned to <strong>${populatedComplaint.assignedTo.name}</strong> successfully. You can go through the complaint details and track the complaints <a href="#">here</a>. <br/>Hope your issue would be resolved soon. <br/><br/>Regards. <br/>Admin. <br/>${populatedComplaint.department} Department`,
-                    };
-                    const msgToAssignee = {
-                        to: populatedComplaint.assignedTo.email,
-                        from: 'no-reply@ttn-buzz.com',
-                        subject: `Complaint ID: ${populatedComplaint._id}`,
-                        html: `Hi <strong>${populatedComplaint.assignedTo.name}</strong>, <br/>The complaint with the title <strong>${populatedComplaint.subject}</strong> has been assigned to you. The complaint is assigned by <strong>${req.user.name}(${populatedComplaint.email})</strong> successfully. You can go through the complaint details and track the complaints <a href="#">here</a>. <br/>Hope you would look into the matter. <br/><br/>Regards. <br/>Admin. <br/>${populatedComplaint.department} Department`,
-                    };
-                    sgMail.send(msgToLogger)
-                        .then(() => console.log("mailed successfully to logger"))
-                        .catch(() => console.log("mail failed"));
-                    sgMail.send(msgToAssignee)
-                        .then(() => console.log("mailed successfully to assignee"))
-                        .catch(() => console.log("mail failed"));
-                    res.send({newComplaint: populatedComplaint, status: 1});
-                }
-            });
-        }).catch((err) => {
-            res.status(400).send({message: 'DBError', status: 2});
+    })
+        .catch((err) => {
+            console.error(err);
+            res.status(400).send({message: err, status: 2});
 
         })
 
-    } catch (e) {
-        res.status(400).send(e);
-    }
 };
 
-const getMyComplaints = (req, res) => {
-    if (req.query['type'] === complaintReqType.BRIEF) {
-        getUserComplaintsBrief(req.userId).then((complaints) => {
-            res.send({complaints, status: 1});
-        }).catch(() => {
-            res.status(400).send({message: 'DBError', status: 2});
-        });
-    } else if (req.query['type'] === complaintReqType.DETAILED) {
-        const complaintId = req.query['id'];
+const getMyComplaints = async (req, res) => {
+    if (req.query.type === complaintReqType.BRIEF) {
+        const {
+            limit,
+            skip
+        } = req.query;
+        try {
+            const complaintsBrief = await getUserComplaintsBrief(req.userId, parseInt(limit), parseInt(skip));
+            const complaintsCount = await getComplaintsTotalCount(req.userId);
+            res.send({
+                complaints: complaintsBrief,
+                complaintsCount,
+                status: 1
+            });
+
+        } catch (err) {
+            res.status(400).send({message: err, status: 2});
+        }
+    } else if (req.query.type === complaintReqType.DETAILED) {
+        const complaintId = req.query.id;
         getUserComplaintsDetailed(complaintId).then((complaints) => {
             res.send({complaints, status: 1});
-        }).catch(() => {
-            res.status(400).send({message: 'DBError', status: 2});
+        }).catch((err) => {
+            res.status(400).send({message: err, status: 2});
         });
     } else {
         res.status(401).send({message: 'Not Authenticated', status: 0})
     }
 };
 
+const getComplaintsCount = (req, res) => {
+    getComplaintsTotalCount(req.userId)
+        .then((count) => res.send({count}))
+        .catch(err => {
+            res.status(400).send({message: err})
+        });
+};
+
 module.exports = {
     getAdminDepartments,
     createNewComplaint,
-    getMyComplaints
+    getMyComplaints,
+    getComplaintsCount
 };

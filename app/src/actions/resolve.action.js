@@ -1,6 +1,7 @@
 import {
-    ASSIGN_ROLE_FAILED,
-    ASSIGN_ROLE_STARTED, ASSIGN_ROLE_SUCCESS,
+    ASSIGN_RESOLVE_FAILED,
+    ASSIGN_RESOLVE_STARTED,
+    ASSIGN_RESOLVE_SUCCESS,
     GET_MY_RESOLVE_FAILED,
     GET_MY_RESOLVE_STARTED,
     GET_MY_RESOLVE_SUCCESS,
@@ -56,14 +57,14 @@ export const setResolveStatusDefault = () => ({
 });
 
 export const assignResolveStarted = () => ({
-    type: ASSIGN_ROLE_STARTED
+    type: ASSIGN_RESOLVE_STARTED
 });
 
-export const assignResolveSuccess = (user) => ({
-    type: ASSIGN_ROLE_SUCCESS,
-    payload: {user}
+export const assignResolveSuccess = (resolveId, user) => ({
+    type: ASSIGN_RESOLVE_SUCCESS,
+    payload: {resolveId, user}
 });
 
 export const assignResolveFailed = () => ({
-    type: ASSIGN_ROLE_FAILED
+    type: ASSIGN_RESOLVE_FAILED
 });

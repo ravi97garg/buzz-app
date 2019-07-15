@@ -22,11 +22,17 @@ export const createComplaint = (complaint) => (dispatch) => {
         })
 };
 
-export const getMyComplaintsBrief = () => (dispatch) => {
+export const getMyComplaintsBrief = (options) => (dispatch) => {
     dispatch(initComplaintStarted());
-    axiosInstance.get('/data/complaint/getMyComplaint?type=brief')
+    axiosInstance.get('/data/complaint/getMyComplaint',
+        {
+            params: {
+                type: 'brief',
+                ...options
+            }
+        })
         .then((res) => {
-            dispatch(initComplaintSuccess(res.complaints))
+            dispatch(initComplaintSuccess({complaints: res.complaints, complaintsCount: res.complaintsCount}))
         })
         .catch((err) => {
             dispatch(initComplaintFailed());
@@ -39,4 +45,8 @@ export const setComplaintStatusDefaultService = () => (dispatchEvent) => {
 
 export const getMyComplaintsDetailed = (id) => {
     return axiosInstance.get(`/data/complaint/getMyComplaint?type=detailed&id=${id}`)
+};
+
+export const getComplaintCount = () => (dispatch) => {
+    return axiosInstance.get('/data/complaint/getComplaintCount')
 };

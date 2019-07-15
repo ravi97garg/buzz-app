@@ -1,6 +1,6 @@
 const Comment = require('../models/Comment');
 
-const createCommentService = (comment, commentBy, commentPostId) => {
+const createComment = (comment, commentBy, commentPostId) => {
     const newComment = new Comment();
     newComment.comment = comment;
     newComment.commentBy = commentBy;
@@ -10,5 +10,5 @@ const createCommentService = (comment, commentBy, commentPostId) => {
 
 
 module.exports = {
-    createCommentService
+    createComment
 };

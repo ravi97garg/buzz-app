@@ -8,13 +8,12 @@ const {findUserByEmail} = require('../services/user.service');
 const authenticateUser = (req, res) => {
     jwt.verify(req.params.token, PRIVATE_KEY, function (err, decoded) {
         if (err) {
-            console.error(err);
-            res.status(401).send()
+            res.status(401).send({message: err})
         } else {
             findUserByEmail(decoded.email).then((user) => {
                 res.send(user);
             }).catch((err) => {
-                res.status(401).send()
+                res.status(401).send({message: err})
             })
         }
     });
@@ -26,12 +25,10 @@ const changeUserProfile = async (req, res) => {
         req.user.profileImage = req.profileImage.secure_url;
         changeProfileService(req.userId, req.user.profileImage)
             .then((output) => {
-                console.log(`output: ${JSON.stringify(output)}`);
                 jwt.sign(req.user, PRIVATE_KEY,
                     function (err, token) {
                         if (err) {
-                            console.error(`err: ${err}`);
-                            res.status(401).send({message: 'Not Authenticated', status: 0});
+                            res.status(401).send({message: err, status: 0});
                         } else {
                             res.send({
                                 message: 'updated profile image',
@@ -44,12 +41,10 @@ const changeUserProfile = async (req, res) => {
 
             })
             .catch((err) => {
-                console.error(err);
-                res.status(400).send({message: 'DBError', status: 2});
+                res.status(400).send({message: err, status: 2});
             })
-    } catch (e) {
-        console.error(e);
-        res.status(400).send({message: 'UploadError', status: 3});
+    } catch (err) {
+        res.status(400).send({message: err, status: 3});
     }
 
 };

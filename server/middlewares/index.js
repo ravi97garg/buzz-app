@@ -18,6 +18,15 @@ const dataRouteMiddleware = (req, res, next) => {
     }
 };
 
+const cors = (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    next();
+};
+
 module.exports = {
-    dataRouteMiddleware
+    dataRouteMiddleware,
+    cors
 };

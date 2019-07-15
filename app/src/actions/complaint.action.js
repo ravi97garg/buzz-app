@@ -11,9 +11,9 @@ export const initComplaintStarted = () => ({
     type: INIT_COMPLAINT_STARTED
 });
 
-export const initComplaintSuccess = (complaints) => ({
+export const initComplaintSuccess = ({complaints, complaintsCount}) => ({
     type: INIT_COMPLAINT_SUCCESS,
-    payload: {complaints}
+    payload: {complaints, complaintsCount}
 });
 
 export const initComplaintFailed = () => ({

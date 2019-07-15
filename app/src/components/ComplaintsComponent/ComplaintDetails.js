@@ -1,5 +1,6 @@
 import React from 'react';
 import {getMyComplaintsDetailed} from "../../services/complaint.service";
+import ImageSlider from "../ImageSliderComponent";
 
 export default class ComplaintDetails extends React.Component {
 
@@ -10,7 +11,9 @@ export default class ComplaintDetails extends React.Component {
             complaintContent: '',
             createdAt: '',
             loggedBy: '',
-            assignedTo: ''
+            assignedTo: '',
+            images: [],
+            viewMore: false
         }
     }
 
@@ -21,10 +24,18 @@ export default class ComplaintDetails extends React.Component {
                 complaintContent: res.complaints.complaintContent,
                 createdAt: res.complaints.createdAt,
                 loggedBy: res.complaints.loggedBy,
-                assignedTo: res.complaints.assignedTo
+                assignedTo: res.complaints.assignedTo,
+                images: res.complaints.images
             })
         })
     }
+
+    toggleViewMore = () => {
+        this.setState({
+            viewMore: !this.state.viewMore
+        })
+    };
+
 
     render() {
         const {
@@ -32,7 +43,8 @@ export default class ComplaintDetails extends React.Component {
             complaintContent,
             createdAt,
             loggedBy,
-            assignedTo
+            assignedTo,
+            images
         } = this.state;
         return (
             <div className='modalcontainer'>
@@ -49,7 +61,11 @@ export default class ComplaintDetails extends React.Component {
                     </div>
                 </div>
                 <h2 className='complaintheading'>{subject}</h2>
-                <p>{complaintContent}</p>
+                <p className={this.state.viewMore ? null : 'show-ellipsis'}>
+                    {complaintContent}
+                </p>
+                <button className={'view-more-btn'} onClick={this.toggleViewMore}>{this.state.viewMore === false ? 'View More' : 'Hide'}</button>
+                {images && images[0] && <ImageSlider images={images}/>}
                 <span>Logged on {new Date(createdAt).toLocaleString()}</span>
             </div>
         )

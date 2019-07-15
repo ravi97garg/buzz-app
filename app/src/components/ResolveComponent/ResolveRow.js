@@ -100,7 +100,7 @@ class ResolveRowComponent extends React.Component {
                                 id={_id}
                                 statusIndex={statusIndex}
                                 handleChange={this.handleChange}
-                                assignRole={this.assignResolve}
+                                assignResolve={this.assignResolve}
                             /> :
                             <td>
                                 <span>{status}</span>

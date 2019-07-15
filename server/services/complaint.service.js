@@ -39,13 +39,19 @@ const getUserComplaintsDetailed = (complaintId) => {
         });
 };
 
-const getUserComplaintsBrief = (user) => {
+const getUserComplaintsBrief = (user, limit = 10, skip = 0) => {
     return Complaint
         .find({loggedBy: user}, {subject: 1, department: 1, status: 1, assignedTo: 1})
+        .skip(skip)
+        .limit(limit)
         .sort({'createdAt': -1})
         .populate({
             path: 'assignedTo'
         })
+};
+
+const getComplaintsTotalCount = (userId) => {
+    return Complaint.find({loggedBy: userId}).countDocuments()
 };
 
 module.exports = {
@@ -53,5 +59,6 @@ module.exports = {
     postComplaint,
     electAdmin,
     getUserComplaintsBrief,
-    getUserComplaintsDetailed
+    getUserComplaintsDetailed,
+    getComplaintsTotalCount
 };

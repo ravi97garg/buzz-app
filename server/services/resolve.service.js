@@ -1,5 +1,16 @@
 const Complaint = require('../models/Complaint');
 
+const getResolveById = (resolveId) => {
+    return Complaint
+        .findOne({_id: resolveId})
+        .populate({
+            path: 'loggedBy'
+        })
+        .populate({
+            path: 'assignedTo'
+        });
+};
+
 const getInitResolves = () => {
     return Complaint.find()
         .sort({'createdAt': -1})
@@ -22,7 +33,7 @@ const getMyDepartmentResolves = (user) => {
         })
 };
 
-const changeStatusService = (complaintId, status) => {
+const changeStatus = (complaintId, status) => {
     return Complaint.updateOne({_id: complaintId}, {status: status});
 };
 
@@ -31,8 +42,9 @@ const assignResolve = (resolveId, userId) => {
 };
 
 module.exports = {
+    getResolveById,
     getInitResolves,
-    changeStatusService,
+    changeStatus,
     getMyDepartmentResolves,
     assignResolve
 };

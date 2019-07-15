@@ -12,6 +12,7 @@ import PageNotFoundComponent from "./PageNotFoundComponent";
 import {createUser, userLoginFailed} from "../services/user.service";
 import {STATUS} from "../constants";
 import LoaderComponent from "./Loader";
+import NotAuthenticatedComponent from "./NotAuthenticatedComponent";
 
 
 class AppRouterComponent extends React.Component {
@@ -42,6 +43,10 @@ class AppRouterComponent extends React.Component {
                                       path={"/resolve"}
                                       component={ResolveComponent}
                                       userStatus={this.props.user.currentStatus}
+                        />
+                        <Route exact
+                               path={'/authenticationFailed'}
+                               component={NotAuthenticatedComponent}
                         />
                         <Route exact
                                path={"/login"}
@@ -100,7 +105,7 @@ const PrivateRoute = ({component: Component, path, userStatus, ...rest}) => {
             if (userStatus === STATUS.SUCCESS) {
                 rest.history.push('/dashboard');
                 return <Route {...rest} render={() => <Fragment/>}/>
-            } else if (userStatus === STATUS.FAILED){
+            } else if (userStatus === STATUS.FAILED) {
                 localStorage.clear();
                 rest.history && rest.history.push('/login');
                 return <Route {...rest} render={() => <Fragment/>}/>

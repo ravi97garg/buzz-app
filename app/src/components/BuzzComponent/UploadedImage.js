@@ -18,7 +18,7 @@ class UploadedImageComponent extends Component {
     };
 
     handleClick = () => {
-        this.props.onImageClick(this.props.UserController)
+        this.props.onImageClick(this.props.index)
     };
 
     render() {
