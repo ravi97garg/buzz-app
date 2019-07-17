@@ -1,7 +1,7 @@
 import axiosInstance from "../config/axios";
 import {
     addComplaintFailed,
-    addComplaintStarted, addComplaintSuccess,
+    addComplaintStarted, addComplaintSuccess, changeFilterSuccess,
     initComplaintFailed,
     initComplaintStarted,
     initComplaintSuccess, setComplaintStatusDefault
@@ -39,14 +39,14 @@ export const getMyComplaintsBrief = (options) => (dispatch) => {
         })
 };
 
+export const changeFilter = (complaintFilter) => (dispatchEvent) => {
+    dispatchEvent(changeFilterSuccess(complaintFilter));
+};
+
 export const setComplaintStatusDefaultService = () => (dispatchEvent) => {
     dispatchEvent(setComplaintStatusDefault());
 };
 
-export const getMyComplaintsDetailed = (id) => {
-    return axiosInstance.get(`/data/complaint/getMyComplaint?type=detailed&id=${id}`)
-};
-
-export const getComplaintCount = () => (dispatch) => {
-    return axiosInstance.get('/data/complaint/getComplaintCount')
+export const getMyComplaintsDetailed = (uid) => {
+    return axiosInstance.get(`/data/complaint/getMyComplaint?type=detailed&uid=${uid}`)
 };

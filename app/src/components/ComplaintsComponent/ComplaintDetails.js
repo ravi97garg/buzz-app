@@ -18,14 +18,22 @@ export default class ComplaintDetails extends React.Component {
     }
 
     componentDidMount() {
-        getMyComplaintsDetailed(this.props.id).then((res) => {
+        getMyComplaintsDetailed(this.props.uid).then((res) => {
+            const {
+                subject,
+                complaintContent,
+                createdAt,
+                loggedBy,
+                assignedTo,
+                images
+            } = res.complaints;
             this.setState({
-                subject: res.complaints.subject,
-                complaintContent: res.complaints.complaintContent,
-                createdAt: res.complaints.createdAt,
-                loggedBy: res.complaints.loggedBy,
-                assignedTo: res.complaints.assignedTo,
-                images: res.complaints.images
+                subject: subject,
+                complaintContent: complaintContent,
+                createdAt: createdAt,
+                loggedBy: loggedBy,
+                assignedTo: assignedTo,
+                images: images
             })
         })
     }
@@ -42,29 +50,36 @@ export default class ComplaintDetails extends React.Component {
             subject,
             complaintContent,
             createdAt,
-            loggedBy,
-            assignedTo,
-            images
+            loggedBy: {
+                name: loggedByName,
+                profileImage: loggedByImage
+            },
+            assignedTo: {
+                name: assignedToName,
+                profileImage: assignedToImage
+            },
+            images,
+            viewMore
         } = this.state;
         return (
             <div className='modalcontainer'>
                 <div className={'user-icons-container'}>
                     <div className={'complaint-user-img-wrapper left'}>
-                        <img alt={createdAt} src={loggedBy.profileImage}/>
+                        <img alt={createdAt} src={loggedByImage}/>
                         <span>Assigned by</span>
-                        <span className={'bold-text'}>{loggedBy.name}</span>
+                        <span className={'bold-text'}>{loggedByName}</span>
                     </div>
                     <div className={'complaint-user-img-wrapper right'}>
-                        <img alt={createdAt} src={assignedTo.profileImage}/>
+                        <img alt={createdAt} src={assignedToImage}/>
                         <span>Assigned to</span>
-                        <span className={'bold-text'}>{assignedTo.name}</span>
+                        <span className={'bold-text'}>{assignedToName}</span>
                     </div>
                 </div>
                 <h2 className='complaintheading'>{subject}</h2>
-                <p className={this.state.viewMore ? null : 'show-ellipsis'}>
+                <p className={viewMore ? null : 'show-ellipsis'}>
                     {complaintContent}
                 </p>
-                <button className={'view-more-btn'} onClick={this.toggleViewMore}>{this.state.viewMore === false ? 'View More' : 'Hide'}</button>
+                <button className={'view-more-btn'} onClick={this.toggleViewMore}>{viewMore === false ? 'View More' : 'Hide'}</button>
                 {images && images[0] && <ImageSlider images={images}/>}
                 <span>Logged on {new Date(createdAt).toLocaleString()}</span>
             </div>

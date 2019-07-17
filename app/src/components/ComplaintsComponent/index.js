@@ -3,7 +3,7 @@ import ComplaintsForm from './ComplaintForm';
 import ComplaintsTable from './ComplaintTable';
 import {connect} from "react-redux";
 import {
-    createComplaint, getComplaintCount,
+    createComplaint,
     getMyComplaintsBrief,
     setComplaintStatusDefaultService
 } from "../../services/complaint.service";
@@ -18,12 +18,11 @@ class ComplaintsComponent extends React.Component {
                     setComplaintStatusDefaultService={this.props.setComplaintStatusDefaultService}
                 />
                 <ComplaintsTable
-                    complaintList={this.props.complaints.complaintList}
-                    getMyComplaintsBrief={this.props.getMyComplaintsBrief}
-                    getComplaintCount={this.props.getComplaintCount}
-                    setComplaintStatusDefaultService={this.props.setComplaintStatusDefaultService}
-                    complaintsCount={this.props.complaints.complaintsCount}
-                    complaintStatus={this.props.complaints.complaintStatus}
+                    dataList={this.props.complaints.complaintList}
+                    dataService={this.props.getMyComplaintsBrief}
+                    setStatusDefaultService={this.props.setComplaintStatusDefaultService}
+                    dataCount={this.props.complaints.complaintsCount}
+                    dataStatus={this.props.complaints.complaintStatus}
                 />
             </div>
         )
@@ -41,7 +40,6 @@ const mapDispatchToProps = {
     getMyComplaintsBrief,
     createComplaint,
     setComplaintStatusDefaultService,
-    getComplaintCount
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComplaintsComponent);

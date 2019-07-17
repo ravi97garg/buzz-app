@@ -4,12 +4,15 @@ import ComplaintRow from "./ComplaintRow";
 class ComplaintTableView extends Component {
 
     render() {
+        const {
+            complaintList
+        } = this.props;
         return (
             <div>
                 <table className={'complaint-table'}>
                     <thead>
                     {
-                        this.props.complaintList && this.props.complaintList[0] && <tr>
+                        complaintList && complaintList[0] && <tr>
                             <td>Complaint Id</td>
                             <td>Issue Title</td>
                             <td>Department</td>
@@ -20,10 +23,10 @@ class ComplaintTableView extends Component {
                     </thead>
                     <tbody>
                     {
-                        this.props.complaintList && this.props.complaintList[0] && this.props.complaintList.map((item) => {
+                        complaintList && complaintList[0] && complaintList.map((item) => {
                                 return (
-                                    <ComplaintRow id={item._id}
-                                                  key={item._id}
+                                    <ComplaintRow uid={item.uid}
+                                                  key={item.uid}
                                                   subject={item.subject}
                                                   department={item.department}
                                                   status={item.status}

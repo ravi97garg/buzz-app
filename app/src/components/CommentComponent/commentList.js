@@ -8,10 +8,10 @@ class CommentListComponent extends React.Component {
             <div>
                 {this.props.post.comments.map((comment) => {
                     return (
-                        <CommentRowComponent profileImage={comment.commentBy.profileImage}
+                        <CommentRowComponent profileImage={comment.author.profileImage}
                                              comment={comment.comment}
                                              commentedOn={comment.commentedOn}
-                                             commentBy={comment.commentBy.name}
+                                             commentBy={comment.author.name}
                                              key={comment._id}
                         />
                     )

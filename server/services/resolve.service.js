@@ -2,7 +2,7 @@ const Complaint = require('../models/Complaint');
 
 const getResolveById = (resolveId) => {
     return Complaint
-        .findOne({_id: resolveId})
+        .findOne({uid: resolveId})
         .populate({
             path: 'loggedBy'
         })
@@ -11,8 +11,10 @@ const getResolveById = (resolveId) => {
         });
 };
 
-const getInitResolves = () => {
+const getInitResolves = (limit , skip ) => {
     return Complaint.find()
+        .skip(skip)
+        .limit(limit)
         .sort({'createdAt': -1})
         .populate({
             path: 'loggedBy'
@@ -22,8 +24,18 @@ const getInitResolves = () => {
         })
 };
 
-const getMyDepartmentResolves = (user) => {
-    return Complaint.find({department: user.department})
+const getAllResolveCount = () => {
+    return Complaint.find().countDocuments();
+};
+
+const getDeptComplaintCount = (department) => {
+    return Complaint.find({department}).countDocuments();
+};
+
+const getResolvesByDepartment = (department, limit = 10, skip = 0) => {
+    return Complaint.find({department})
+        .skip(skip)
+        .limit(limit)
         .sort({'createdAt': -1})
         .populate({
             path: 'loggedBy'
@@ -34,17 +46,19 @@ const getMyDepartmentResolves = (user) => {
 };
 
 const changeStatus = (complaintId, status) => {
-    return Complaint.updateOne({_id: complaintId}, {status: status});
+    return Complaint.updateOne({uid: complaintId}, {status: status});
 };
 
 const assignResolve = (resolveId, userId) => {
-    return Complaint.updateOne({_id: resolveId}, {assignedTo: userId})
+    return Complaint.updateOne({uid: resolveId}, {assignedTo: userId})
 };
 
 module.exports = {
     getResolveById,
     getInitResolves,
     changeStatus,
-    getMyDepartmentResolves,
-    assignResolve
+    getResolvesByDepartment,
+    assignResolve,
+    getAllResolveCount,
+    getDeptComplaintCount
 };

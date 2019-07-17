@@ -1,4 +1,5 @@
 const async = require('async');
+const generate = require('nanoid/async/generate');
 
 const Complaint = require("../models/Complaint");
 const {getFirstAdminStrategy} = require("../utilities");
@@ -26,7 +27,7 @@ const getAdminDepartments = (req, res) => {
     getDepartments().then((departments) => {
         res.send(departments);
     }).catch((err) => {
-        res.send({message: err, status: 2})
+        res.status(500).send({message: err})
     })
 };
 
@@ -36,6 +37,7 @@ const createNewComplaint = (req, res) => {
         let image = await uploader.upload(dataUri(file).content);
         req.body.images.push(image.secure_url);
     }).then(async () => {
+
         const {
             body: {
                 complaintDepartment,
@@ -50,6 +52,7 @@ const createNewComplaint = (req, res) => {
         } = req;
 
         const complaintObj = {
+            uid: await generate('0123456789ABCDEF', 8),
             department: complaintDepartment,
             subject: complaintTitle,
             complaintContent: complaintContent,
@@ -62,11 +65,11 @@ const createNewComplaint = (req, res) => {
         const newComplaint = await postComplaint(complaintObj);
         Complaint.populate(newComplaint, {path: "assignedTo"}, function (err, populatedComplaint) {
             if (err) {
-                res.send({message: err, status: 2});
+                res.status(500).send({message: err});
             } else {
                 const {
                     email: loggedByEmail,
-                    _id: complaintId,
+                    uid: uid,
                     subject: complaintSubject,
                     assignedTo: {
                         name: assignedToName,
@@ -81,7 +84,7 @@ const createNewComplaint = (req, res) => {
                 } = req;
                 msgToLogger(
                     loggedByEmail,
-                    complaintId,
+                    uid,
                     loggedByName,
                     complaintSubject,
                     assignedToName,
@@ -89,19 +92,20 @@ const createNewComplaint = (req, res) => {
                 );
                 msgToAssignee(
                     assignedToEmail,
-                    complaintId,
+                    uid,
                     assignedToName,
                     complaintSubject,
                     loggedByName,
                     loggedByEmail,
                     department
                 );
-                res.send({newComplaint: populatedComplaint, status: 1});
+                delete populatedComplaint._id;
+                res.send({newComplaint: populatedComplaint});
             }
         });
     })
         .catch((err) => {
-            res.status(400).send({message: err, status: 2});
+            res.status(401).send({message: err});
 
         })
 
@@ -111,29 +115,31 @@ const getMyComplaints = async (req, res) => {
     if (req.query.type === complaintReqType.BRIEF) {
         const {
             limit,
-            skip
+            skip,
+            complaintStatus
         } = req.query;
         try {
-            const complaintsBrief = await getUserComplaintsBrief(req.userId, parseInt(limit), parseInt(skip));
-            const complaintsCount = await getComplaintsTotalCount(req.userId);
+            const complaintsBrief = await getUserComplaintsBrief(req.userId, parseInt(limit), parseInt(skip), complaintStatus);
+            const complaintsCount = await getComplaintsTotalCount(req.userId, complaintStatus);
+            delete complaintsBrief._id;
             res.send({
                 complaints: complaintsBrief,
-                complaintsCount,
-                status: 1
+                complaintsCount
             });
 
         } catch (err) {
-            res.status(400).send({message: err, status: 2});
+            res.status(500).send({message: err});
         }
     } else if (req.query.type === complaintReqType.DETAILED) {
-        const complaintId = req.query.id;
+        const complaintId = req.query.uid;
         getUserComplaintsDetailed(complaintId).then((complaints) => {
-            res.send({complaints, status: 1});
+            delete complaints._id;
+            res.send({complaints});
         }).catch((err) => {
-            res.status(400).send({message: err, status: 2});
+            res.status(500).send({message: err});
         });
     } else {
-        res.status(401).send({message: 'Not Authenticated', status: 0})
+        res.status(401).send({message: 'Not Authenticated'})
     }
 };
 
@@ -141,7 +147,7 @@ const getComplaintsCount = (req, res) => {
     getComplaintsTotalCount(req.userId)
         .then((count) => res.send({count}))
         .catch(err => {
-            res.status(400).send({message: err})
+            res.status(500).send({message: err})
         });
 };
 

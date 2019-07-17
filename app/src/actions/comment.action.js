@@ -1,5 +1,7 @@
+import {POST_COMMENT_SUCCESS} from "../constants/buzz";
+
 const createComment = (comment) => ({
-    type: 'POST_COMMENT',
+    type: POST_COMMENT_SUCCESS,
     payload: comment
 });
 

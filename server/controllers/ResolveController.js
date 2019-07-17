@@ -1,31 +1,39 @@
 const {
-    assignResolve,
-    getMyDepartmentResolves,
-    changeStatus,
+    getResolveById,
     getInitResolves,
-    getResolveById
+    changeStatus,
+    getResolvesByDepartment,
+    assignResolve,
+    getAllResolveCount,
+    getDeptComplaintCount
 } = require("../services/resolve.service");
 const {
     msgToLogger,
     msgToAssignee
 } = require("../mailTemplates/resolve/statusChangeEventMail");
 
-const getInitialResolves = (req, res) => {
-    getInitResolves()
-        .then((resolves) => {
-            res.send({complaints: resolves, status: 1});
-        }).catch((err) => {
-        res.status(400).send({message: err, status: 2});
-    })
+const getInitialResolves = async (req, res) => {
+    try {
+        let {
+            limit = 10,
+            skip = 0
+        } = req.query;
+        if (req.params.department) {
+            const complaints = await getResolvesByDepartment(req.params.department, parseInt(limit), parseInt(skip));
+            const complaintsCount = await getDeptComplaintCount(req.params.department);
+            delete complaints._id;
+            res.send({complaints, complaintsCount});
+        } else {
+            const complaints = await getInitResolves(parseInt(limit), parseInt(skip));
+            const complaintsCount = await getAllResolveCount();
+            delete complaints._id;
+            res.send({complaints, complaintsCount});
+        }
+    } catch (err) {
+        res.status(500).send({message: err})
+    }
 };
 
-const getResolvesByDepartment = (req, res) => {
-    getMyDepartmentResolves(req.user).then((resolves) => {
-        res.send({complaints: resolves, status: 1});
-    }).catch((err) => {
-        res.status(400).send({message: err, status: 2})
-    });
-};
 
 const changeResolveStatus = (req, res) => {
     const {complaintId, status} = req.body;
@@ -63,28 +71,27 @@ const changeResolveStatus = (req, res) => {
                 )
             })
             .catch((err) => {
-                res.status(400).send({message: err, status: 2});
+                res.status(500).send({message: err});
             })
         );
-        res.send({message: 'status changed successfully', status: 1})
+        res.send({message: 'status changed successfully'})
     }).catch((err) => {
-        res.status(400).send({message: err, status: 2});
+        res.status(500).send({message: err});
     })
 };
 
 const reassignResolve = (req, res) => {
     assignResolve(req.resolveId, req.userId)
         .then(() => {
-            res.send({message: 'OK', status: 1});
+            res.send({message: 'Resolve assigned successfully'});
         })
-        .catch(() => {
-            res.status(400).send();
+        .catch((err) => {
+            res.status(500).send({message: err});
         })
 };
 
 module.exports = {
     getInitialResolves,
-    getResolvesByDepartment,
     changeResolveStatus,
     reassignResolve
 };

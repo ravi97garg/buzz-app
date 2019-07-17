@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken");
 
-const {changeProfileService} = require("../services/user.service");
+const {
+    changeProfileService,
+    findUserByEmail
+} = require("../services/user.service");
 const {dataUri} = require("../config/multer.config");
 const {JWT_KEY} = require('../constants');
 const {uploader} = require('../config/cloudinary.config');
-const {findUserByEmail} = require('../services/user.service');
 
 const authenticateUser = (req, res) => {
     jwt.verify(req.params.token, JWT_KEY, function (err, decoded) {
@@ -29,11 +31,10 @@ const changeUserProfile = async (req, res) => {
                 jwt.sign(req.user, JWT_KEY,
                     function (err, token) {
                         if (err) {
-                            res.status(401).send({message: err, status: 0});
+                            res.status(401).send({message: err});
                         } else {
                             res.send({
                                 message: 'updated profile image',
-                                status: 1,
                                 imageUrl: req.user.profileImage,
                                 token
                             })
@@ -42,10 +43,10 @@ const changeUserProfile = async (req, res) => {
 
             })
             .catch((err) => {
-                res.status(400).send({message: err, status: 2});
+                res.status(400).send({message: err});
             })
     } catch (err) {
-        res.status(400).send({message: err, status: 3});
+        res.status(400).send({message: err});
     }
 
 };

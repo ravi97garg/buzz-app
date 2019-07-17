@@ -23,3 +23,11 @@ export const REACTION = {
     HAPPY: 'happy',
     SAD: 'sad'
 };
+
+export const COMPLAINT_FILTER_TYPE = {
+    ALL_COMPLAINTS: 'All Complaints',
+    PENDING: 'Pending',
+    IN_PROGRESS: 'In Progress',
+    COMPLETED: 'Completed',
+    CLOSED: 'Closed'
+};

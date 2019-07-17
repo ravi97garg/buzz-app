@@ -8,12 +8,12 @@ const CommentSchema = new Schema({
         type: String,
         required: true
     },
-    commentBy : {
+    author : {
         type: Schema.Types.ObjectId,
         required: true,
         ref: User
     },
-    commentPostId : {
+    postId : {
         type: Schema.Types.ObjectId,
         required: true,
         ref: Buzz

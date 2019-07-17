@@ -2,26 +2,20 @@ const Express = require('express');
 
 const {
     getInitialResolves,
-    getResolvesByDepartment,
     changeResolveStatus,
     reassignResolve
 } = require('../controllers/ResolveController');
 
 const router = Express.Router();
 
-router.get('/getInitComplaints',
-    getInitialResolves
-);
-
-router.get('/getMyDeptResolves',
-    (req, res, next) => {
+router.get('/getComplaints/:department?', (req, res, next) => {
         if (req.user) {
             next();
         } else {
             res.status(400).send();
         }
     },
-    getResolvesByDepartment
+    getInitialResolves
 );
 
 router.post('/changeStatus',

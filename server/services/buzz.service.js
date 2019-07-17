@@ -68,9 +68,9 @@ const getReaction = (postId) => {
 
 const getComment = (postId) => {
     return Comment
-        .find({commentPostId: postId})
+        .find({postId})
         .sort({'commentedOn': -1})
-        .populate({path: 'commentBy'})
+        .populate({path: 'author'})
 };
 
 

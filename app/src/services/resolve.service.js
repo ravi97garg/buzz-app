@@ -1,24 +1,36 @@
 import axiosInstance from "../config/axios";
 import {
     assignResolveFailed,
-    assignResolveStarted, assignResolveSuccess,
+    assignResolveStarted,
+    assignResolveSuccess,
     getInitComplaintsFailed,
     getInitComplaintsStarted,
     getInitComplaintsSuccess,
-    getMyResolvesFailed,
-    getMyResolvesStarted,
-    getMyResolvesSuccess,
     setResolveStatusDefault,
     updateComplaintStatusFailed,
     updateComplaintStatusStarted,
     updateComplaintStatusSuccess
 } from "../actions/resolve.action";
 
-export const getInitialComplaints = () => (dispatchEvent) => {
+export const getResolves = (options) => (dispatchEvent) => {
     dispatchEvent(getInitComplaintsStarted());
-    axiosInstance.get('/data/resolve/getInitComplaints')
+    let hitUrl = '/data/resolve/getComplaints';
+    if(options && options.department){
+        hitUrl += `/${options.department}`
+    }
+    axiosInstance.get(hitUrl,
+        {
+            params: {
+                ...options
+            }
+        }
+    )
         .then((data) => {
-            dispatchEvent(getInitComplaintsSuccess(data.complaints));
+            const {
+                complaints,
+                complaintsCount
+            } = data;
+            dispatchEvent(getInitComplaintsSuccess(complaints, complaintsCount));
         })
         .catch((err) => {
             console.error(err);
@@ -26,7 +38,7 @@ export const getInitialComplaints = () => (dispatchEvent) => {
         })
 };
 
-export const getMyDeptResolves = () => (dispatch) => {
+/*export const getMyDeptResolves = () => (dispatch) => {
     dispatch(getMyResolvesStarted());
     axiosInstance.get(`/data/resolve/getMyDeptResolves`)
         .then((data) => {
@@ -36,20 +48,7 @@ export const getMyDeptResolves = () => (dispatch) => {
             console.error(err);
             dispatch(getMyResolvesFailed())
         })
-};
-
-export const getNewComplaints = (uptime) => {
-    return axiosInstance.post('/data/resolve/getNewComplaints', {
-        uptime
-    });
-};
-
-export const loadMoreComplaints = (downtime) => {
-    return axiosInstance.post('/data/resolve/loadMoreComplaints', {
-        limit: 10,
-        downtime
-    });
-};
+};*/
 
 export const changeStatus = (complaintId, status) => (dispatchEvent) => {
     dispatchEvent(updateComplaintStatusStarted());

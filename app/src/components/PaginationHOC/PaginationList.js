@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
+import {COMPLAINT_FILTER_TYPE} from "../../constants";
 
 class PaginationList extends Component {
 
     changePage = (requestedPageIndex) => {
-        if(requestedPageIndex > -1 && requestedPageIndex < this.props.complaintPages){
+        if (requestedPageIndex > -1 && requestedPageIndex < this.props.dataPages) {
             this.props.changePageHandle(requestedPageIndex);
         }
     };
@@ -12,9 +13,13 @@ class PaginationList extends Component {
         this.props.changeLimitHandle(e.target.value);
     };
 
+    handleFilter = (e) => {
+        this.props.changeFilter(e.target.name, e.target.value);
+    };
+
     render() {
         const arr = [];
-        for (let i = 1; i <= this.props.complaintPages; i++) {
+        for (let i = 1; i <= this.props.dataPages; i++) {
             arr.push(i.toString());
         }
         return (
@@ -25,7 +30,8 @@ class PaginationList extends Component {
                     </button>
                     {arr.map((item, index) => {
                         return (
-                            <button className={this.props.currentPage === index ? 'active-page-btn' : null} onClick={() => this.changePage(index)}>
+                            <button className={this.props.currentPage === index ? 'active-page-btn' : null}
+                                    onClick={() => this.changePage(index)}>
                                 {index + 1}
                             </button>
                         )
@@ -35,12 +41,39 @@ class PaginationList extends Component {
                     </button>
                 </div>
                 <div className={'page-filter-container'}>
-                    <select onChange={this.changeLimit}>
+                    Limit: <select onChange={this.changeLimit}>
                         <option value={10}>10</option>
                         <option value={20}>20</option>
                         <option value={50}>50</option>
                         <option value={100}>100</option>
                     </select>
+                    <fieldset>
+                        <legend>Complaint Status</legend>
+                        <input
+                            type="checkbox"
+                            name={"complaintStatus"}
+                            value={COMPLAINT_FILTER_TYPE.PENDING}
+                            onClick={this.handleFilter}
+                        />{COMPLAINT_FILTER_TYPE.PENDING}
+                        <input
+                            type="checkbox"
+                            name={"complaintStatus"}
+                            value={COMPLAINT_FILTER_TYPE.IN_PROGRESS}
+                            onClick={this.handleFilter}
+                        />{COMPLAINT_FILTER_TYPE.IN_PROGRESS}
+                        <input
+                            type="checkbox"
+                            name={"complaintStatus"}
+                            value={COMPLAINT_FILTER_TYPE.COMPLETED}
+                            onClick={this.handleFilter}
+                        />{COMPLAINT_FILTER_TYPE.COMPLETED}
+                        <input
+                            type="checkbox"
+                            name={"complaintStatus"}
+                            value={COMPLAINT_FILTER_TYPE.CLOSED}
+                            onClick={this.handleFilter}
+                        />{COMPLAINT_FILTER_TYPE.CLOSED}
+                    </fieldset>
                 </div>
             </div>
         )

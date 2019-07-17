@@ -3,8 +3,8 @@ const Comment = require('../models/Comment');
 const createComment = (comment, commentBy, commentPostId) => {
     const newComment = new Comment();
     newComment.comment = comment;
-    newComment.commentBy = commentBy;
-    newComment.commentPostId = commentPostId;
+    newComment.author = commentBy;
+    newComment.postId = commentPostId;
     return newComment.save();
 };
 

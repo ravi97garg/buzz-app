@@ -2,9 +2,6 @@ import {
     ASSIGN_RESOLVE_STARTED,
     ASSIGN_RESOLVE_FAILED,
     ASSIGN_RESOLVE_SUCCESS,
-    GET_MY_RESOLVE_FAILED,
-    GET_MY_RESOLVE_STARTED,
-    GET_MY_RESOLVE_SUCCESS,
     INIT_ALL_COMPLAINTS_FAILED,
     INIT_ALL_COMPLAINTS_STARTED,
     INIT_ALL_COMPLAINTS_SUCCESS, SET_RESOLVE_STATUS_DEFAULT,
@@ -16,7 +13,6 @@ import {STATUS} from "../constants";
 
 const initialState = {
     complaintList: [],
-    myResolves: [],
     resolveStatus: STATUS.DEFAULT,
     assignResolveStatus: STATUS.DEFAULT
  };
@@ -35,20 +31,24 @@ const resolve = (state = initialState, action) => {
             complaintList = complaintList.map((item) => item._id === complaintId ? {...item, status: status} : item);
             return {...state, complaintList};
 
-        case GET_MY_RESOLVE_STARTED:
-            return {...state, resolveStatus: GET_MY_RESOLVE_STARTED};
-
-        case GET_MY_RESOLVE_SUCCESS:
-            return {...state, myResolves: [...action.data], resolveStatus: GET_MY_RESOLVE_SUCCESS};
-
-        case GET_MY_RESOLVE_FAILED:
-            return {...state, resolveStatus: GET_MY_RESOLVE_FAILED};
+        // case GET_MY_RESOLVE_STARTED:
+        //     return {...state, resolveStatus: GET_MY_RESOLVE_STARTED};
+        //
+        // case GET_MY_RESOLVE_SUCCESS:
+        //     return {...state, myResolves: [...action.data], resolveStatus: GET_MY_RESOLVE_SUCCESS};
+        //
+        // case GET_MY_RESOLVE_FAILED:
+        //     return {...state, resolveStatus: GET_MY_RESOLVE_FAILED};
 
         case INIT_ALL_COMPLAINTS_STARTED:
             return {...state, resolveStatus: INIT_ALL_COMPLAINTS_STARTED};
 
         case INIT_ALL_COMPLAINTS_SUCCESS:
-            return {...state, complaintList: action.payload.complaints, resolveStatus: INIT_ALL_COMPLAINTS_SUCCESS};
+            return {...state,
+                complaintList: action.payload.complaints,
+                complaintsCount: action.payload.complaintsCount,
+                resolveStatus: INIT_ALL_COMPLAINTS_SUCCESS
+            };
 
         case INIT_ALL_COMPLAINTS_FAILED:
             return {...state, resolveStatus: INIT_ALL_COMPLAINTS_FAILED};
@@ -65,17 +65,16 @@ const resolve = (state = initialState, action) => {
                 user
             } = action.payload;
             const updatedComplaintIndex = state.complaintList.findIndex((item) => item._id === resolveId);
-            const updatedResolveIndex = state.myResolves.findIndex((item) => item._id === resolveId);
+            // const updatedResolveIndex = state.myResolves.findIndex((item) => item._id === resolveId);
             const complaints = [...state.complaintList];
-            const resolves= [...state.myResolves];
+            // const resolves= [...state.myResolves];
             complaints[updatedComplaintIndex].assignedTo = user;
-            if(resolves[0]){
-                resolves[updatedResolveIndex].assignedTo = user;
-            }
+            // if(resolves[0]){
+            //     resolves[updatedResolveIndex].assignedTo = user;
+            // }
             return {...state,
                 assignResolveStatus: STATUS.SUCCESS,
                 complaintList: complaints,
-                myResolves: resolves
             };
         }
 

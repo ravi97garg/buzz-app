@@ -13,7 +13,7 @@ import {
     CREATE_BUZZ_SUCCESS,
     LOAD_MORE_BUZZ_FAILED,
     LOAD_MORE_BUZZ_STARTED,
-    LOAD_MORE_BUZZ_SUCCESS,
+    LOAD_MORE_BUZZ_SUCCESS, POST_COMMENT_SUCCESS,
     REACTION_SET_SUCCESS,
     REACTION_UNSET_SUCCESS,
     REACTION_UPDATE_FAILED,
@@ -120,10 +120,10 @@ const buzz = (state = initialState, action) => {
             return {...state, buzzStatus: REACTION_UPDATE_FAILED}
         }
 
-        case 'POST_COMMENT': {
+        case POST_COMMENT_SUCCESS: {
             let buzzs = [...state.buzzList];
             const buzzIndex = state.buzzList.findIndex((obj) => {
-                return obj._id === action.payload.commentPostId
+                return obj._id === action.payload.postId
             });
             buzzs[buzzIndex].comments.push(action.payload);
             return {...state, buzzList: buzzs};

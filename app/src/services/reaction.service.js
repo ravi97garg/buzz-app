@@ -9,7 +9,6 @@ import {
 
 
 const reactionAction = (action, reactionObj, newReaction) => {
-    console.log('hey there');
     switch (action) {
         case 1:
             return setReactionAction(reactionObj);
@@ -25,7 +24,7 @@ const reactionAction = (action, reactionObj, newReaction) => {
 
 export const reactionService = (buzzId, reactionType) => (dispatch) => {
     dispatch(updateReactionStarted());
-    axiosInstance.post('/data/buzz/postReaction', {
+    axiosInstance.post('/data/buzz/handleReaction', {
         buzzId,
         reactionType
     })

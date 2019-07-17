@@ -4,6 +4,11 @@ const User = require('./User');
 const {adminDepartments, complaintStatus} = require('../constants');
 
 const ComplaintSchema = new Schema({
+    uid: {
+        type: String,
+        required: true,
+        unique: true
+    },
     department: {
         type: String,
         enum: [
@@ -18,7 +23,7 @@ const ComplaintSchema = new Schema({
         type: String,
         required: true
     },
-    complaintContent: {
+    content: {
         type: String,
         required: true
     },

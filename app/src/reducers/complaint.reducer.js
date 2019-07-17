@@ -1,17 +1,23 @@
-import {STATUS} from "../constants";
+import {COMPLAINT_FILTER_TYPE, STATUS} from "../constants";
 import {
     ADD_COMPLAINT_FAILED,
     ADD_COMPLAINT_STARTED,
     ADD_COMPLAINT_SUCCESS,
+    CHANGE_FILTER_SUCCESS,
     INIT_COMPLAINT_FAILED,
     INIT_COMPLAINT_STARTED,
-    INIT_COMPLAINT_SUCCESS, SET_COMPLAINT_STATUS_DEFAULT
+    INIT_COMPLAINT_SUCCESS,
+    SET_COMPLAINT_STATUS_DEFAULT
 } from "../constants/complaints";
 
-const initialState = {complaintList: [], complaintStatus: STATUS.DEFAULT, complaintsCount: 0};
+const initialState = {
+    complaintList: [],
+    complaintStatus: STATUS.DEFAULT,
+    complaintsCount: 0,
+    complaintFilter: COMPLAINT_FILTER_TYPE.ALL_COMPLAINTS
+};
 
 const complaint = (state = initialState, action) => {
-    // console.log(` fired ${JSON.stringify(action)}`);
     switch (action.type) {
         case INIT_COMPLAINT_STARTED: {
             return {...state, complaintStatus: INIT_COMPLAINT_STARTED}
@@ -49,6 +55,12 @@ const complaint = (state = initialState, action) => {
             return {
                 ...state,
                 complaintStatus: ADD_COMPLAINT_FAILED
+            };
+
+        case CHANGE_FILTER_SUCCESS:
+            return {
+                ...state,
+                complaintFilter: action.payload.complaintFilter
             };
 
         case SET_COMPLAINT_STATUS_DEFAULT:

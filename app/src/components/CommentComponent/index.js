@@ -12,7 +12,6 @@ class CommentComponent extends React.Component {
             <div className={this.props.className}>
                 <CommentFormComponent
                     buzzId={this.props.buzzId}
-                    post={this.props.post}
                     createCommentAction={this.props.createCommentAction}
                     setBuzzStatusDefaultAction={this.props.setBuzzStatusDefaultAction}
                 />

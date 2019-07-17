@@ -28,7 +28,7 @@ class ResolveRowComponent extends React.Component {
             ],
             isModalOpen: false,
             toastClasses: 'snackbar ',
-            [this.props.resolves._id]: this.props.resolves.status
+            [this.props.resolves.uid]: this.props.resolves.status
         }
     };
 
@@ -75,7 +75,7 @@ class ResolveRowComponent extends React.Component {
     render() {
         const {
             resolves: {
-                _id,
+                uid,
                 status,
                 loggedBy,
                 assignedTo,
@@ -88,7 +88,7 @@ class ResolveRowComponent extends React.Component {
         return (
             <React.Fragment>
                 <tr>
-                    <td onClick={() => this.openDetailsModal(_id)}><span className={'text-ellipsis'}>{_id}</span></td>
+                    <td onClick={this.openDetailsModal}><span className={'text-ellipsis'}>{uid}</span></td>
                     <td>{loggedBy.name}</td>
                     {this.props.page === 'Home' && <td>{assignedTo.name}</td>}
                     {
@@ -97,7 +97,7 @@ class ResolveRowComponent extends React.Component {
                                 resolveAssignedTo={assignedTo}
                                 currentUser={currentUser}
                                 saveAction={this.saveAction}
-                                id={_id}
+                                id={uid}
                                 statusIndex={statusIndex}
                                 handleChange={this.handleChange}
                                 assignResolve={this.assignResolve}
@@ -109,7 +109,7 @@ class ResolveRowComponent extends React.Component {
                     }
                 </tr>
                 {this.state.isModalOpen ?
-                    <ModalView onClose={this.onClose} component={() => <ComplaintDetails id={_id}/>}/> : null}
+                    <ModalView onClose={this.onClose} component={() => <ComplaintDetails uid={uid}/>}/> : null}
                 <div className={this.state.toastClasses}>Status changed successfully</div>
             </React.Fragment>
         );

@@ -2,9 +2,6 @@ import {
     ASSIGN_RESOLVE_FAILED,
     ASSIGN_RESOLVE_STARTED,
     ASSIGN_RESOLVE_SUCCESS,
-    GET_MY_RESOLVE_FAILED,
-    GET_MY_RESOLVE_STARTED,
-    GET_MY_RESOLVE_SUCCESS,
     INIT_ALL_COMPLAINTS_FAILED,
     INIT_ALL_COMPLAINTS_STARTED,
     INIT_ALL_COMPLAINTS_SUCCESS, SET_RESOLVE_STATUS_DEFAULT,
@@ -13,9 +10,9 @@ import {
     UPDATE_COMPLAINT_STATUS_SUCCESS
 } from "../constants/resolve";
 
-export const getInitComplaintsSuccess = (complaints) => ({
+export const getInitComplaintsSuccess = (complaints, complaintsCount) => ({
     type: INIT_ALL_COMPLAINTS_SUCCESS,
-    payload: {complaints}
+    payload: {complaints, complaintsCount}
 });
 
 export const getInitComplaintsStarted = () => ({
@@ -26,18 +23,18 @@ export const getInitComplaintsFailed = () => ({
     type: INIT_ALL_COMPLAINTS_FAILED
 });
 
-export const getMyResolvesStarted = () => ({
-    type: GET_MY_RESOLVE_STARTED
-});
-
-export const getMyResolvesSuccess = (data) => ({
-    type: GET_MY_RESOLVE_SUCCESS,
-    data
-});
-
-export const getMyResolvesFailed = () => ({
-    type: GET_MY_RESOLVE_FAILED
-});
+// export const getMyResolvesStarted = () => ({
+//     type: GET_MY_RESOLVE_STARTED
+// });
+//
+// export const getMyResolvesSuccess = (data) => ({
+//     type: GET_MY_RESOLVE_SUCCESS,
+//     data
+// });
+//
+// export const getMyResolvesFailed = () => ({
+//     type: GET_MY_RESOLVE_FAILED
+// });
 
 export const updateComplaintStatusStarted = () => ({
     type: UPDATE_COMPLAINT_STATUS_STARTED

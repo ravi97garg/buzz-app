@@ -1,6 +1,6 @@
 const Reaction = require('../models/Reaction');
 
-const getReaction = (reactedBy, reactionPostId) => {
+const getReaction = (reactionPostId, reactedBy) => {
     return Reaction.findOne({
         reactedBy: reactedBy,
         reactionPostId: reactionPostId

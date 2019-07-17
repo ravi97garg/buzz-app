@@ -10,23 +10,28 @@ export default (TableComponent) => {
             this.state = {
                 currentPage: 0,
                 limit: 10,
-                complaintPages: Math.ceil(this.props.complaintsCount/10)
+                complaintStatus: [],
+                dataPages: Math.ceil(this.props.dataCount / 10)
             };
         }
 
-        componentDidUpdate(prevProps, prevState, snapshot) {
-            if(prevProps.complaintsCount !== this.props.complaintsCount){
+        componentDidUpdate = (prevProps, prevState, snapshot) => {
+            if (prevProps.dataCount !== this.props.dataCount || prevState.limit !== this.state.limit) {
                 this.setState({
-                    complaintPages: Math.ceil(this.props.complaintsCount/10)
+                    dataPages: Math.ceil(this.props.dataCount / this.state.limit)
                 })
             }
-            if(prevState.currentPage !== this.state.currentPage || prevState.limit !== this.state.limit){
-                this.props.getMyComplaintsBrief({
+            if (prevState.currentPage !== this.state.currentPage ||
+                prevState.limit !== this.state.limit ||
+                (prevState.complaintStatus && prevState.complaintStatus.length !== this.state.complaintStatus.length)
+            ) {
+                this.props.dataService({
                     limit: this.state.limit,
-                    skip: this.state.limit * (this.state.currentPage)
+                    skip: this.state.limit * (this.state.currentPage),
+                    complaintStatus: this.state.complaintStatus
                 })
             }
-        }
+        };
 
         changePage = (requestedPageIndex) => {
             this.setState({
@@ -40,15 +45,35 @@ export default (TableComponent) => {
             })
         };
 
-        render() {
+        changeFilter = (filterKey, filterValue) => {
+            console.log(filterKey, filterValue);
+            if (Object.keys(this.state).includes(filterKey)) {
+                if (this.state[filterKey].includes(filterValue)) {
+                    this.setState({
+                        [filterKey]: this.state[filterKey].filter((item) => item !== filterValue)
+                    })
+                } else {
+                    this.setState({
+                        [filterKey]: [...this.state[filterKey], filterValue]
+                    })
+                }
 
+            } else {
+                this.setState({
+                    [filterKey]: [filterValue]
+                })
+            }
+        };
+
+        render = () => {
             return (
                 <div>
                     <PaginationListComponent
                         changePageHandle={this.changePage}
                         currentPage={this.state.currentPage}
-                        complaintPages={this.state.complaintPages}
+                        dataPages={this.state.dataPages}
                         changeLimitHandle={this.changeLimitHandle}
+                        changeFilter={this.changeFilter}
                     />
                     <TableComponent
                         {

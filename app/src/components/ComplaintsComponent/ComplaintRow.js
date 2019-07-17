@@ -26,7 +26,7 @@ export default class ComplaintRow extends React.Component {
     render() {
 
         const {
-            id,
+            uid,
             subject,
             department,
             assignedTo: {
@@ -37,14 +37,14 @@ export default class ComplaintRow extends React.Component {
 
         return (
             <React.Fragment>
-                <tr key={id}>
-                    <td onClick={() => this.openDetailsModal(id)}><span className={'text-ellipsis'}>{id}</span></td>
+                <tr key={uid}>
+                    <td onClick={this.openDetailsModal}><span className={'text-ellipsis'}>{uid}</span></td>
                     <td>{subject}</td>
                     <td>{department}</td>
                     <td>{name}</td>
                     <td>{status}</td>
                 </tr>
-                {this.state.isModalOpen ? <ModalView onClose={this.onClose} component={() => <ComplaintDetails id={id} />}/> : null}
+                {this.state.isModalOpen ? <ModalView onClose={this.onClose} component={() => <ComplaintDetails uid={uid} />}/> : null}
             </React.Fragment>
         );
     }

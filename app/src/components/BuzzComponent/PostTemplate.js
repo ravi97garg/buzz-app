@@ -92,8 +92,7 @@ export default class PostTemplateComponent extends React.Component {
         this.setState({
             showFullSizeImage: true,
             zoomImage: this.props.post.images[index]
-        })
-        console.log(this.props.post.images, index);
+        });
     };
 
     onCloseImageModal = () => {

@@ -5,8 +5,7 @@ import TabScreenComponent from "./tabScreen";
 import {
     assignResolveService,
     changeStatus,
-    getInitialComplaints,
-    getMyDeptResolves,
+    getResolves,
     setResolveStatusDefaultAction
 } from "../../services/resolve.service";
 
@@ -41,13 +40,14 @@ class ResolveComponent extends React.Component {
             <div className={'buzz'}>
                 <ResolveTabComponent page={this.state.currentPage} openPage={this.openPage}/>
                 <TabScreenComponent page={this.state.currentPage}
-                                    getInitialComplaints={this.props.getInitialComplaints}
-                                    resolve={this.props.resolve}
+                                    dataService={this.props.getResolves}
+                                    dataList={this.props.resolve.complaintList}
                                     user={this.props.user}
-                                    getMyDeptResolves={this.props.getMyDeptResolves}
+                                    dataCount={this.props.resolve.complaintsCount}
                                     changeStatus={this.props.changeStatus}
-                                    setResolveStatusDefaultAction={this.props.setResolveStatusDefaultAction}
+                                    setStatusDefaultService={this.props.setResolveStatusDefaultAction}
                                     assignResolveService={this.props.assignResolveService}
+                                    dataStatus={this.props.resolve.resolveStatus}
                 />
             </div>
         )
@@ -62,8 +62,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    getInitialComplaints,
-    getMyDeptResolves,
+    getResolves,
     changeStatus,
     setResolveStatusDefaultAction,
     assignResolveService
