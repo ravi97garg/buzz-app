@@ -46,6 +46,10 @@ export const createUser = () => (dispatch) => {
     }
 };
 
+export const getAllUsers = () => (dispatchEvent) => {
+
+}
+
 export const userLoginFailed = () => (dispatch) => {
     dispatch(fetchUserFailed());
 };

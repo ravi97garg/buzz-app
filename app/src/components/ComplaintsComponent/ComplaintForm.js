@@ -4,6 +4,7 @@ import UploadComponent from "../UploaderComponent";
 import AttachmentUploadComponent from "../UploaderComponent/AttachmentUpload";
 import {ADD_COMPLAINT_SUCCESS} from "../../constants/complaints";
 import ImagesContainer from "../BuzzComponent/ImagesContainer";
+import ToastComponent from "../ToastComponent";
 
 class ComplaintForm extends React.Component {
 
@@ -14,14 +15,7 @@ class ComplaintForm extends React.Component {
             complaintDepartment: '',
             complaintTitle: '',
             complaintContent: '',
-            images: [],
-            toastClasses: 'snackbar '
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.complaints.complaintStatus !== this.props.complaints.complaintStatus && this.props.complaints.complaintStatus === ADD_COMPLAINT_SUCCESS){
-            this.setToast();
+            images: []
         }
     }
 
@@ -35,18 +29,6 @@ class ComplaintForm extends React.Component {
         this.setState({
             images: this.state.images.concat(Array.from(e.target.files))
         });
-    };
-
-    setToast = () => {
-        this.setState({
-            toastClasses: this.state.toastClasses + 'show-toast'
-        });
-        
-        setTimeout(() => {
-            this.setState({
-                toastClasses: 'snackbar '
-            }, () => this.props.setComplaintStatusDefaultService());
-        }, 3000)
     };
 
     deleteImage = (index) => {
@@ -136,7 +118,11 @@ class ComplaintForm extends React.Component {
                         onImageClick={this.deleteImage}
                     />
                 </form>
-                <div className={this.state.toastClasses}>Complaint added succesfully</div>
+                {this.props.complaints.complaintStatus === ADD_COMPLAINT_SUCCESS &&
+                <ToastComponent
+                    message={'Complaint added successfully'}
+                    setStatusDefaultService={this.props.setComplaintStatusDefaultService}
+                />}
             </div>
         )
     }

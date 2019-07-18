@@ -44,6 +44,11 @@ class AppRouterComponent extends React.Component {
                                       component={ResolveComponent}
                                       userStatus={this.props.user.currentStatus}
                         />
+                        {/*<SuperAdminRoute exact*/}
+                        {/*              path={"/admin"}*/}
+                        {/*              component={ResolveComponent}*/}
+                        {/*              userStatus={this.props.user.currentStatus}*/}
+                        {/*/>*/}
                         <Route exact
                                path={'/authenticationFailed'}
                                component={NotAuthenticatedComponent}

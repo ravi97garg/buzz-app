@@ -4,7 +4,8 @@ import {
     ASSIGN_RESOLVE_SUCCESS,
     INIT_ALL_COMPLAINTS_FAILED,
     INIT_ALL_COMPLAINTS_STARTED,
-    INIT_ALL_COMPLAINTS_SUCCESS, SET_RESOLVE_STATUS_DEFAULT,
+    INIT_ALL_COMPLAINTS_SUCCESS,
+    SET_RESOLVE_STATUS_DEFAULT,
     UPDATE_COMPLAINT_STATUS_FAILED,
     UPDATE_COMPLAINT_STATUS_STARTED,
     UPDATE_COMPLAINT_STATUS_SUCCESS
@@ -28,17 +29,8 @@ const resolve = (state = initialState, action) => {
         case UPDATE_COMPLAINT_STATUS_SUCCESS:
             const {complaintId, status} = action.payload;
             let complaintList = [...state.complaintList];
-            complaintList = complaintList.map((item) => item._id === complaintId ? {...item, status: status} : item);
-            return {...state, complaintList};
-
-        // case GET_MY_RESOLVE_STARTED:
-        //     return {...state, resolveStatus: GET_MY_RESOLVE_STARTED};
-        //
-        // case GET_MY_RESOLVE_SUCCESS:
-        //     return {...state, myResolves: [...action.data], resolveStatus: GET_MY_RESOLVE_SUCCESS};
-        //
-        // case GET_MY_RESOLVE_FAILED:
-        //     return {...state, resolveStatus: GET_MY_RESOLVE_FAILED};
+            complaintList = complaintList.map((item) => item.uid === complaintId ? {...item, status: status} : item);
+            return {...state, complaintList, resolveStatus: UPDATE_COMPLAINT_STATUS_SUCCESS};
 
         case INIT_ALL_COMPLAINTS_STARTED:
             return {...state, resolveStatus: INIT_ALL_COMPLAINTS_STARTED};

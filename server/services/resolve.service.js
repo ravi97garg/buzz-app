@@ -1,4 +1,7 @@
 const Complaint = require('../models/Complaint');
+const {
+    complaintStatus
+} = require('../constants');
 
 const getResolveById = (resolveId) => {
     return Complaint
@@ -11,8 +14,8 @@ const getResolveById = (resolveId) => {
         });
 };
 
-const getInitResolves = (limit , skip ) => {
-    return Complaint.find()
+const getInitResolves = (limit , skip, statuses = Object.values(complaintStatus)) => {
+    return Complaint.find({status: {$in: [...statuses]}})
         .skip(skip)
         .limit(limit)
         .sort({'createdAt': -1})
@@ -24,16 +27,16 @@ const getInitResolves = (limit , skip ) => {
         })
 };
 
-const getAllResolveCount = () => {
-    return Complaint.find().countDocuments();
+const getAllResolveCount = (statuses = Object.values(complaintStatus)) => {
+    return Complaint.find({status: {$in: [...statuses]}}).countDocuments();
 };
 
-const getDeptComplaintCount = (department) => {
-    return Complaint.find({department}).countDocuments();
+const getDeptComplaintCount = (department, statuses = Object.values(complaintStatus)) => {
+    return Complaint.find({department, status: {$in: [...statuses]}}).countDocuments();
 };
 
-const getResolvesByDepartment = (department, limit = 10, skip = 0) => {
-    return Complaint.find({department})
+const getResolvesByDepartment = (department, limit = 10, skip = 0, statuses = Object.values(complaintStatus)) => {
+    return Complaint.find({department, status: {$in: [...statuses]}})
         .skip(skip)
         .limit(limit)
         .sort({'createdAt': -1})

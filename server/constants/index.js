@@ -1,9 +1,10 @@
 const CLIENT_ID = '877864863528-8q6gbm5epb5nv5no5vvs39rn9ehsqhu3.apps.googleusercontent.com';
-const SECRET_KEY = 'bsh5QG18Ak2JG3gl45kvq-H7';
+const SECRET_KEY = 'WxgKoRNEqskAUlEC9jx0O2--';
 
 const SERVER_PORT = 8080;
 const CLIENT_PORT = 3000;
 const CLIENT_URL = `http://localhost:${CLIENT_PORT}`;
+const DB_NAME = 'buzz-db';
 
 const JWT_KEY = 'itisalmostimpossibletocrackthiscode';
 
@@ -12,8 +13,8 @@ const CLOUDINARY_API_KEY = '295531686213238';
 const CLOUDINARY_API_SECRET = '-zMFnMD_rqF2vJtU7vcCfw0B9hY';
 
 const SENDGRID_NAME = 'ttn buzz email';
-// const SENDGRID_API_KEY = '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';
-const SENDGRID_API_KEY = 'SG.pammAjw9RpGUjJlJhVjAzw.qYAmYpCdvQRJcGaTYjHJSrj-uNmgfVLrRvElewJVTSI';
+const SENDGRID_API_KEY = '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';
+// const SENDGRID_API_KEY = 'SG.pammAjw9RpGUjJlJhVjAzw.qYAmYpCdvQRJcGaTYjHJSrj-uNmgfVLrRvElewJVTSI';
 
 const USER_INFO = {
     PROFILE: 'https://www.googleapis.com/auth/userinfo.profile',
@@ -22,7 +23,8 @@ const USER_INFO = {
 
 const userRoles = {
     USER: 'User',
-    ADMIN: 'Admin'
+    ADMIN: 'Admin',
+    SUPER_ADMIN: 'Super Admin'
 };
 
 const buzzCategory = {
@@ -59,6 +61,7 @@ module.exports = {
     SECRET_KEY,
     SERVER_PORT,
     CLIENT_URL,
+    DB_NAME,
     JWT_KEY,
     CLOUD_NAME,
     CLOUDINARY_API_KEY,

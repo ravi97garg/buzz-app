@@ -12,7 +12,7 @@ router.get('/getComplaints/:department?', (req, res, next) => {
         if (req.user) {
             next();
         } else {
-            res.status(400).send();
+            res.status(422).send({message: 'Expected data not found'});
         }
     },
     getInitialResolves
@@ -27,7 +27,7 @@ router.post('/changeStatus',
         if (complaintId && status) {
             next();
         } else {
-            res.status(400).send();
+            res.status(422).send({message: 'Expected data not found'});
         }
     },
     changeResolveStatus
@@ -42,7 +42,7 @@ router.get('/assignResolve/:resolveId',
             req.resolveId = resolveId;
             next()
         } else {
-            res.status(400).send();
+            res.status(422).send({message: 'Expected data not found'});
         }
     }, reassignResolve
 );

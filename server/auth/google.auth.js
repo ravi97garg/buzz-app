@@ -1,8 +1,8 @@
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+
 const {CLIENT_ID, SECRET_KEY} = require("../constants");
 const User = require('../models/User');
-
-let passport = require('passport');
-let GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 passport.serializeUser((user, done) => {
     done(null, user.id)

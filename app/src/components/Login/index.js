@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {BASE_URL} from "../../config";
+
 export default class LoginComponent extends React.Component {
 
     componentDidMount() {
@@ -18,7 +20,7 @@ export default class LoginComponent extends React.Component {
                     </div>
                     <span className={'card-title'}>TTN BUZZ</span>
                     <div className={'login-btn-wrapper'}>
-                        <a href='http://localhost:8080/auth/google'>
+                        <a href={`${BASE_URL}/auth/google`}>
                             <button>LOGIN WITH GOOGLE</button>
                         </a>
                     </div>

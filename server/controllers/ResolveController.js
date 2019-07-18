@@ -14,18 +14,19 @@ const {
 
 const getInitialResolves = async (req, res) => {
     try {
-        let {
-            limit = 10,
-            skip = 0
+        const {
+            limit,
+            skip,
+            complaintStatus
         } = req.query;
         if (req.params.department) {
-            const complaints = await getResolvesByDepartment(req.params.department, parseInt(limit), parseInt(skip));
-            const complaintsCount = await getDeptComplaintCount(req.params.department);
+            const complaints = await getResolvesByDepartment(req.params.department, parseInt(limit), parseInt(skip), complaintStatus);
+            const complaintsCount = await getDeptComplaintCount(req.params.department, complaintStatus);
             delete complaints._id;
             res.send({complaints, complaintsCount});
         } else {
-            const complaints = await getInitResolves(parseInt(limit), parseInt(skip));
-            const complaintsCount = await getAllResolveCount();
+            const complaints = await getInitResolves(parseInt(limit), parseInt(skip), complaintStatus);
+            const complaintsCount = await getAllResolveCount(complaintStatus);
             delete complaints._id;
             res.send({complaints, complaintsCount});
         }
@@ -38,7 +39,7 @@ const getInitialResolves = async (req, res) => {
 const changeResolveStatus = (req, res) => {
     const {complaintId, status} = req.body;
     changeStatus(complaintId, status).then(() => {
-        getResolveById(complaintId
+        getResolveById(complaintId)
             .then((complaint) => {
                 const {
                     loggedBy: {
@@ -72,8 +73,7 @@ const changeResolveStatus = (req, res) => {
             })
             .catch((err) => {
                 res.status(500).send({message: err});
-            })
-        );
+            });
         res.send({message: 'status changed successfully'})
     }).catch((err) => {
         res.status(500).send({message: err});

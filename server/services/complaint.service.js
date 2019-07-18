@@ -25,7 +25,6 @@ const postComplaint = (complaint) => {
         status
     } = complaint;
     const newComplaint = new Complaint;
-    console.log(`uid: ${uid}`);
     newComplaint.uid = uid;
     newComplaint.department = department;
     newComplaint.subject = subject;
@@ -57,12 +56,7 @@ const getUserComplaintsDetailed = (complaintId) => {
 };
 
 const getUserComplaintsBrief = (user, limit = 10, skip = 0, statuses =
-    [
-        complaintStatus.PENDING,
-        complaintStatus.INPROGRESS,
-        complaintStatus.COMPLETED,
-        complaintStatus.CLOSED
-    ]) => {
+    Object.values(complaintStatus)) => {
     return Complaint
         .find({loggedBy: user, status: {$in: [...statuses]}}, {
             _id: 0,
@@ -80,13 +74,7 @@ const getUserComplaintsBrief = (user, limit = 10, skip = 0, statuses =
         })
 };
 
-const getComplaintsTotalCount = (userId, statuses =
-    [
-        complaintStatus.PENDING,
-        complaintStatus.INPROGRESS,
-        complaintStatus.COMPLETED,
-        complaintStatus.CLOSED
-    ]) => {
+const getComplaintsTotalCount = (userId, statuses = Object.values(complaintStatus)) => {
     return Complaint.find({loggedBy: userId, status: {$in: [...statuses]}}).countDocuments()
 };
 

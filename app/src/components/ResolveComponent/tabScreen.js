@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import ResolveRowComponent from "./ResolveRow";
 import {STATUS} from "../../constants";
 import PaginatedComponent from "../PaginationHOC";
+import {INIT_ALL_COMPLAINTS_SUCCESS} from "../../constants/resolve";
+import ToastComponent from "../ToastComponent";
 
 class TabScreenComponent extends React.Component {
 
@@ -26,19 +28,14 @@ class TabScreenComponent extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.page !== this.props.page) {
-            this.props.setStatusDefaultService();
-        }
-        if (this.props.page === 'Home') {
-            console.log('hi there')
+
+        if (prevProps.page !== this.props.page && this.props.page === 'Home') {
             if (this.props.dataStatus === STATUS.DEFAULT) {
                 this.props.dataService();
             }
-        } else if (this.props.page === 'News') {
-            console.log('hi here', this.props.dataStatus)
+        } else if (prevProps.page !== this.props.page && this.props.page === 'News') {
             if (this.props.dataStatus === STATUS.DEFAULT) {
-                console.log('hi here')
-                this.props.dataService(this.props.user.department);
+                this.props.dataService({department: this.props.user.department});
             }
         }
     }
@@ -86,7 +83,11 @@ class TabScreenComponent extends React.Component {
                     </tbody>
 
                 </table> : <span>No complaints to resolve so far</span>}
-
+                {this.props.dataStatus === INIT_ALL_COMPLAINTS_SUCCESS &&
+                <ToastComponent
+                    message={'All Complaints fetched successfully'}
+                    setStatusDefaultService={this.props.setStatusDefaultService}
+                />}
             </div>
         )
     }

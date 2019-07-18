@@ -1,5 +1,6 @@
 const Express = require('express');
 
+const {cloudinaryConfig} = require("../config/cloudinary.config");
 const {multerUploads} = require('../config/multer.config');
 const {postComment} = require("../controllers/CommentController");
 const {handleReaction} = require("../controllers/ReactionController");
@@ -13,6 +14,7 @@ const {
 const router = Express.Router();
 
 router.post('/createBuzz',
+    cloudinaryConfig,
     multerUploads,
     (req, res, next) => {
         if (req.files && req.userId) {

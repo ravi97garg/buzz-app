@@ -56,19 +56,18 @@ class ResolveRowComponent extends React.Component {
         })
     };
 
-    saveAction = (id) => {
-        if (this.state[id] !== this.props.resolves.status) {
-            this.props.changeStatus(id, this.state[id]);
+    saveAction = (uid) => {
+        if (this.state[uid] !== this.props.resolves.status) {
+            this.props.changeStatus(uid, this.state[uid]);
             this.setToast();
         }
     };
 
-    assignResolve = (id) => {
-        this.props.assignResolveService(id, this.props.currentUser);
+    assignResolve = (uid) => {
+        this.props.assignResolveService(uid, this.props.currentUser);
     };
 
     handleChange = (e) => {
-        console.log('hi', e.target.value);
         this.setState({[e.target.name]: e.target.value})
     };
 
@@ -101,6 +100,7 @@ class ResolveRowComponent extends React.Component {
                                 statusIndex={statusIndex}
                                 handleChange={this.handleChange}
                                 assignResolve={this.assignResolve}
+                                resolve={this.props.resolves}
                             /> :
                             <td>
                                 <span>{status}</span>

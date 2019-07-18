@@ -6,19 +6,14 @@ const bodyParser = require('body-parser');
 const initiateMongo = require('./models');
 const router = require('./routes');
 const { cloudinaryConfig } = require('./config/cloudinary.config');
-// const {cors} = require("./middlewares");
 
 const {SERVER_PORT} = require("./constants");
 const app = Express();
-
-app.use(cloudinaryConfig);
 
 app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
-initiateMongo();
 
 app.use(passport.initialize());
 app.use(passport.session());

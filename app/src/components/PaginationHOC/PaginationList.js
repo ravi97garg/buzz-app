@@ -41,7 +41,8 @@ class PaginationList extends Component {
                     </button>
                 </div>
                 <div className={'page-filter-container'}>
-                    Limit: <select onChange={this.changeLimit}>
+                    Limit:
+                    <select onChange={this.changeLimit}>
                         <option value={10}>10</option>
                         <option value={20}>20</option>
                         <option value={50}>50</option>
@@ -49,30 +50,38 @@ class PaginationList extends Component {
                     </select>
                     <fieldset>
                         <legend>Complaint Status</legend>
-                        <input
-                            type="checkbox"
-                            name={"complaintStatus"}
-                            value={COMPLAINT_FILTER_TYPE.PENDING}
-                            onClick={this.handleFilter}
-                        />{COMPLAINT_FILTER_TYPE.PENDING}
-                        <input
-                            type="checkbox"
-                            name={"complaintStatus"}
-                            value={COMPLAINT_FILTER_TYPE.IN_PROGRESS}
-                            onClick={this.handleFilter}
-                        />{COMPLAINT_FILTER_TYPE.IN_PROGRESS}
-                        <input
-                            type="checkbox"
-                            name={"complaintStatus"}
-                            value={COMPLAINT_FILTER_TYPE.COMPLETED}
-                            onClick={this.handleFilter}
-                        />{COMPLAINT_FILTER_TYPE.COMPLETED}
-                        <input
-                            type="checkbox"
-                            name={"complaintStatus"}
-                            value={COMPLAINT_FILTER_TYPE.CLOSED}
-                            onClick={this.handleFilter}
-                        />{COMPLAINT_FILTER_TYPE.CLOSED}
+                        <label>
+                            <input
+                                type="checkbox"
+                                name={"complaintStatus"}
+                                value={COMPLAINT_FILTER_TYPE.PENDING}
+                                onClick={this.handleFilter}
+                            />{COMPLAINT_FILTER_TYPE.PENDING}
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name={"complaintStatus"}
+                                value={COMPLAINT_FILTER_TYPE.IN_PROGRESS}
+                                onClick={this.handleFilter}
+                            />{COMPLAINT_FILTER_TYPE.IN_PROGRESS}
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name={"complaintStatus"}
+                                value={COMPLAINT_FILTER_TYPE.COMPLETED}
+                                onClick={this.handleFilter}
+                            />{COMPLAINT_FILTER_TYPE.COMPLETED}
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name={"complaintStatus"}
+                                value={COMPLAINT_FILTER_TYPE.CLOSED}
+                                onClick={this.handleFilter}
+                            />{COMPLAINT_FILTER_TYPE.CLOSED}
+                        </label>
                     </fieldset>
                 </div>
             </div>

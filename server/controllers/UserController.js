@@ -28,7 +28,7 @@ const changeUserProfile = async (req, res) => {
         req.user.profileImage = req.profileImage.secure_url;
         changeProfileService(req.userId, req.user.profileImage)
             .then(() => {
-                jwt.sign(req.user, JWT_KEY,
+                jwt.sign(req.user.toJSON(), JWT_KEY,
                     function (err, token) {
                         if (err) {
                             res.status(401).send({message: err});

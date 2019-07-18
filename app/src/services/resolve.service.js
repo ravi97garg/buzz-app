@@ -38,18 +38,6 @@ export const getResolves = (options) => (dispatchEvent) => {
         })
 };
 
-/*export const getMyDeptResolves = () => (dispatch) => {
-    dispatch(getMyResolvesStarted());
-    axiosInstance.get(`/data/resolve/getMyDeptResolves`)
-        .then((data) => {
-            dispatch(getMyResolvesSuccess(data.complaints));
-        })
-        .catch((err) => {
-            console.error(err);
-            dispatch(getMyResolvesFailed())
-        })
-};*/
-
 export const changeStatus = (complaintId, status) => (dispatchEvent) => {
     dispatchEvent(updateComplaintStatusStarted());
     axiosInstance.post('/data/resolve/changeStatus', {

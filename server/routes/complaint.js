@@ -1,5 +1,6 @@
 const Express = require('express');
 
+const {cloudinaryConfig} = require("../config/cloudinary.config");
 const {multerUploads} = require('../config/multer.config');
 const {complaintReqType} = require('../constants');
 const {
@@ -16,6 +17,7 @@ router.get('/getDepartments',
 );
 
 router.post('/postComplaint',
+    cloudinaryConfig,
     multerUploads,
     (req, res, next) => {
         const {

@@ -1,5 +1,6 @@
 const {verifyToken} = require("../utilities");
 const {findUserByEmail} = require('../services/user.service');
+const {userRoles} = require('../constants');
 
 const dataRouteMiddleware = (req, res, next) => {
     let decodedToken = verifyToken(req.headers.authorization);
@@ -26,7 +27,16 @@ const cors = (req, res, next) => {
     next();
 };
 
+const isAdmin = (req,res, next) => {
+    if(req.user.role === userRoles.ADMIN || req.user.role === userRoles.SUPER_ADMIN){
+        next();
+    } else {
+        res.status(400).send({message: 'The requested user is not an ADMIN'});
+    }
+};
+
 module.exports = {
     dataRouteMiddleware,
-    cors
+    cors,
+    isAdmin
 };
