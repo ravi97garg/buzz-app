@@ -14,7 +14,8 @@ const getResolveById = (resolveId) => {
         });
 };
 
-const getInitResolves = (limit , skip, statuses = Object.values(complaintStatus)) => {
+const getInitResolves = (limit = 10, skip = 0, statuses = Object.values(complaintStatus)) => {
+    console.log(`limit is: ${limit}`);
     return Complaint.find({status: {$in: [...statuses]}})
         .skip(skip)
         .limit(limit)

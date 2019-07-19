@@ -1,4 +1,4 @@
-const sgMail = require('../../config/sendgrid.config');
+const transporter = require('../../config/nodemailer.config');
 
 const msgToLogger = (emailTo, complaintId, loggerName, subject, assigneeName, department, status) => {
     const msg = {
@@ -7,7 +7,7 @@ const msgToLogger = (emailTo, complaintId, loggerName, subject, assigneeName, de
         subject: `Complaint ID: ${complaintId}`,
         html: `Hi <strong>${loggerName}</strong>, <br/>The status of the complaint with the title <strong>${subject}</strong> has been changed by <strong>${assigneeName}</strong> (Admin, ${department} Department). The current status of your complaint is <strong>${status}</strong>You can go through the complaint details and track the complaints <a href="#">here</a>. <br/><br/>Thank you<br/>Regards. <br/>Admin. <br/>${department} Department`,
     };
-    return sgMail.send(msg);
+    return transporter.sendMail(msg);
 };
 
 const msgToAssignee = (emailTo, complaintId, assigneeName, subject, status, department) => {
@@ -17,7 +17,7 @@ const msgToAssignee = (emailTo, complaintId, assigneeName, subject, status, depa
         subject: `Complaint ID: ${complaintId}`,
         html: `Hi <strong>${assigneeName}</strong>, <br/>You have changed the status of complaint with the title <strong>${subject}</strong> to status: <strong>${status}</strong>. <br/><br/>Regards. <br/>Admin. <br/>${department} Department`,
     };
-    return sgMail.send(msg);
+    return transporter.sendMail(msg);
 };
 
 module.exports = {

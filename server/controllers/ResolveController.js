@@ -20,12 +20,12 @@ const getInitialResolves = async (req, res) => {
             complaintStatus
         } = req.query;
         if (req.params.department) {
-            const complaints = await getResolvesByDepartment(req.params.department, parseInt(limit), parseInt(skip), complaintStatus);
+            const complaints = await getResolvesByDepartment(req.params.department, parseInt(limit) || 10, parseInt(skip) || 0, complaintStatus);
             const complaintsCount = await getDeptComplaintCount(req.params.department, complaintStatus);
             delete complaints._id;
             res.send({complaints, complaintsCount});
         } else {
-            const complaints = await getInitResolves(parseInt(limit), parseInt(skip), complaintStatus);
+            const complaints = await getInitResolves(parseInt(limit) || 10, parseInt(skip) || 0, complaintStatus);
             const complaintsCount = await getAllResolveCount(complaintStatus);
             delete complaints._id;
             res.send({complaints, complaintsCount});
@@ -61,7 +61,8 @@ const changeResolveStatus = (req, res) => {
                     assignedToName,
                     department,
                     status
-                );
+                ).then((res) => console.log('great'))
+                    .catch((err) => console.error(err));
                 msgToAssignee(
                     assignedToEmail,
                     complaintId,
@@ -69,7 +70,8 @@ const changeResolveStatus = (req, res) => {
                     subject,
                     status,
                     department
-                )
+                ).then((res) => console.log('great'))
+                    .catch((err) => console.error(err));
             })
             .catch((err) => {
                 res.status(500).send({message: err});

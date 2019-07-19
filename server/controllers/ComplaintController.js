@@ -119,7 +119,7 @@ const getMyComplaints = async (req, res) => {
             complaintStatus
         } = req.query;
         try {
-            const complaintsBrief = await getUserComplaintsBrief(req.userId, parseInt(limit), parseInt(skip), complaintStatus);
+            const complaintsBrief = await getUserComplaintsBrief(req.userId, parseInt(limit) || 10, parseInt(skip) || 0, complaintStatus);
             const complaintsCount = await getComplaintsTotalCount(req.userId, complaintStatus);
             delete complaintsBrief._id;
             res.send({

@@ -18,13 +18,13 @@ class ResolveComponent extends React.Component {
 
 
     componentDidMount() {
-        if (this.props.user.role && this.props.user.role !== 'Admin') {
+        if (this.props.user.role && (this.props.user.role !== 'Admin' && this.props.user.role !== 'Super Admin')) {
             this.props.history.push('/pageNotFound');
         }
     }
 
     componentDidUpdate() {
-        if (this.props.user.role && this.props.user.role !== 'Admin') {
+        if (this.props.user.role && (this.props.user.role !== 'Admin' && this.props.user.role !== 'Super Admin')) {
             this.props.history.push('/pageNotFound');
         }
     }

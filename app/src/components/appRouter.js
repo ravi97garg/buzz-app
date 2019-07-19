@@ -13,6 +13,7 @@ import {createUser, userLoginFailed} from "../services/user.service";
 import {STATUS} from "../constants";
 import LoaderComponent from "./Loader";
 import NotAuthenticatedComponent from "./NotAuthenticatedComponent";
+import SuperAdminComponent from "./SuperAdminComponent";
 
 
 class AppRouterComponent extends React.Component {
@@ -23,11 +24,13 @@ class AppRouterComponent extends React.Component {
                 {(this.props.user.currentStatus === STATUS.STARTED) ?
                     <LoaderComponent/> :
                     <Switch>
-                        <Route exact path='/token'
-                               render={(props) => <TokenComponent {...props}
-                                                                  createUser={this.props.createUser}
-                                                                  userStatus={this.props.user.currentStatus}
-                               />}
+                        <Route exact
+                               path='/token'
+                               render={(props) => (
+                                   <TokenComponent {...props}
+                                                   createUser={this.props.createUser}
+                                                   userStatus={this.props.user.currentStatus}
+                                   />)}
                         />
                         <PrivateRoute exact
                                       path={"/dashboard"}
@@ -44,11 +47,11 @@ class AppRouterComponent extends React.Component {
                                       component={ResolveComponent}
                                       userStatus={this.props.user.currentStatus}
                         />
-                        {/*<SuperAdminRoute exact*/}
-                        {/*              path={"/admin"}*/}
-                        {/*              component={ResolveComponent}*/}
-                        {/*              userStatus={this.props.user.currentStatus}*/}
-                        {/*/>*/}
+                        <PrivateRoute exact
+                                      path={"/admin"}
+                                      component={SuperAdminComponent}
+                                      userStatus={this.props.user.currentStatus}
+                        />
                         <Route exact
                                path={'/authenticationFailed'}
                                component={NotAuthenticatedComponent}
@@ -67,7 +70,6 @@ class AppRouterComponent extends React.Component {
         if (!localStorage.getItem("Token")) {
             this.props.history.push('/login');
         } else {
-            console.log('mount from router');
             this.props.createUser();
         }
     }

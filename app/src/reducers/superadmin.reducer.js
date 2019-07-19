@@ -1,9 +1,9 @@
+import {STATUS} from "../constants";
 import {
     FETCH_ALL_USERS_FAILED,
     FETCH_ALL_USERS_STARTED,
     FETCH_ALL_USERS_SUCCESS
-} from "../constants/user";
-import {STATUS} from "../constants";
+} from "../constants/superadmin";
 
 const initialState = {
     users: [],

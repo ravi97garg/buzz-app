@@ -36,11 +36,17 @@ class NavLinkComponent extends React.Component {
                 }}>
                     Complaints
                 </NavLink>
-                {this.props.user.role === 'Admin' &&
+                {(this.props.user.role === 'Admin' || this.props.user.role === 'Super Admin') &&
                 <NavLink to="/resolve" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
                     color: "white"
                 }}>
                     Resolve
+                </NavLink>}
+                {(this.props.user.role === 'Super Admin') &&
+                <NavLink to="/superadmin" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
+                    color: "white"
+                }}>
+                    Manage Users
                 </NavLink>}
 
             </div>

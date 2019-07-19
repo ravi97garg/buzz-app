@@ -2,7 +2,7 @@ import {
     FETCH_ALL_USERS_FAILED,
     FETCH_ALL_USERS_STARTED,
     FETCH_ALL_USERS_SUCCESS
-} from "../constants/user";
+} from "../constants/superadmin";
 
 export const fetchAllUsersStarted = () => ({
     type: FETCH_ALL_USERS_STARTED

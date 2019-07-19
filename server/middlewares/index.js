@@ -27,16 +27,26 @@ const cors = (req, res, next) => {
     next();
 };
 
-const isAdmin = (req,res, next) => {
-    if(req.user.role === userRoles.ADMIN || req.user.role === userRoles.SUPER_ADMIN){
+const isAdmin = (req, res, next) => {
+    if (req.user.role === userRoles.ADMIN || req.user.role === userRoles.SUPER_ADMIN) {
         next();
     } else {
         res.status(400).send({message: 'The requested user is not an ADMIN'});
     }
 };
 
+const isSuperAdmin = (req, res, next) => {
+    if (req.user.role === userRoles.SUPER_ADMIN) {
+        next();
+    } else {
+        res.status(400).send({message: 'The requested user is not an SUPER ADMIN'});
+    }
+};
+
+
 module.exports = {
     dataRouteMiddleware,
     cors,
-    isAdmin
+    isAdmin,
+    isSuperAdmin
 };
