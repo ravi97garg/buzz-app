@@ -320,6 +320,7 @@ lint/tmp/
 
 # My Constants
 server/constants/ComplaintTable.js
+server/config/
 
 # lint/reports/
 
