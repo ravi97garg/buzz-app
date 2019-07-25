@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import UploadComponent from "../UploaderComponent";
 import ProfileUploadComponent from "../UploaderComponent/ProfileUpload";
 import {changeProfileImageService} from "../../services/user.service";
+import {USER_ROLES} from "../../constants/user";
 
 class NavLinkComponent extends React.Component {
 
@@ -36,13 +37,13 @@ class NavLinkComponent extends React.Component {
                 }}>
                     Complaints
                 </NavLink>
-                {(this.props.user.role === 'Admin' || this.props.user.role === 'Super Admin') &&
+                {(this.props.user.role === USER_ROLES.ADMIN || this.props.user.role === USER_ROLES.SUPER_ADMIN) &&
                 <NavLink to="/resolve" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
                     color: "white"
                 }}>
                     Resolve
                 </NavLink>}
-                {(this.props.user.role === 'Super Admin') &&
+                {(this.props.user.role === USER_ROLES.SUPER_ADMIN) &&
                 <NavLink to="/admin" className={'nav-options'} activeClassName="selected-nav" activeStyle={{
                     color: "white"
                 }}>

@@ -23,11 +23,12 @@ export const changeUserStatusStarted = () => ({
     type: CHANGE_USER_STATUS_STARTED
 });
 
-export const changeUserStatusSuccess = (userId, status) => ({
+export const changeUserStatusSuccess = (userId, status, role) => ({
     type: CHANGE_USER_STATUS_SUCCESS,
     payload: {
         userId,
-        status
+        status,
+        role
     }
 });
 

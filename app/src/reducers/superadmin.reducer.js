@@ -1,11 +1,12 @@
-import {STATUS} from "../constants";
+import {STATUS} from '../constants';
 import {
     CHANGE_USER_STATUS_FAILED,
-    CHANGE_USER_STATUS_STARTED, CHANGE_USER_STATUS_SUCCESS,
+    CHANGE_USER_STATUS_STARTED, 
+    CHANGE_USER_STATUS_SUCCESS,
     FETCH_ALL_USERS_FAILED,
     FETCH_ALL_USERS_STARTED,
     FETCH_ALL_USERS_SUCCESS
-} from "../constants/superadmin";
+} from '../constants/superadmin';
 
 const initialState = {
     users: [],
@@ -39,11 +40,12 @@ const superuser = (state = initialState, action) => {
         case CHANGE_USER_STATUS_SUCCESS: {
             const {
                 userId,
-                status
+                status,
+                role
             } = action.payload;
             let updatedUsers = [...state.users];
             updatedUsers = updatedUsers.map((item) => {
-                return item._id === userId ? {...item, activeStatus: status} : item
+                return item._id === userId ? {...item, activeStatus: status, role} : item
             });
             return {...state, userStatus: STATUS.SUCCESS, users: updatedUsers}
         }

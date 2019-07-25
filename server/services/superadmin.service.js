@@ -7,8 +7,11 @@ const getAllUsers = (userId, limit = 10, skip = 0, roles = Object.values(userRol
         .limit(limit)
 };
 
-const updateStatus = (userId, status) => {
-    return User.updateOne({_id: userId}, {activeStatus: status})
+const updateStatus = (userId, status, role) => {
+    const objToUpdate = {};
+    if(status) objToUpdate.activeStatus = status;
+    if(role) objToUpdate.role = role;
+    return User.updateOne({_id: userId}, {$set: objToUpdate})
 };
 
 module.exports = {

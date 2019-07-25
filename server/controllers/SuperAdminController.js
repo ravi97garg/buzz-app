@@ -23,9 +23,10 @@ const changeUserStatus = (req, res) => {
         userId
     } = req.params;
     const {
-        status
+        status,
+        role
     } = req.query;
-    updateStatus(userId, status).then(() => {
+    updateStatus(userId, status, role).then(() => {
         res.send({message: 'activation status updated succesfully'})
     }).catch((err) => {
         res.status(500).send({message: err})
