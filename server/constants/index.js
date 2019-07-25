@@ -4,9 +4,11 @@ const SECRET_KEY = 'WxgKoRNEqskAUlEC9jx0O2--';
 const SERVER_PORT = 8080;
 const CLIENT_PORT = 3000;
 const CLIENT_URL = `http://localhost:${CLIENT_PORT}`;
+const SERVER_URL = `http://localhost:${SERVER_PORT}`;
 const DB_NAME = 'buzz-db';
 
 const JWT_KEY = 'itisalmostimpossibletocrackthiscode';
+const tokenExpirationTime = '10h';
 
 const CLOUD_NAME = 'dnuq1lgqs';
 const CLOUDINARY_API_KEY = '295531686213238';
@@ -38,6 +40,11 @@ const adminDepartments = {
     OTHERS: 'Others'
 };
 
+const activeStatus = {
+    DEACTIVE: 'Deactive',
+    ACTIVE: 'Active'
+};
+
 const complaintStatus = {
     PENDING: 'Pending',
     INPROGRESS: 'In Progress',
@@ -61,6 +68,7 @@ module.exports = {
     SECRET_KEY,
     SERVER_PORT,
     CLIENT_URL,
+    SERVER_URL,
     DB_NAME,
     JWT_KEY,
     CLOUD_NAME,
@@ -70,10 +78,12 @@ module.exports = {
     SENDGRID_API_KEY,
     USER_INFO,
 
+    activeStatus,
     userRoles,
     buzzCategory,
     adminDepartments,
     complaintStatus,
     reaction,
-    complaintReqType
+    complaintReqType,
+    tokenExpirationTime
 };

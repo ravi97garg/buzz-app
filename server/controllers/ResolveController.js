@@ -61,7 +61,7 @@ const changeResolveStatus = (req, res) => {
                     assignedToName,
                     department,
                     status
-                ).then((res) => console.log('great'))
+                ).then(() => console.log('message sent successfully'))
                     .catch((err) => console.error(err));
                 msgToAssignee(
                     assignedToEmail,
@@ -70,7 +70,7 @@ const changeResolveStatus = (req, res) => {
                     subject,
                     status,
                     department
-                ).then((res) => console.log('great'))
+                ).then(() => console.log('message sent successfully'))
                     .catch((err) => console.error(err));
             })
             .catch((err) => {

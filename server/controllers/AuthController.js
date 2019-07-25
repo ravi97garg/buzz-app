@@ -2,14 +2,15 @@ const jwt = require('jsonwebtoken');
 
 const {
     JWT_KEY,
-    CLIENT_URL
+    CLIENT_URL,
+    tokenExpirationTime
 } = require('../constants');
 
 const generateToken = (req, res) => {
     const {
         email
     } = req.user;
-    jwt.sign({'email': email}, JWT_KEY, {expiresIn: "10h"},
+    jwt.sign({'email': email}, JWT_KEY, {expiresIn: tokenExpirationTime},
         (err, token) => {
             if(err){
                 res.redirect(`${CLIENT_URL}/authenticationFailed`);

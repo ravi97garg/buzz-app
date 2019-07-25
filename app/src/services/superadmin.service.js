@@ -1,5 +1,7 @@
 import axiosInstance from "../config/axios";
 import {
+    changeUserStatusFailed,
+    changeUserStatusStarted, changeUserStatusSuccess,
     fetchAllUsersFailed,
     fetchAllUsersStarted,
     fetchAllUsersSuccess
@@ -13,5 +15,16 @@ export const getUsers = () => (dispatchEvent) => {
         })
         .catch((err) => {
             dispatchEvent(fetchAllUsersFailed());
+        })
+};
+
+export const changeUserStatus = (userId, status) => (dispatchEvent) => {
+    dispatchEvent(changeUserStatusStarted());
+    axiosInstance.get(`/data/superadmin/changeUserStatus/${userId}?status=${status}`)
+        .then(() => {
+            dispatchEvent(changeUserStatusSuccess(userId, status));
+        })
+        .catch((err) => {
+            dispatchEvent(changeUserStatusFailed());
         })
 };

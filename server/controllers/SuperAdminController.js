@@ -1,8 +1,9 @@
 const {
-    getAllUsers
+    getAllUsers,
+    updateStatus
 } = require('../services/superadmin.service');
 
-const getUsers = (req, res, next) => {
+const getUsers = (req, res) => {
     const {
         limit,
         skip,
@@ -17,6 +18,21 @@ const getUsers = (req, res, next) => {
         })
 };
 
+const changeUserStatus = (req, res) => {
+    const {
+        userId
+    } = req.params;
+    const {
+        status
+    } = req.query;
+    updateStatus(userId, status).then(() => {
+        res.send({message: 'activation status updated succesfully'})
+    }).catch((err) => {
+        res.status(500).send({message: err})
+    });
+};
+
 module.exports = {
-    getUsers
+    getUsers,
+    changeUserStatus
 };

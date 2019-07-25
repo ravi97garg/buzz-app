@@ -1,7 +1,13 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-const {CLIENT_ID, SECRET_KEY} = require("../constants");
+const {
+    CLIENT_ID,
+    SECRET_KEY,
+    SERVER_URL,
+    activeStatus,
+    userRoles
+} = require("../constants");
 const User = require('../models/User');
 
 passport.serializeUser((user, done) => {
@@ -18,7 +24,7 @@ passport.deserializeUser((id, done) => {
 passport.use(new GoogleStrategy({
         clientID: CLIENT_ID,
         clientSecret: SECRET_KEY,
-        callbackURL: "http://localhost:8080/auth/google/redirect"
+        callbackURL: `${SERVER_URL}/auth/google/redirect`
     },
     function (accessToken, refreshToken, profile, done) {
 
@@ -28,7 +34,8 @@ passport.use(new GoogleStrategy({
             email: profile.emails[0].value,
             profileImage: profile.photos[0].value,
             provider: profile.provider,
-            [profile.provider]: profile._json
+            [profile.provider]: profile._json,
+            activeStatus: activeStatus.ACTIVE
         };
 
         User.findOne({email: profile.emails[0].value}, (err, adminUser) => {
@@ -36,7 +43,7 @@ passport.use(new GoogleStrategy({
                 console.error(err);
             } else {
                 user.department = adminUser ? adminUser.department : 'IT';
-                user.role = adminUser ? adminUser.role : 'User';
+                user.role = adminUser ? adminUser.role : userRoles.USER;
                 User.findOneAndUpdate(
                     {googleId: profile.id},
                     {...user},

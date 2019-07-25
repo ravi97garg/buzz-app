@@ -1,7 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {getUsers} from "../../services/superadmin.service";
+
+import {
+    changeUserStatus,
+    getUsers
+} from "../../services/superadmin.service";
+import UserRowComponent from "./userRow";
 
 class SuperAdmin extends Component {
 
@@ -22,12 +27,20 @@ class SuperAdmin extends Component {
     render(){
         console.log(this.props.superadmin.users);
         return (
-            <div>
+            <div className={'buzz'}>
                 Superadmin!
+                {this.props.superadmin.users && this.props.superadmin.users.map((user) => {
+                    return (
+                        <UserRowComponent
+                            user={user}
+                            changeUserStatus={this.props.changeUserStatus}
+                        />
+                    )
+                })}
+
             </div>
         )
     }
-
 }
 
 SuperAdmin.propTypes = {
@@ -46,7 +59,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    getUsers
+    getUsers,
+    changeUserStatus
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SuperAdmin);

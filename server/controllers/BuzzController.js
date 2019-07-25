@@ -91,11 +91,9 @@ const reportBuzz = async (req, res) => {
     } = req.body;
     const buzzer = await getBuzzByID(buzzId);
     const {
-        buzzer: {
-            postedBy: {
-                email: buzzerMail,
-                name: buzzerName
-            }
+        postedBy: {
+            email: buzzerMail,
+            name: buzzerName
         }
     } = buzzer;
     const {
