@@ -28,6 +28,7 @@ router.get(`/changeUserStatus/:userId`, (req, res, next) => {
             status,
             role
         } = req.query;
+        console.log("yo bro here", userId, status, role);
         if (!userId || (!status && !role)) {
             res.status(401).send({message: `Not Authenticated to access this route`});
         } else if (status && Object.values(activeStatus).indexOf(status) === -1) {

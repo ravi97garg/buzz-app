@@ -52,7 +52,10 @@ const UserSchema = new Schema({
         ],
         required: true,
         default: activeStatus.ACTIVE
-    }
+    },
+    // complaintsCount : {
+    //     type:
+    // }
 });
 
 module.exports = mongoose.model('User', UserSchema);
