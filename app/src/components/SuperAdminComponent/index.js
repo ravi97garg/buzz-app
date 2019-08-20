@@ -7,6 +7,8 @@ import {
     getUsers
 } from "../../services/superadmin.service";
 import UserRowComponent from "./userRow";
+import TableComponent from "../TableComponent";
+import {USER_ROLES, USER_STATUSES} from "../../constants/user";
 
 class SuperAdmin extends Component {
 
@@ -24,7 +26,7 @@ class SuperAdmin extends Component {
         }
     }
 
-    render(){
+    render() {
         console.log(this.props.superadmin.users);
         return (
             <div className={'buzz'}>
@@ -37,7 +39,15 @@ class SuperAdmin extends Component {
                         />
                     )
                 })}
-
+                <TableComponent
+                    columns={[
+                        {title: 'Name', type: 'normal', dataKey: 'name'},
+                        {title: 'Role', type: 'dropdown', dataKey: 'role', optionList: Object.values(USER_ROLES)},
+                        {title: 'Account Status', type: 'dropdown', dataKey: 'activeStatus', optionList: Object.values(USER_STATUSES)},
+                        {title: 'Action', type: 'button', onClickHandler: this.props.changeUserStatus, value: 'Commit'}
+                    ]}
+                    dataList={this.props.superadmin.users}
+                />
             </div>
         )
     }

@@ -5,15 +5,36 @@ import TableRowComponent from "./TableRow";
 
 class TableComponent extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            columns: props.columns
+        }
+    }
+
     render() {
+
+        const {
+            columns
+        } = this.props;
+
         return (
-            <div>
-                {this.props.dataList.map((tableRowData) => {
+            <table>
+                <thead>
+                <tr>
+                    {this.state.columns.map((header) => {
+                        return <th>{header.title}</th>
+                    })}
+                </tr>
+                </thead>
+                <tbody>
+                {this.props.dataList.map((dataRow) => {
                     return (
-                        <TableRowComponent tableRowData={tableRowData}/>
+                        <TableRowComponent columns={columns} dataRow={dataRow}/>
                     )
                 })}
-            </div>
+                </tbody>
+            </table>
         )
     }
 

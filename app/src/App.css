@@ -687,6 +687,7 @@ table {
 .complaint-table-container {
     padding: 20px;
     background-color: white;
+    height: 440px;
 }
 
 .complaint-user-img-wrapper {

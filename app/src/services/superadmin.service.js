@@ -20,7 +20,8 @@ export const getUsers = () => (dispatchEvent) => {
 
 export const changeUserStatus = (userId, status, role) => (dispatchEvent) => {
     dispatchEvent(changeUserStatusStarted());
-    axiosInstance.get(`/data/superadmin/changeUserStatus/${userId}?status=${status}&&role=${role}`)
+    console.log('user is ', JSON.stringify(userId));
+    axiosInstance.get(`/data/superadmin/changeUserStatus/${userId.toString()}?status=${status}&&role=${role}`)
         .then(() => {
             dispatchEvent(changeUserStatusSuccess(userId, status, role));
         })

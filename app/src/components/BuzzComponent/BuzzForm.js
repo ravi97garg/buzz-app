@@ -59,6 +59,7 @@ class BuzzFormComponent extends React.Component {
     };
 
     render() {
+        console.log("######3", this.props.history);
         return (
             <div className={'buzz-form clearfix'}>
                 <form onSubmit={this.handleSubmit}>
